@@ -4,115 +4,63 @@ body {
     margin: 0;
     padding: 0;
     line-height: 1.5;
-    color: #333; /* Default text color */
-    background-color: #f8f8f8; /* Light gray background */
+    color: #333;
+    background-color: #f8f8f8;
 }
 
 a {
-    color: #007bff; /* Link color */
+    color: #007bff;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
-a:focus {
-    outline: 2px dashed #007bff; /* Focus style for links */
+a:hover {
+    color: #0056b3;
 }
 
 h1, h2, h3 {
-    margin: 0; /* Remove default margin */
+    margin: 0;
     color: #333;
 }
 
-/* Lists */
 ul {
-    list-style-type: none; /* No list bullets */
+    list-style-type: none;
     padding: 0;
     margin: 0;
 }
 
-/* Modern Style for Background Music Audio Player */
-#backgroundMusic {
-    width: 100%; /* Full width of container */
-    max-width: 400px; /* Set maximum width for the audio player */
-    margin: 20px auto; /* Center the audio player */
-    display: block; /* Ensure the audio element is treated as a block element */
-    background-color: #e6e6e6; /* Light gray background */
-    padding: 10px;
-    border-radius: 8px; /* Rounded corners */
-}
-
-/* Audio Controls */
-audio::-webkit-media-controls-panel,
-audio::-moz-media-controls-panel {
-    background-color: #ffffff; /* White background for the controls panel */
-    border-radius: 8px; /* Rounded corners */
-    padding: 10px; /* Add padding to the controls panel */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
-}
-
-/* Audio Control Buttons */
-audio::-webkit-media-controls-play-button,
-audio::-moz-media-controls-play-button,
-audio::-webkit-media-controls-mute-button,
-audio::-moz-media-controls-mute-button {
-    background-color: #007bff; /* Blue color */
-    border-radius: 50%; /* Circular button */
-    width: 32px; /* Set size */
-    height: 32px;
-    margin: 0 10px; /* Add margin around the button */
-}
-
-/* Audio Sliders */
-audio::-webkit-media-controls-volume-slider,
-audio::-moz-media-controls-volume-slider,
-audio::-webkit-media-controls-timeline,
-audio::-moz-media-controls-timeline {
-    background-color: #e6e6e6; /* Light gray */
-    height: 8px; /* Slim height */
-    border-radius: 4px; /* Slightly rounded corners */
-    width: 100%; /* Full width */
-    margin: 10px 0; /* Add margin */
-}
-
-/* Progress thumb */
-audio::-webkit-media-controls-timeline-container .slider-thumb,
-audio::-moz-media-controls-timeline-container .slider-thumb {
-    background-color: #007bff; /* Blue color */
-    width: 12px;
-    height: 12px;
-    border-radius: 50%; /* Circular thumb */
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.3); /* Add shadow */
-}
-
 /* Header Styles */
 header {
-    background-color: #f8f8f8; /* Light gray background */
+    background-color: #f8f8f8;
     padding: 10px 20px;
+    text-align: center;
 }
 
 .quick-links {
     display: flex;
-    gap: 20px; /* Space between links */
+    gap: 20px;
+    justify-content: center;
 }
 
 .quick-links a {
-    font-weight: bold; /* Bold links */
-    color: #333; /* Dark link color */
-    padding: 5px; /* Padding for links */
-    border-radius: 5px; /* Rounded corners */
+    font-weight: bold;
+    color: #333;
+    padding: 5px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
 }
 
 .quick-links a:hover {
-    background-color: #e0e0e0; /* Hover background */
+    background-color: #e0e0e0;
 }
 
 /* Main Content */
 main {
     padding: 20px;
-    background-color: white; /* White background for main content */
-    border-radius: 8px; /* Rounded corners */
-    margin: 20px auto; /* Center main content */
-    max-width: 1000px; /* Max width */
+    background-color: white;
+    border-radius: 8px;
+    margin: 20px auto;
+    max-width: 1000px;
 }
 
 /* Introduction Section */
@@ -126,7 +74,7 @@ main {
 }
 
 #introduction p {
-    color: #666; /* Lighter text color */
+    color: #666;
 }
 
 /* About Section */
@@ -135,8 +83,8 @@ main {
     padding: 40px;
 }
 
-#about img {
-    border-radius: 50%; /* Circular images */
+.site-logo img {
+    border-radius: 50%;
     width: 132px;
     height: 132px;
 }
@@ -153,7 +101,7 @@ main {
 .social-links {
     display: flex;
     justify-content: center;
-    gap: 15px; /* Space around links */
+    gap: 15px;
 }
 
 .social-links a {
@@ -165,7 +113,7 @@ main {
 }
 
 .social-links a:hover {
-    background-color: #0056b3; /* Darker blue on hover */
+    background-color: #0056b3;
 }
 
 /* Subscription Button */
@@ -174,18 +122,19 @@ main {
     margin-top: 40px;
 }
 
-.subscription-link button {
+.subscribe-button {
     padding: 10px 20px;
+    margin-top: 10px; /* Added margin */
     border: none;
     border-radius: 5px;
-    background-color: #dc3545; /* Bootstrap danger red */
+    background-color: #dc3545;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
-.subscription-link button:hover {
-    background-color: #c82333; /* Darker red on hover */
+.subscribe-button:hover {
+    background-color: #c82333;
 }
 
 /* Content Section */
@@ -194,27 +143,29 @@ main {
     margin-bottom: 20px;
 }
 
-.columns {
+.content-group {
     display: flex;
-    gap: 20px; /* Space between columns */
-    flex-wrap: wrap; /* Allow columns to wrap on smaller screens */
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
 .column {
     flex: 1;
-    min-width: 300px; /* Minimum width for each column */
+    min-width: 300px;
     padding: 20px;
 }
 
-.video-container, .gif-container, .featured-image {
+.video-section,
+.gif-container,
+.featured-image {
     text-align: center;
     margin: 20px 0;
 }
 
 img {
-    max-width: 100%; /* Responsive images */
+    max-width: 100%;
     height: auto;
-    border-radius: 8px; /* Rounded corners for images */
+    border-radius: 8px;
 }
 
 /* Contact Section */
@@ -227,7 +178,7 @@ img {
     margin-bottom: 20px;
 }
 
-.contact-info button {
+.email-button {
     padding: 10px 20px;
     background-color: #007bff;
     color: white;
@@ -237,18 +188,28 @@ img {
     transition: background-color 0.3s ease;
 }
 
-.contact-info button:hover {
+.email-button:hover {
     background-color: #0056b3;
+}
+
+.additional-contact {
+    margin-top: 20px;
+}
+
+.additional-contact a {
+    display: block;
+    margin-bottom: 10px;
+    color: #007bff;
 }
 
 /* Footer */
 footer {
-    background-color: #f8f8f8; /* Light gray background */
-    text-align: center; /* Center text */
+    background-color: #f8f8f8;
+    text-align: center;
     padding: 20px;
 }
 
 footer p {
-    margin: 0; /* Remove default margin */
-    color: #666; /* Dark text color */
+    margin: 0;
+    color: #666;
 }
