@@ -1,5 +1,3 @@
-// script.js
-
 // Function to handle button hover effects
 function handleButtonHover(event) {
     const button = event.currentTarget;
@@ -17,17 +15,18 @@ function handleEmailClick() {
     window.location.href = 'mailto:boulhada08@gmail.com';
 }
 
-// Event listeners for button hover effects
+// Add event listeners for subscription button hover effects
 document.querySelectorAll('.subscribe-button').forEach(button => {
     button.addEventListener('mouseenter', handleSubscriptionHover);
     button.addEventListener('mouseleave', handleSubscriptionHover);
 });
 
+// Add event listener for email button click
 document.querySelectorAll('.email-button').forEach(button => {
     button.addEventListener('click', handleEmailClick);
 });
 
-// Event listeners for button hover effects
+// Add event listeners for button hover effects on quick links and social links
 document.querySelectorAll('.quick-links a, .social-links a').forEach(link => {
     link.addEventListener('mouseenter', handleButtonHover);
     link.addEventListener('mouseleave', handleButtonHover);
