@@ -5,22 +5,25 @@ body {
     padding: 0;
     line-height: 1.5;
     color: #333; /* Default text color */
+    background-color: #f8f8f8; /* Light gray background */
 }
 
 a {
-    color: inherit; /* Links inherit color */
+    color: #007bff; /* Link color */
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 a:focus {
-    outline: 2px dashed #333; /* Focus style for links */
+    outline: 2px dashed #007bff; /* Focus style for links */
 }
 
 h1, h2, h3 {
     margin: 0; /* Remove default margin */
+    color: #333;
 }
 
+/* Lists */
 ul {
     list-style-type: none; /* No list bullets */
     padding: 0;
@@ -33,23 +36,25 @@ ul {
     max-width: 400px; /* Set maximum width for the audio player */
     margin: 20px auto; /* Center the audio player */
     display: block; /* Ensure the audio element is treated as a block element */
-    background-color: #f2f2f2; /* Light gray background */
+    background-color: #e6e6e6; /* Light gray background */
     padding: 10px;
     border-radius: 8px; /* Rounded corners */
 }
 
-/* Style the audio controls panel */
+/* Audio Controls */
 audio::-webkit-media-controls-panel,
 audio::-moz-media-controls-panel {
     background-color: #ffffff; /* White background for the controls panel */
     border-radius: 8px; /* Rounded corners */
     padding: 10px; /* Add padding to the controls panel */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add a subtle shadow for depth */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
 }
 
-/* Style the audio play/pause button */
+/* Audio Control Buttons */
 audio::-webkit-media-controls-play-button,
-audio::-moz-media-controls-play-button {
+audio::-moz-media-controls-play-button,
+audio::-webkit-media-controls-mute-button,
+audio::-moz-media-controls-mute-button {
     background-color: #007bff; /* Blue color */
     border-radius: 50%; /* Circular button */
     width: 32px; /* Set size */
@@ -57,42 +62,27 @@ audio::-moz-media-controls-play-button {
     margin: 0 10px; /* Add margin around the button */
 }
 
-/* Style the audio volume slider */
+/* Audio Sliders */
 audio::-webkit-media-controls-volume-slider,
-audio::-moz-media-controls-volume-slider {
-    background-color: #007bff; /* Blue color */
-    height: 8px; /* Slim height */
-    border-radius: 4px; /* Slightly rounded corners */
-    width: 120px; /* Set the width */
-}
-
-/* Style the audio progress bar */
+audio::-moz-media-controls-volume-slider,
 audio::-webkit-media-controls-timeline,
 audio::-moz-media-controls-timeline {
-    background-color: #e0e0e0; /* Light gray background */
+    background-color: #e6e6e6; /* Light gray */
     height: 8px; /* Slim height */
     border-radius: 4px; /* Slightly rounded corners */
     width: 100%; /* Full width */
     margin: 10px 0; /* Add margin */
 }
 
-/* Style the progress thumb */
+/* Progress thumb */
 audio::-webkit-media-controls-timeline-container .slider-thumb,
 audio::-moz-media-controls-timeline-container .slider-thumb {
     background-color: #007bff; /* Blue color */
     width: 12px;
     height: 12px;
     border-radius: 50%; /* Circular thumb */
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.3); /* Add shadow for depth */
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.3); /* Add shadow */
 }
-
-/* Style for the mute button */
-audio::-webkit-media-controls-mute-button,
-audio::-moz-media-controls-mute-button {
-    background-color: #007bff; /* Blue color */
-    border-radius: 50%; /* Circular button */
-}
-
 
 /* Header Styles */
 header {
@@ -109,16 +99,20 @@ header {
     font-weight: bold; /* Bold links */
     color: #333; /* Dark link color */
     padding: 5px; /* Padding for links */
-    border-radius: 5px; /* Rounded corners for links */
+    border-radius: 5px; /* Rounded corners */
 }
 
 .quick-links a:hover {
     background-color: #e0e0e0; /* Hover background */
 }
 
-/* Main Content Styles */
+/* Main Content */
 main {
     padding: 20px;
+    background-color: white; /* White background for main content */
+    border-radius: 8px; /* Rounded corners */
+    margin: 20px auto; /* Center main content */
+    max-width: 1000px; /* Max width */
 }
 
 /* Introduction Section */
@@ -128,7 +122,7 @@ main {
 }
 
 #introduction h1 {
-    color: #333;
+    margin-bottom: 20px;
 }
 
 #introduction p {
@@ -143,6 +137,8 @@ main {
 
 #about img {
     border-radius: 50%; /* Circular images */
+    width: 132px;
+    height: 132px;
 }
 
 #about h2 {
@@ -157,57 +153,57 @@ main {
 .social-links {
     display: flex;
     justify-content: center;
-    gap: 10px; /* Space around links */
+    gap: 15px; /* Space around links */
 }
 
 .social-links a {
-    padding: 10px 20px;
+    padding: 10px 15px;
     border-radius: 5px;
-    background-color: #333;
+    background-color: #007bff;
     color: white;
+    transition: background-color 0.3s ease;
 }
 
-social-links a:hover {
-    background-color: #555;
+.social-links a:hover {
+    background-color: #0056b3; /* Darker blue on hover */
 }
 
-/* Subscription Form */
+/* Subscription Button */
 .subscription-link {
     text-align: center;
-    margin-top: 40px; /* Increased top margin for lower placement */
+    margin-top: 40px;
 }
 
 .subscription-link button {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    background-color: red; /* Changed color to red */
+    background-color: #dc3545; /* Bootstrap danger red */
     color: white;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .subscription-link button:hover {
-    background-color: darkred; /* Darker red on hover */
+    background-color: #c82333; /* Darker red on hover */
 }
 
-
 /* Content Section */
-#content-section h2 {
-    color: #333;
+#content h2 {
     text-align: center;
+    margin-bottom: 20px;
 }
 
 .columns {
     display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin: 20px 0;
+    gap: 20px; /* Space between columns */
+    flex-wrap: wrap; /* Allow columns to wrap on smaller screens */
 }
 
 .column {
-    width: 50%; /* Split screen in half */
-    padding: 10px;
-    text-align: center;
+    flex: 1;
+    min-width: 300px; /* Minimum width for each column */
+    padding: 20px;
 }
 
 .video-container, .gif-container, .featured-image {
@@ -218,7 +214,7 @@ social-links a:hover {
 img {
     max-width: 100%; /* Responsive images */
     height: auto;
-    border-radius: 5px;
+    border-radius: 8px; /* Rounded corners for images */
 }
 
 /* Contact Section */
@@ -233,33 +229,19 @@ img {
 
 .contact-info button {
     padding: 10px 20px;
-    background-color: #333;
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
-contact-info button:hover {
-    background-color: #555;
+.contact-info button:hover {
+    background-color: #0056b3;
 }
 
-.additional-contact h3 {
-    margin-bottom: 10px;
-    color: #333;
-}
-
-.additional-contact ul {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-}
-
-.additional-contact a:hover {
-    color: #555;
-}
-
-/* Footer Styles */
+/* Footer */
 footer {
     background-color: #f8f8f8; /* Light gray background */
     text-align: center; /* Center text */
