@@ -1,0 +1,9 @@
+/* CSS for styling the game */
+body {
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+canvas {
+    border: 1px solid black;
+}
