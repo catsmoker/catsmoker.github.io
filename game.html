@@ -2,14 +2,41 @@
 <html>
 
 <head>
-    <title>Snake Game</title>
+    <title>Game Selector</title>
     <link rel="stylesheet" href="game.css">
 </head>
 
 <body>
-    <h1>Snake Game</h1>
-    <canvas id="gameCanvas" width="400" height="400"></canvas>
-    <script src="game.js"></script>
+    <h1>Game Selector</h1>
+    <div class="game-container">
+        <!-- Snake Game Button -->
+        <div class="game-option">
+            <h2>Snake Game</h2>
+            <p>Play the classic Snake game!</p>
+            <button onclick="startGame('snake')">Play</button>
+        </div>
+        <!-- Future Game Option (e.g. Tetris) -->
+        <div class="game-option">
+            <h2>Tetris</h2>
+            <p>Play the classic Tetris game!</p>
+            <button onclick="startGame('tetris')">Play</button>
+        </div>
+        <!-- Add more game options as needed -->
+    </div>
+
+    <script>
+        // Function to start the selected game
+        function startGame(game) {
+            if (game === 'snake') {
+                // Redirect to the Snake game page
+                window.location.href = 'snake.html';
+            } else if (game === 'tetris') {
+                // Redirect to the Tetris game page
+                window.location.href = 'tetris.html';
+            }
+            // Add more conditions for other games as needed
+        }
+    </script>
 </body>
 
 </html>

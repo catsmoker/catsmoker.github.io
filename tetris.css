@@ -1,0 +1,21 @@
+/* General styling for the body */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Full height of the viewport */
+}
+
+/* Styling for the game container */
+.game-container {
+    text-align: center;
+}
+
+/* Styling for the game canvas */
+canvas {
+    border: 2px solid black; /* Black border around the canvas */
+}
