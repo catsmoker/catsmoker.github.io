@@ -3,23 +3,24 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="description" content="Catsmoker - Your destination for immersive experiences and captivating content.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catsmoker - Find Me Here</title>
+    <meta name="description" content="Catsmoker - Your destination for immersive experiences and captivating content.">
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-9L0YJB8T77"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
+        function gtag() {
+            dataLayer.push(arguments);
+        }
         gtag('js', new Date());
         gtag('config', 'G-9L0YJB8T77');
     </script>
 
     <!-- Google Ads -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6395046646821342"
-     crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6395046646821342" crossorigin="anonymous"></script>
 
     <!-- CSS Stylesheet -->
     <link rel="stylesheet" href="styles.css">
@@ -35,6 +36,7 @@
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </nav>
+
         <!-- Background Music -->
         <div class="music-section">
             <h2>Music</h2>
@@ -42,6 +44,10 @@
                 <source src="catsmoker.mp3" type="audio/mpeg">
                 Your browser does not support the audio element.
             </audio>
+        
+        <!-- Toggle Button for Dark Mode -->
+            <button id="theme-toggle" class="toggle-button">Dark Mode</button>
+
         </div>
     </header>
 
@@ -101,30 +107,33 @@
 
                 <!-- YouTube Videos -->
                 <div class="video-section">
-                    <iframe width="auto" height="auto" src="https://www.youtube.com/embed/pXZIm_qD2Fg" title="Unlocking 90 FPS in PUBG Using Magisk" frameborder="0" allowfullscreen></iframe>
-                    <iframe width="auto" height="auto" src="https://www.youtube.com/embed/t5TQ0sMYxhE" title="Unlocking 90 FPS in PUBG Using Magisk" frameborder="0" allowfullscreen></iframe>
-                    <iframe width="auto" height="auto" src="https://www.youtube.com/embed/_b-kUbEgP0E" title="Unlocking 90 FPS in PUBG Using Magisk" frameborder="0" allowfullscreen></iframe>
-                    <iframe width="auto" height="auto" src="https://www.youtube.com/embed/eN0nsP9TsOQ" title="Unlocking 90 FPS in PUBG Using Magisk" frameborder="0" allowfullscreen></iframe>
-                </div>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/pXZIm_qD2Fg" title="YouTube Video" frameborder="0" allowfullscreen></iframe>
+                        <iframe src="https://www.youtube.com/embed/t5TQ0sMYxhE" title="YouTube Video" frameborder="0" allowfullscreen></iframe>
+                        <iframe src="https://www.youtube.com/embed/_b-kUbEgP0E" title="YouTube Video" frameborder="0" allowfullscreen></iframe>
+                        <iframe src="https://www.youtube.com/embed/eN0nsP9TsOQ" title="YouTube Video" frameborder="0" allowfullscreen></iframe>
+                    </div>
 
-                <!-- Ads Section -->
-                <div class="ad-section">
-                    <!-- ad unit code -->
-                    <ins class="adsbygoogle"
-                        style="display:block"
-                        data-ad-client="ca-pub-6395046646821342"
-                        data-ad-slot="3304678313"
-                        data-ad-format="auto"
-                        data-full-width-responsive="true"></ins>
-                    <script>
-                        (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
-                </div>
+                    <!-- Ads Section -->
+                    <div class="ad-section">
+                        <!-- Google Ads code -->
+                        <ins class="adsbygoogle"
+                            style="display: block"
+                            data-ad-client="ca-pub-6395046646821342"
+                            data-ad-slot="3304678313"
+                            data-ad-format="auto"
+                            data-full-width-responsive="true">
+                        </ins>
+                        <script>
+                            (adsbygoogle = window.adsbygoogle || []).push({});
+                        </script>
+                    </div>
 
-                <!-- Featured Image -->
-                <figure class="featured-image">
-                    <img src="catsmoker.png" alt="A cute cat named Catsmoker" loading="lazy" style="max-width: 100%;">
-                </figure>
+                    <!-- Featured Image -->
+                    <figure class="featured-image">
+                        <img src="catsmoker.png" alt="A cute cat named Catsmoker" loading="lazy" style="max-width: 100%;">
+                    </figure>
+                </div>
             </div>
         </section>
 
