@@ -97,20 +97,21 @@ function checkCollision() {
 
 // Handle keyboard input
 window.addEventListener("keydown", (event) => {
-    if (event.key === "ArrowUp" && snakeDirection.y !== 1) {
+    if (event.key === "w" && snakeDirection.y !== 1) {
         snakeDirection.x = 0;
         snakeDirection.y = -1;
-    } else if (event.key === "ArrowDown" && snakeDirection.y !== -1) {
+    } else if (event.key === "s" && snakeDirection.y !== -1) {
         snakeDirection.x = 0;
         snakeDirection.y = 1;
-    } else if (event.key === "ArrowLeft" && snakeDirection.x !== 1) {
+    } else if (event.key === "a" && snakeDirection.x !== 1) {
         snakeDirection.x = -1;
         snakeDirection.y = 0;
-    } else if (event.key === "ArrowRight" && snakeDirection.x !== -1) {
+    } else if (event.key === "d" && snakeDirection.x !== -1) {
         snakeDirection.x = 1;
         snakeDirection.y = 0;
     }
 });
+
 
 // Start the game loop
 gameLoop();
