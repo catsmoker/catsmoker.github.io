@@ -1,8 +1,8 @@
 /* General Styles */
 body {
     font-family: Arial, sans-serif;
-    margin: 0; /* Remove default margin */
-    padding: 0; /* Remove default padding */
+    margin: 0;
+    padding: 0;
     line-height: 1.5;
     color: #333;
     background-color: #f8f8f8;
@@ -33,13 +33,15 @@ ul {
 header {
     background-color: #f8f8f8;
     padding: 10px 20px;
-    text-align: center;
+    display: flex;
+    justify-content: space-between; /* Aligns button to the far left and quick-links to the right */
+    align-items: center; /* Centers items vertically */
 }
 
 .quick-links {
     display: flex;
     gap: 20px;
-    justify-content: center;
+    justify-content: flex-end; /* Ensure the quick-links list stays on the right */
 }
 
 .quick-links a {
@@ -54,14 +56,77 @@ header {
     background-color: #e0e0e0;
 }
 
+/* Light mode styles (default) */
+body {
+    background-color: white;
+    color: black;
+}
+
+/* Dark mode styles */
+.dark-mode {
+    background-color: black;
+    color: white;
+}
+
+.dark-mode a {
+    color: #66a3ff;
+}
+
+.dark-mode a:hover {
+    color: #3385ff;
+}
+
+.dark-mode h1, h2, h3 {
+    color: rgb(71, 71, 71);
+}
+
+.dark-mode h1, h3 {
+    color: rgb(255, 0, 0);
+}
+
+/* Dark mode header styles */
+.dark-mode header {
+    background-color: #333;
+}
+
+/* Dark mode main content styles */
+.dark-mode main {
+    background-color: #444;
+}
+
+/* Dark mode footer styles */
+.dark-mode footer {
+    background-color: #333;
+    color: white;
+}
+
+/* Dark mode toggle button styles */
+#theme-toggle {
+    background-color: #051d00; /* Initial background color */
+    color: white; /* Initial text color */
+    padding: 10px 20px; /* Add padding for better spacing */
+    border: none; /* Remove default border */
+    border-radius: 8px; /* Rounded corners */
+    font-size: 16px; /* Set a comfortable font size */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transition for background and shadow */
+}
+
+/* Button hover effects */
+#theme-toggle:hover {
+    background-color: #b3b3b3; /* Darker blue color on hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow effect */
+}
+
+
 /* Main Content */
 main {
     padding: 20px;
     background-color: white;
     border-radius: 8px;
-    margin: 0; /* Ensure content fills the entire viewport */
-    max-width: 100%; /* Ensure content adjusts to screen width */
-    box-sizing: border-box; /* Include padding and border in total width */
+    margin: 0;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 /* Introduction Section */
@@ -92,7 +157,7 @@ main {
 
 #about h2 {
     margin-top: 10px;
-    color: #333;
+    color: #666;
 }
 
 #about p {
@@ -117,7 +182,30 @@ main {
     background-color: #0056b3;
 }
 
-/* Subscription Button */
+/* Container for Buttons */
+.button-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Grid layout with a minimum width of 150px per column */
+    grid-gap: 10px; /* Spacing between buttons */
+    margin-bottom: 20px;
+}
+
+/* Styling for individual buttons */
+.button-container .button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.button-container .button:hover {
+    background-color: #0056b3;
+}
+
+/* Subscription Link */
 .subscription-link {
     text-align: center;
     margin-top: 40px;
@@ -125,7 +213,6 @@ main {
 
 .subscribe-button {
     padding: 10px 20px;
-    margin-top: 10px; /* Added margin */
     border: none;
     border-radius: 5px;
     background-color: #dc3545;
@@ -156,17 +243,27 @@ main {
     padding: 20px;
 }
 
-.video-section,
-.gif-container,
-.featured-image {
-    text-align: center;
-    margin: 20px 0;
-}
-
 img {
     max-width: 100%;
     height: auto;
     border-radius: 8px;
+}
+
+/* Video Section */
+.video-section {
+    text-align: center;
+    margin: 20px 0;
+}
+
+/* Video Container */
+.video-container {
+    margin-bottom: 20px;
+}
+
+/* Styles for YouTube iframe videos */
+.video-container iframe {
+    width: 100%;
+    height: auto;
 }
 
 /* Contact Section */
@@ -213,4 +310,44 @@ footer {
 footer p {
     margin: 0;
     color: #666;
+}
+
+/* Media Query for Small Screens */
+@media screen and (max-width: 600px) {
+    .quick-links,
+    .social-links,
+    .subscription-link,
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .quick-links a,
+    .social-links a,
+    .subscribe-button,
+    .button {
+        width: auto;
+        margin-bottom: 10px;
+    }
+}
+
+/* Media Query for Video Section */
+@media screen and (min-width: 768px) {
+    /* Increase the max-width and use grid layout */
+    .video-container {
+        max-width: 1200px;
+        margin: 0 auto 20px;
+        
+        /* Enable grid layout with two columns and spacing */
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-gap: 20px;
+    }
+    
+    /* Increase the height of the iframe to match the larger screen size */
+    .video-container iframe {
+        width: 400px;
+        height: 200px; /* Adjust this value as needed */
+    }
 }
