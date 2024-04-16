@@ -2,8 +2,8 @@
 function startGame(game) {
     // Define the URL for each game
     const gameUrls = {
-        snake: 'snake.html', // URL for Snake game
-        tetris: 'x.html' // URL for Tetris game
+        snake: 'snake/snake.html', // URL for Snake game
+        x: 'x.html' // URL for x game
         // Add more games here if needed
     };
     
