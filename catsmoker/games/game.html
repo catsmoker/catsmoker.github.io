@@ -16,6 +16,13 @@
             <button onclick="startGame('snake')">Play</button>
         </div>
         <!-- Add more game options as needed -->
+        <div class="game-container">
+            <!-- coming soon Button -->
+            <div class="game-option">
+                <h2>coming soon</h2>
+                <p>coming soon!</p>
+                <button onclick="startGame('coming soon')">Play</button>
+            </div>
     </div>
 
     <script>
@@ -24,9 +31,9 @@
             if (game === 'snake') {
                 // Redirect to the Snake game page
                 window.location.href = 'snake/snake.html';
-            //} else if (game === 'x') {
-                // Redirect to the Tetris game page
-                //window.location.href = 'x.html';
+            } else if (game === 'coming soon') {
+                // Redirect to the coming soon game page
+                window.location.href = 'comingsoon.html';
             }
             // Add more conditions for other games as needed
         }
