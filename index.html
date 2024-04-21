@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -32,7 +31,6 @@
     <!-- CSS Stylesheet -->
     <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
     <!-- Header -->
     <header>
@@ -47,8 +45,10 @@
 
         <!-- Background Music -->
         <div class="music-section">
-            <h2>Music</h2>
-            <audio id="backgroundMusic" loop controls>
+            <button id="playButton">
+                <img alt="Play music" width="20">
+            </button>
+            <audio id="backgroundMusic" autoplay>
                 <source src="catsmoker/audio/backgroundmusic.mp3" type="audio/mpeg">
                 Your browser does not support the audio element.
             </audio>
@@ -147,7 +147,7 @@
                 <p>We'd love to hear from you! If you have any questions, comments, or suggestions, please feel free to reach out via email.</p>
             </header>
             <div class="contact-info">
-                <button onclick="window.location.href='mailto:boulhada08@gmail.com';" class="email-button">Email Us</button>
+                <button onclick="handleEmailClick()" class="email-button">Email Us</button>
             </div>
 
             <div class="additional-contact">
@@ -177,5 +177,4 @@
     <!-- JavaScript -->
     <script src="script.js" defer></script>
 </body>
-
 </html>
