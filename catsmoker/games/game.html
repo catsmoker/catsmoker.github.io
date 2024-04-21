@@ -2,42 +2,55 @@
 <html>
 
 <head>
-    <title>Game Selector</title>
     <link rel="stylesheet" href="game.css">
+    <style>
+        /* Centering .game-container */
+        .game-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Centering "Game Selector" text */
+        h1 {
+            text-align: center;
+        }
+    </style>
 </head>
 
 <body>
+    <div id="overlay"></div>
+    <div id="hey">
+        <div id="layer-up"></div>
+    </div>
+    <div id="layer-0">
+        <div id="layer-1">
+            <div id="layer-2">
+                <div id="lines">
+                    <div id="layer-corner"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <h1>Game Selector</h1>
     <div class="game-container">
         <!-- Snake Game Button -->
         <div class="game-option">
             <h2>Snake Game</h2>
             <p>Play the classic Snake game!</p>
-            <button onclick="startGame('snake')">Play</button>
+            <button data-game="snake">Play</button>
         </div>
         <!-- Add more game options as needed -->
-        <div class="game-container">
-            <!-- coming soon Button -->
-            <div class="game-option">
-                <h2>coming soon</h2>
-                <p>coming soon!</p>
-                <button onclick="startGame('coming soon')">Play</button>
-            </div>
+        <div class="game-option">
+            <h2>Coming Soon!</h2>
+            <p>More games are coming soon!</p>
+            <button data-game="comingsoon">Play</button>
+        </div>
     </div>
 
-    <script>
-        // Function to start the selected game
-        function startGame(game) {
-            if (game === 'snake') {
-                // Redirect to the Snake game page
-                window.location.href = 'snake/snake.html';
-            } else if (game === 'coming soon') {
-                // Redirect to the coming soon game page
-                window.location.href = 'comingsoon.html';
-            }
-            // Add more conditions for other games as needed
-        }
-    </script>
+    <script src="game.js"></script>
 </body>
 
 </html>

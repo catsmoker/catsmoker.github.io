@@ -3,7 +3,7 @@ function startGame(game) {
     // Define the URL for each game
     const gameUrls = {
         snake: 'snake/snake.html', // URL for Snake game
-        x: 'x.html' // URL for x game
+        comingsoon: 'comingsoon.html' // URL for comingsoon game
         // Add more games here if needed
     };
     
@@ -24,8 +24,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // Add a click event listener to each button
     gameButtons.forEach(button => {
         button.addEventListener("click", event => {
-            // Get the game type from the button's parent element
-            const gameType = button.parentElement.querySelector("h2").innerText.toLowerCase();
+            // Get the game type from the button's data attribute
+            const gameType = button.dataset.game;
             
             // Start the selected game
             startGame(gameType);
