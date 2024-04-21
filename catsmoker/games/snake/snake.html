@@ -10,8 +10,31 @@
 
 <body>
     <div class="game-container">
-        <h1>Snake Game</h1>
-        <canvas id="gameCanvas" width="400" height="400"></canvas>
+        <div class="game">
+            <h1>Snake Game</h1>
+            <canvas id="gameCanvas" width="400" height="400"></canvas>
+            <div id="controls">
+                <button id="up" class="control-btn">&#8593;</button>
+                <div>
+                    <button id="left" class="control-btn">&#8592;</button>
+                    <button id="down" class="control-btn">&#8595;</button>
+                    <button id="right" class="control-btn">&#8594;</button>
+                </div>
+                <button id="restart" class="restart-btn">Restart</button>
+            </div>
+        </div>
+        <div class="tutorial">
+            <h2>Tutorial</h2>
+            <p>Use arrow keys or the buttons to control the snake.</p>
+            <p>Eat the apples to score points. Each apple has different effects:</p>
+            <ul>
+                <li><span style="color: red;">Red Apple:</span> +1 point</li>
+                <li><span style="color: orange;">Orange Apple:</span> +1 point and increased speed</li>
+                <li><span style="color: blue;">Blue Apple:</span> +1 point and decreased speed</li>
+                <li><span style="color: purple;">Purple Apple:</span> -2 points</li>
+            </ul>
+            <p>Avoid hitting the walls or yourself!</p>
+        </div>
     </div>
 
     <script src="snake.js"></script>

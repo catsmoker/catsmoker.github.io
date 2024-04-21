@@ -1,7 +1,7 @@
 /* General styling for the body */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    background-color: #1f1f1f;
     text-align: center;
     margin: 0;
     padding: 0;
@@ -10,7 +10,7 @@ body {
 /* Styling for the header */
 h1 {
     margin: 20px 0;
-    color: #333;
+    color: #ff0000;
 }
 
 /* Container for game options */
