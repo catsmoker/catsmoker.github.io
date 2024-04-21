@@ -36,14 +36,14 @@
 <body>
     <!-- Header -->
     <header>
-        <nav>
-            <ul class="quick-links">
-                <li><a href="#about">About</a></li>
-                <li><a href="#content">Content</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li><a href="catsmoker/games/game.html">play a game</a></li>
-            </ul>
-        </nav>
+        <button class="openbtn" onclick="openNav()">&#9776;</button>
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+            <a href="#about">About</a>
+            <a href="#content">Content</a>
+            <a href="#contact">Contact</a>
+            <a href="catsmoker/games/game.html">Play a Game</a>
+        </div>
 
         <!-- Background Music -->
         <div class="music-section">
@@ -54,7 +54,7 @@
             </audio>
         
             <!-- DarkMode Button -->
-            <button id="theme-DarkMode" class="DarkMode-button">Dark Mode</button>
+            <button id="theme-toggle" class="DarkMode-button">Dark Mode</button>
         </div>
     </header>
 
@@ -77,26 +77,20 @@
                 <h2>About Catsmoker</h2>
                 <p>Find the latest updates and captivating content here.</p>
             </header>
-        </div>
-        <header>
-            <!-- Social Media Links -->
             <nav>
                 <ul class="social-links">
-                    <li><a href="https://www.paypal.com/paypalme/boulhada08" target="_blank" title="PayPal.me">PayPal.me</a></li>
-                    <li><a href="https://twitter.com/CATSM0KER" target="_blank" title="Twitter">Twitter</a></li>
-                    <li><a href="https://github.com/catsmoker" target="_blank" title="GitHub">GitHub</a></li>
-                    <li><a href="https://open.spotify.com/user/317obkq2nnwlyrhsmgdtxo6cdodm" target="_blank" title="Spotify">Spotify</a></li>
-                    <li><a href="https://www.youtube.com/channel/UCkq6b5grZfRhhSqoBBTeIXA?sub_confirmation=1" target="_blank" title="YouTube">YouTube</a></li>
-                    <li><a href="https://discord.com/invite/HQC5BwcXtS" target="_blank" title="Discord">Discord</a></li>
-                    <li><a href="https://t.me/CATSM0KER" target="_blank" title="Telegram">Telegram</a></li>
+                    <li><a href="https://www.paypal.com/paypalme/boulhada08" style="background-image: url('catsmoker/images/paypal.svg');" target="_blank" title="PayPal.me">PayPal.me</a></li>
+                    <li><a href="https://twitter.com/CATSM0KER" style="background-image: url('catsmoker/images/twitter.svg');" target="_blank" title="Twitter">Twitter</a></li>
+                    <li><a href="https://github.com/catsmoker" style="background-image: url('catsmoker/images/github.svg');" target="_blank" title="GitHub">GitHub</a></li>
+                    <li><a href="https://open.spotify.com/user/317obkq2nnwlyrhsmgdtxo6cdodm" style="background-image: url('catsmoker/images/spotify.svg');" target="_blank" title="Spotify">Spotify</a></li>
+                    <li><a href="https://www.youtube.com/@CATSM0KER?sub_confirmation=1" style="background-image: url('catsmoker/images/youtube.svg');" target="_blank" title="YouTube">YouTube</a></li>
+                    <li><a href="https://discord.com/invite/HQC5BwcXtS" target="_blank" style="background-image: url('catsmoker/images/discord.svg');" title="Discord">Discord</a></li>
+                    <li><a href="https://t.me/CATSM0KER" style="background-image: url('catsmoker/images/telegram.svg');" target="_blank" title="Telegram">Telegram</a></li>
                 </ul>
             </nav>
-        </div>
-        <header>
-            <!-- Subscription Button -->
             <div class="subscription-link">
                 <h2>Subscribe to my YouTube channel!</h2>
-                <a href="https://www.youtube.com/channel/UCkq6b5grZfRhhSqoBBTeIXA?sub_confirmation=1" aria-label="Subscribe on YouTube">
+                <a href="https://www.youtube.com/@CATSM0KER?sub_confirmation=1" aria-label="Subscribe on YouTube">
                     <button type="button" class="subscribe-button">Subscribe</button>
                 </a>
             </div>
