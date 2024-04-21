@@ -49,12 +49,27 @@ function handlePageViewsCount() {
     document.getElementById('viewers').appendChild(counter);
 }
 
+// Function to handle audio player
+document.getElementById('playButton').addEventListener('click', function() {
+    var audio = document.getElementById('backgroundMusic');
+    var playButtonIcon = document.getElementById('playButton').querySelector('img');
+
+    if (audio.paused) {
+        audio.play();
+        playButtonIcon.src = 'catsmoker/images/pause.svg';
+    } else {
+        audio.pause();
+        audio.currentTime = 0;
+        playButtonIcon.src = 'catsmoker/images/play.svg';
+    }
+});
+
 // Add event listeners after DOM content has loaded
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('theme-toggle').addEventListener('click', handleThemeToggle);
-    document.getElementById('email-button').addEventListener('click', handleEmailClick); // Corrected ID
-
-    // Initialize
-    initializeThemeToggle();
-    handlePageViewsCount();
+    document.getElementById('myBtn').addEventListener('click', handleEmailClick);
+    
+    initializeThemeToggle(); // Initialize theme toggle
+    handlePageViewsCount(); // Handle page views count
 });
+
