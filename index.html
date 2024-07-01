@@ -47,15 +47,16 @@
         <!-- Background Music -->
         <div class="music-section">
             <button id="playButton">
-                <img alt="Play music" width="20">
+                <img id="playButtonIcon" src="catsmoker/images/play.svg" alt="Play music" width="20">
             </button>
-            <audio id="backgroundMusic" autoplay>
-                <source src="catsmoker/audio/backgroundmusic.mp3" type="audio/mpeg">
-                Your browser does not support the audio element.
-            </audio>
+        </div>
+        <audio id="backgroundMusic">
+            <source id="audioSource" src="catsmoker/audio/backgroundmusic.mp3" type="audio/mpeg">
+        </audio>
         
-            <!-- DarkMode Button -->
-            <button id="theme-toggle" class="DarkMode-button">Dark Mode</button>
+        <!-- Dark Mode Button -->
+        <div class="dark-mode-button">
+            <button id="theme-toggle">Dark Mode</button>
         </div>
     </header>
 
