@@ -5,10 +5,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Favicon -->
-    <link rel="icon" sizes="32x32" href="catsmoker/images/favicon.ico" type="image/fav-icon">
-    <!-- title -->
+    <link rel="icon" sizes="32x32" href="catsmoker/images/favicon.ico" type="image/x-icon">
+    <!-- Title -->
     <title>Catsmoker - Find Me Here</title>
-    <!-- catsmoker meta tag -->
+    <!-- Meta Description -->
     <meta name="description" content="Catsmoker - Your destination for immersive experiences and captivating content.">
     <!-- CSS Stylesheet -->
     <link rel="stylesheet" href="styles.css">
@@ -26,14 +26,7 @@
         </div>
 
         <!-- Background Music -->
-        <div class="music-section">
-            <button id="playButton">
-                <img id="playButtonIcon" src="catsmoker/images/play.svg" alt="Play music" width="20">
-            </button>
-        </div>
-        <audio id="backgroundMusic">
-            <source id="audioSource" src="catsmoker/audio/backgroundmusic.mp3" type="audio/mpeg">
-        </audio>
+        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/playlist/1gFzkqrHQqSBzQCcOCsNsN?utm_source=generator&theme=0" width="100%" height="152" frameborder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
         
         <!-- Dark Mode Button -->
         <div class="dark-mode-button">
@@ -44,10 +37,12 @@
     <!-- Main Content -->
     <main>
         <!-- Introduction Section -->
+        <section id="introduction" class="section">
             <header>
                 <h1>Welcome to Catsmoker</h1>
                 <p>Your destination for immersive experiences and captivating content.</p>
             </header>
+        </section>
         
         <!-- About Section -->
         <section id="about" class="section">
@@ -111,15 +106,15 @@
             <header>
                 <h2>Contact Us</h2>
                 <p>We'd love to hear from you! If you have any questions, comments, or suggestions, please feel free to reach out via email.</p>
-            <div class="contact-info">
-                <button onclick="handleEmailClick()" class="email-button">Email Us</button>
-            </div>
+                <div class="contact-info">
+                    <button onclick="handleEmailClick()" class="email-button">Email Us</button>
+                </div>
             </header>
             <div class="additional-contact">
                 <h3>Other Ways to Reach Us</h3>
                 <ul>
                     <li><a href="tel:+212775804065" title="Call Us">Call Us</a></li>
-                    <li><a href="https://wa.me/212775804065" target="_blank" title="Contact us on whatsapp">Contact us on whatsapp</a></li>
+                    <li><a href="https://wa.me/212775804065" target="_blank" title="Contact us on WhatsApp">Contact us on WhatsApp</a></li>
                 </ul>
             </div>
         </section>
@@ -131,7 +126,6 @@
                 <img src="https://profile-counter.glitch.me/catsmoker/count.svg" alt="Profile views count">
             </header>
         </section>
-
     </main>
 
     <!-- Footer -->
