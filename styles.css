@@ -2,10 +2,10 @@
 :root {
     --primary-color: #3498db;
     --primary-hover-color: #2980b9;
-    --secondary-color: #2c3e50;
-    --background-color: #ecf0f1;
-    --dark-background-color: #00345c;
-    --dark-secondary-color: #bdc3c7;
+    --secondary-color: #000000; /* Black text color for light mode */
+    --background-color: #ffffff; /* White background for light mode */
+    --dark-background-color: #000000; /* Black background for dark mode */
+    --dark-secondary-color: #ffffff; /* White text color for dark mode */
     --dark-primary-color: #3498db;
     --dark-primary-hover-color: #2980b9;
     --transition-time: 0.3s;
@@ -91,7 +91,7 @@ header {
 }
 
 .dark-mode header {
-    background-color: var(--secondary-color);
+    background-color: var(--dark-background-color);
     border-bottom: 2px solid var(--dark-primary-color);
 }
 
@@ -189,6 +189,10 @@ header h1, header p {
     margin-top: 10px;
 }
 
+.dark-mode h1, .dark-mode h2, .dark-mode h3, .dark-mode p {
+    color: var(--dark-secondary-color);
+}
+
 /* Subscription Link */
 .subscription-link {
     text-align: center;
@@ -216,33 +220,6 @@ header h1, header p {
 
 .dark-mode .subscribe-button:hover {
     background-color: var(--dark-primary-hover-color);
-}
-
-/* YouTube-like video section */
-.video-section {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 1px;
-}
-
-.video-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1px;
-    justify-content: space-between;
-}
-
-.video-container iframe {
-    width: 40%;
-    height: 285px;
-    border: none;
-    border-radius: 1px;
-    transition: transform var(--transition-time), box-shadow var(--transition-time);
-}
-
-.video-container iframe:hover {
-    transform: scale(1.05);
 }
 
 /* Footer */
