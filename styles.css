@@ -44,7 +44,7 @@ ul {
     margin: 0;
 }
 
-/* The side navigation menu */
+/* Side Navigation Menu */
 .sidenav {
     height: 100%;
     width: 0;
@@ -55,7 +55,7 @@ ul {
     background-color: #111;
     overflow-x: hidden;
     padding-top: 60px;
-    transition: var(--transition-time);
+    transition: width var(--transition-time);
 }
 
 .sidenav a {
@@ -64,7 +64,7 @@ ul {
     font-size: 25px;
     color: #818181;
     display: block;
-    transition: var(--transition-time);
+    transition: color var(--transition-time);
 }
 
 .sidenav a:hover {
@@ -156,11 +156,12 @@ main {
 }
 
 /* Introduction Section */
-header h1, header p {
+#introduction header {
     text-align: center;
 }
 
-.dark-mode header h1, .dark-mode header p {
+.dark-mode #introduction header h1, 
+.dark-mode #introduction header p {
     color: var(--dark-secondary-color);
 }
 
@@ -189,7 +190,10 @@ header h1, header p {
     margin-top: 10px;
 }
 
-.dark-mode h1, .dark-mode h2, .dark-mode h3, .dark-mode p {
+.dark-mode h1, 
+.dark-mode h2, 
+.dark-mode h3, 
+.dark-mode p {
     color: var(--dark-secondary-color);
 }
 
@@ -322,4 +326,3 @@ footer p {
         height: 220px; /* Adjust height for extra-large screens */
     }
 }
-
