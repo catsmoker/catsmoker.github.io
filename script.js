@@ -21,14 +21,6 @@ function handleThemeToggle() {
 
     // Update the button text based on the current mode
     themeToggleBtn.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
-
-    // Update the favicon based on the current mode
-    const favicon = document.querySelector('link[rel="icon"]');
-    favicon.href = isDarkMode ? 'catsmoker/images/favicon-dark.ico' : 'catsmoker/images/favicon.ico';
-
-    // Update the background music based on the current mode
-    const audio = document.getElementById('backgroundMusic');
-    audio.src = isDarkMode ? 'catsmoker/audio/backgroundmusic-dark.mp3' : 'catsmoker/audio/backgroundmusic.mp3';
 }
 
 // Function to initialize the theme toggle button
@@ -49,21 +41,6 @@ function handlePageViewsCount() {
     document.getElementById('viewers').appendChild(counter);
 }
 
-// Function to handle audio player
-document.getElementById('playButton').addEventListener('click', function() {
-    var audio = document.getElementById('backgroundMusic');
-    var playButtonIcon = document.getElementById('playButton').querySelector('img');
-
-    if (audio.paused) {
-        audio.play();
-        playButtonIcon.src = 'catsmoker/images/pause.svg';
-    } else {
-        audio.pause();
-        audio.currentTime = 0;
-        playButtonIcon.src = 'catsmoker/images/play.svg';
-    }
-});
-
 // Add event listeners after DOM content has loaded
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('theme-toggle').addEventListener('click', handleThemeToggle);
@@ -72,4 +49,3 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeThemeToggle(); // Initialize theme toggle
     handlePageViewsCount(); // Handle page views count
 });
-
