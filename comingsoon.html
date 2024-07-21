@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coming Soon</title>
+  <style>
+    /* Font */
+    @font-face {
+      font-family: 'Exo';
+      src: local('Exo Thin'), local('Exo-Thin'), url('Exo-Thin.woff2') format('woff2'),
+           url('Exo-Thin.woff') format('woff');
+      font-weight: 100;
+      font-style: normal;
+    }
+
+    /* Animations */
+    @keyframes bg-scrolling-reverse {
+      0% {
+        background-position: 0 0;
+      }
+      100% {
+        background-position: 500px 500px; /* Adjust the values to control the speed */
+      }
+    }
+
+    /* Main styles */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Exo', sans-serif;
+      background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAIAAACRXR/mAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIGNIUk0AAHolAACAgwAA+f8AAIDpAAB1MAAA6mAAADqYAAAXb5JfxUYAAABnSURBVHja7M5RDYAwDEXRDgmvEocnlrQS2SwUFST9uEfBGWs9c97nbGtDcquqiKhOImLs/UpuzVzWEi1atGjRokWLFi1atGjRokWLFi1atGjRokWLFi1af7Ukz8xWp8z8AAAA//8DAJ4LoEAAlL1nAAAAAElFTkSuQmCC") repeat 0 0;
+      animation: bg-scrolling-reverse 10s infinite linear; /* Adjust the duration to control the speed */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #999;
+      text-align: center;
+    }
+
+    .content {
+      font-size: 8rem;
+      font-weight: 100;
+    }
+  </style>
+</head>
+<body>
+  <div class="content">Coming Soon</div>
+</body>
+</html>
