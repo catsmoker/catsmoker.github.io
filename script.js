@@ -20,7 +20,7 @@ const handleCallClick = () => {
 
 // Function to handle WhatsApp button click
 const handleWhatsAppClick = () => {
-    window.open('https://wa.me/212775804065', '_blank');
+    window.open('https://web.whatsapp.com/send/?phone=212775804065&text&type=phone_number&app_absent=0', '_blank');
 };
 
 // Function to toggle between dark and light mode
