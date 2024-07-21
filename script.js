@@ -13,6 +13,16 @@ const handleEmailClick = () => {
     window.location.href = 'mailto:boulhada08@gmail.com';
 };
 
+// Function to handle call button click
+const handleCallClick = () => {
+    window.location.href = 'tel:+212775804065';
+};
+
+// Function to handle WhatsApp button click
+const handleWhatsAppClick = () => {
+    window.open('https://wa.me/212775804065', '_blank');
+};
+
 // Function to toggle between dark and light mode
 const handleThemeToggle = () => {
     const body = document.body;
@@ -42,9 +52,19 @@ const handlePageViewsCount = () => {
 
 // Add event listeners after DOM content has loaded
 document.addEventListener('DOMContentLoaded', () => {
+    // Add event listener for the theme toggle button
     document.getElementById('theme-toggle').addEventListener('click', handleThemeToggle);
+    
+    // Add event listener for the email button
     document.getElementById('myBtn').addEventListener('click', handleEmailClick);
     
-    initializeThemeToggle(); // Initialize theme toggle
-    handlePageViewsCount(); // Handle page views count
+    // Initialize the theme toggle button state
+    initializeThemeToggle();
+    
+    // Handle the page views count
+    handlePageViewsCount();
+
+    // Add event listeners for the additional contact buttons
+    document.getElementById('callBtn').addEventListener('click', handleCallClick);
+    document.getElementById('whatsappBtn').addEventListener('click', handleWhatsAppClick);
 });
