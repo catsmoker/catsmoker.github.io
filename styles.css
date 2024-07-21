@@ -326,3 +326,92 @@ footer p {
         height: 220px; /* Adjust height for extra-large screens */
     }
 }
+
+/* Contact Section */
+#contact .section {
+    padding: 40px;
+    background-color: var(--background-color);
+    text-align: center;
+    transition: background-color var(--transition-time);
+}
+
+#contact header h2 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    color: var(--secondary-color);
+}
+
+#contact header p {
+    font-size: 1.2em;
+    color: var(--secondary-color);
+    margin-bottom: 30px;
+}
+
+.dark-mode #contact .section {
+    background-color: var(--dark-background-color);
+}
+
+.dark-mode #contact header h2, 
+.dark-mode #contact header p {
+    color: var(--dark-secondary-color);
+}
+
+.contact-info {
+    margin-bottom: 20px;
+}
+
+.email-button {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color var(--transition-time);
+}
+
+.email-button:hover {
+    background-color: var(--primary-hover-color);
+}
+
+.additional-contact {
+    margin-top: 20px;
+}
+
+.additional-contact h3 {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    color: var(--secondary-color);
+}
+
+.dark-mode .additional-contact h3 {
+    color: var(--dark-secondary-color);
+}
+
+.additional-contact ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.additional-contact li {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+.call-button,
+.whatsapp-button {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color var(--transition-time);
+}
+
+.call-button:hover,
+.whatsapp-button:hover {
+    background-color: #218838;
+}
