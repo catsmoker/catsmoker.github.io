@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Download Page</title>
+    <title>Download Page with Search</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -22,15 +22,40 @@
         .download-link:hover {
             background-color: #45a049;
         }
+        .search-box {
+            margin: 20px;
+            padding: 10px;
+            font-size: 16px;
+            width: 80%;
+            max-width: 500px;
+        }
     </style>
 </head>
 <body>
     <h1>Download Files</h1>
-    <p>Click the links below to download the files:</p>
+    <p>Type to search for files:</p>
+    <input type="text" id="searchBox" class="search-box" placeholder="Search for files...">
 
-    <a href="https://github.com/catsmoker/webviewapp/releases/download/v1.0/catsmoker.apk" class="download-link" download>catsmoker app</a>
-    <a href="comingsoon.html" class="download-link" download>comingsoon</a>
-    <!-- Add more download links as needed -->
+    <div id="linksContainer">
+        <a href="https://github.com/catsmoker/webviewapp/releases/download/v1.0/catsmoker.apk" class="download-link" download>catsmoker app</a>
+        <a href="comingsoon.html" class="download-link" download>comingsoon</a>
+        <!-- Add more download links as needed -->
+    </div>
 
+    <script>
+        document.getElementById('searchBox').addEventListener('input', function() {
+            var searchTerm = this.value.toLowerCase();
+            var links = document.querySelectorAll('#linksContainer .download-link');
+            
+            links.forEach(function(link) {
+                var text = link.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    link.style.display = 'block';
+                } else {
+                    link.style.display = 'none';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
