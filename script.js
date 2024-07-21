@@ -15,7 +15,7 @@ const handleEmailClick = () => {
 
 // Function to handle call button click
 const handleCallClick = () => {
-    window.location.href = 'tel:+212775804065';
+    window.location.href = 'tel:00212775804065';
 };
 
 // Function to handle WhatsApp button click
