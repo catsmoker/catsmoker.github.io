@@ -96,11 +96,17 @@ header {
 }
 
 .openbtn {
+	position: fixed;
+    top: 10px;
+    left: 10px;
     font-size: 30px;
     cursor: pointer;
-    background-color: transparent;
-    border: none;
-    color: var(--primary-color);
+    background-color: var(--primary-color);
+    color: White;
+    border: 1px solid var(--primary-color);
+    border-radius: 15px;
+    padding: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .dark-mode .openbtn {
