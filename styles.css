@@ -2,10 +2,10 @@
 :root {
     --primary-color: #3498db;
     --primary-hover-color: #2980b9;
-    --secondary-color: #000000; /* Black text color for light mode */
-    --background-color: #ffffff; /* White background for light mode */
-    --dark-background-color: #000000; /* Black background for dark mode */
-    --dark-secondary-color: #ffffff; /* White text color for dark mode */
+    --secondary-color: #000000;
+    --background-color: #ffffff;
+    --dark-background-color: #000000;
+    --dark-secondary-color: #ffffff;
     --dark-primary-color: #3498db;
     --dark-primary-hover-color: #2980b9;
     --transition-time: 0.3s;
@@ -110,7 +110,7 @@ header {
 }
 
 .dark-mode .openbtn {
-    color: var(--dark-primary-color);
+    color: var(--dark-background-color);
 }
 
 .dark-mode .closebtn {
@@ -163,7 +163,16 @@ main {
 
 /* Introduction Section */
 #introduction header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 15vh;
     text-align: center;
+}
+
+.text-content {
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .dark-mode #introduction header h1, 
@@ -232,12 +241,27 @@ main {
     background-color: var(--dark-primary-hover-color);
 }
 
+/* Style for the banner image */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#banner img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 /* Footer */
 footer {
     background-color: var(--background-color);
     text-align: center;
     padding: 20px;
     border-top: 2px solid var(--primary-color);
+    transition: background-color 0.3s, border-top 0.3s;
 }
 
 .dark-mode footer {
@@ -247,7 +271,8 @@ footer {
 
 footer p {
     margin: 0;
-    color: #666;
+    color: var(--text-color);
+    transition: color 0.3s;
 }
 
 .dark-mode footer p {
@@ -280,18 +305,18 @@ footer p {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    gap: 10px; /* Reduced gap */
+    gap: 10px;
 }
 
 .video-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px; /* Reduced gap */
+    gap: 10px;
     justify-content: space-between;
 }
 
 .video-container iframe {
-    width: calc(50% - 10px); /* Adjust width to account for the gap */
+    width: calc(50% - 10px);
     height: 200px;
     border: none;
     border-radius: 8px;
@@ -307,29 +332,29 @@ footer p {
 /* Adjustments for different screen sizes */
 @media screen and (max-width: 600px) {
     .video-container iframe {
-        width: calc(100% - 10px); /* Full width with reduced gap */
-        height: 150px; /* Adjust height for smaller screens */
+        width: calc(100% - 10px);
+        height: 150px;
     }
 }
 
 @media screen and (min-width: 601px) and (max-width: 768px) {
     .video-container iframe {
-        width: calc(50% - 10px); /* Adjust width with reduced gap */
-        height: 180px; /* Adjust height for medium screens */
+        width: calc(50% - 10px);
+        height: 180px;
     }
 }
 
 @media screen and (min-width: 769px) and (max-width: 1024px) {
     .video-container iframe {
-        width: calc(50% - 10px); /* Adjust width with reduced gap */
-        height: 200px; /* Adjust height for larger screens */
+        width: calc(50% - 10px);
+        height: 200px;
     }
 }
 
 @media screen and (min-width: 1025px) {
     .video-container iframe {
-        width: calc(33.33% - 10px); /* Adjust width with reduced gap for extra-large screens */
-        height: 220px; /* Adjust height for extra-large screens */
+        width: calc(33.33% - 10px);
+        height: 220px;
     }
 }
 
@@ -366,7 +391,9 @@ footer p {
     margin-bottom: 20px;
 }
 
-.email-button {
+.email-button,
+.call-button,
+.whatsapp-button {
     background-color: var(--primary-color);
     color: white;
     padding: 10px 20px;
@@ -375,9 +402,12 @@ footer p {
     font-size: 1em;
     cursor: pointer;
     transition: background-color var(--transition-time);
+    margin: 10px; /* Added margin for spacing between buttons */
 }
 
-.email-button:hover {
+.email-button:hover,
+.call-button:hover,
+.whatsapp-button:hover {
     background-color: var(--primary-hover-color);
 }
 
@@ -405,16 +435,10 @@ footer p {
     margin: 0 10px;
 }
 
+/* Custom styles for call and WhatsApp buttons */
 .call-button,
 .whatsapp-button {
     background-color: #28a745;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 1em;
-    cursor: pointer;
-    transition: background-color var(--transition-time);
 }
 
 .call-button:hover,
