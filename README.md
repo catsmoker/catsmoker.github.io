@@ -1,8 +1,8 @@
-# Catsmoker Website
+# Catsmoker's Website
 
-[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=500&size=25&duration=5010&pause=1005&color=04F700&center=true&vCenter=true&random=false&width=440&height=60&lines=catsmoker+website+)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Source+Code+Pro&weight=700&size=30&pause=5000&color=FF0000&random=true&width=250&lines=Catsmoker's+Website)](https://git.io/typing-svg)
 
-Welcome to the official Catsmoker website! Explore our content and stay updated with the latest developments.
+[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=Source+Code+Pro&duration=2000&pause=100&color=13F700&multiline=true&repeat=false&width=950&height=200&lines=Welcome+to+the+official+Catsmoker+website!;This+platform+is+dedicated+to+providing+you+with+the+latest+updates%2C;+resources%2C+and+information+about+our+projects.;Whether+you're+here+to+learn+more+about+our+initiatives%2C+access+useful+tools%2C;+or+simply+stay+informed%2C+you've+come+to+the+right+place.)](https://git.io/typing-svg)
 
 ## Visit the Website
 
