@@ -44,6 +44,29 @@ ul {
     margin: 0;
 }
 
+/* animated text */
+.animated-text {
+  text-align: center;
+}
+
+.animated-text span {
+  display: block; /* Makes each span a new line */
+  opacity: 0;
+  color: #00FF00FF;
+  font-size: 20px;
+  animation: type 2s forwards;
+}
+
+@keyframes type {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+
 /* Side Navigation Menu */
 .sidenav {
     height: 100%;
