@@ -68,3 +68,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('callBtn').addEventListener('click', handleCallClick);
     document.getElementById('whatsappBtn').addEventListener('click', handleWhatsAppClick);
 });
+
+// animated text
+const spans = document.querySelectorAll('.animated-text span');
+
+let delay = 0;
+spans.forEach(span => {
+  span.style.animationDelay = `${delay}s`;
+  delay += 1; // Adjust delay as needed
+});
+
