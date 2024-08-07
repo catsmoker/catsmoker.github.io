@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="downloads.css">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <script src="https://unpkg.com/unlazy@0.11.3/dist/unlazy.with-hashing.iife.js" defer init></script>
+    <script src="downloads.js" defer></script>
+</head>
+<body class="min-h-screen flex flex-col items-center bg-background text-foreground">
+    <section id="buttons" class="w-full py-4 flex justify-center">
+        <a href="index.html" class="text-white bg-primary text-primary-foreground rounded-lg px-6 py-2 transition hover:bg-primary/80 hover:scale-105 shadow-lg">GO HOME</a>
+    </section>
+    <h1 class="text-5xl font-bold mt-6 text-center text-accent">Download Files</h1>
+    <p class="mt-2 text-muted-foreground">Type to search for files:</p>
+    <input type="text" id="searchBox" class="mt-4 mb-8 w-11/12 sm:w-3/4 md:w-1/2 lg:w-1/3 p-3 border border-border rounded-lg focus:ring-2 focus:ring-ring transition duration-300 shadow-md" placeholder="Search for files...">
+    <div id="linksContainer" class="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+        <!-- Download Section 1 -->
+        <div class="card-container bg-card p-6 rounded-lg shadow-lg space-y-6">
+            <h2 class="text-2xl font-bold text-center text-card-foreground">catsmoker app</h2>
+            <div class="flex flex-col items-center space-y-4">
+                <div class="flex space-x-4 w-full">
+                    <a href="https://github.com/catsmoker/com.app.catsmoker/releases/download/1-1.0.0/catsmoker.apk" class="download-link flex items-center justify-center px-4 py-3 bg-secondary text-secondary-foreground rounded-lg shadow-md transition hover:bg-secondary/80 hover:shadow-lg w-full sm:w-auto" download>
+                        <img aria-hidden="true" alt="download-icon" class="ml-3" src="catsmoker/images/arrow-down-to-line.svg" />
+                    </a>
+                    <a href="https://github.com/catsmoker/com.app.catsmoker" class="origin-link flex items-center justify-center px-4 py-3 bg-secondary text-secondary-foreground rounded-lg shadow-md transition hover:bg-secondary/80 hover:shadow-lg w-full sm:w-auto" target="_blank">
+                        <img aria-hidden="true" alt="external-link-icon" class="ml-3" src="catsmoker/images/badge-info.svg" />
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Download Section 2 -->
+        <div class="card-container bg-card p-6 rounded-lg shadow-lg space-y-6">
+            <h2 class="text-2xl font-bold text-center text-card-foreground">cs_script</h2>
+            <div class="flex flex-col items-center space-y-4">
+                <div class="flex space-x-4 w-full">
+                    <a href="https://github.com/catsmoker/cs_script/releases/download/script/cs_script.cmd" class="download-link flex items-center justify-center px-4 py-3 bg-secondary text-secondary-foreground rounded-lg shadow-md transition hover:bg-secondary/80 hover:shadow-lg w-full sm:w-auto" download>
+                        <img aria-hidden="true" alt="download-icon" class="ml-3" src="catsmoker/images/arrow-down-to-line.svg" />
+                    </a>
+                    <a href="https://github.com/catsmoker/cs_script" class="origin-link flex items-center justify-center px-4 py-3 bg-secondary text-secondary-foreground rounded-lg shadow-md transition hover:bg-secondary/80 hover:shadow-lg w-full sm:w-auto" target="_blank">
+                        <img aria-hidden="true" alt="external-link-icon" class="ml-3" src="catsmoker/images/badge-info.svg" />
+                    </a>
+                </div>
+            </div>
+        </div>
+		<!-- Download Section 3 -->
+        <div class="card-container bg-card p-6 rounded-lg shadow-lg space-y-6">
+            <h2 class="text-2xl font-bold text-center text-card-foreground">PUBG-120FPS</h2>
+            <div class="flex flex-col items-center space-y-4">
+                <div class="flex space-x-4 w-full">
+                    <a href="https://github.com/catsmoker/PUBG-120FPS/releases/download/1-1.0.0/v1.0.0.zip" class="download-link flex items-center justify-center px-4 py-3 bg-secondary text-secondary-foreground rounded-lg shadow-md transition hover:bg-secondary/80 hover:shadow-lg w-full sm:w-auto" download>
+                        <img aria-hidden="true" alt="download-icon" class="ml-3" src="catsmoker/images/arrow-down-to-line.svg" />
+                    </a>
+                    <a href="https://github.com/catsmoker/PUBG-120FPS" class="origin-link flex items-center justify-center px-4 py-3 bg-secondary text-secondary-foreground rounded-lg shadow-md transition hover:bg-secondary/80 hover:shadow-lg w-full sm:w-auto" target="_blank">
+                        <img aria-hidden="true" alt="external-link-icon" class="ml-3" src="catsmoker/images/badge-info.svg" />
+                    </a>
+                </div>
+            </div>
+        </div>
+		<!-- Download Section 4 -->
+        <div class="card-container bg-card p-6 rounded-lg shadow-lg space-y-6">
+            <h2 class="text-2xl font-bold text-center text-card-foreground">comingsoon</h2>
+            <div class="flex flex-col items-center space-y-4">
+                <div class="flex space-x-4 w-full">
+                    <a href="comingsoon.html" class="download-link flex items-center justify-center px-4 py-3 bg-secondary text-secondary-foreground rounded-lg shadow-md transition hover:bg-secondary/80 hover:shadow-lg w-full sm:w-auto" download>
+                        <img aria-hidden="true" alt="download-icon" class="ml-3" src="catsmoker/images/arrow-down-to-line.svg" />
+                    </a>
+                    <a href="comingsoon.html" class="origin-link flex items-center justify-center px-4 py-3 bg-secondary text-secondary-foreground rounded-lg shadow-md transition hover:bg-secondary/80 hover:shadow-lg w-full sm:w-auto" target="_blank">
+                        <img aria-hidden="true" alt="external-link-icon" class="ml-3" src="catsmoker/images/badge-info.svg" />
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add more sections here -->
+    </div>
+</body>
+</html>
