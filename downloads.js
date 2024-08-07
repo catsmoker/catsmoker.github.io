@@ -4,10 +4,71 @@ function filterLinks() {
 
     sections.forEach(section => {
         const title = section.querySelector('h2').textContent.toLowerCase();
-        if (title.includes(searchTerm)) {
-            section.style.display = '';
+        if (searchTerm === '' || title.includes(searchTerm)) {
+            section.classList.remove('hidden');
         } else {
-            section.style.display = 'none';
+            section.classList.add('hidden');
         }
     });
 }
+
+window.tailwind.config = {
+    darkMode: 'class', // Use 'class' for dark mode
+    theme: {
+        extend: {
+            colors: {
+                border: 'hsl(var(--border))',
+                input: 'hsl(var(--input))',
+                ring: 'hsl(var(--ring))',
+                background: 'hsl(var(--background))',
+                foreground: 'hsl(var(--foreground))',
+                primary: {
+                    DEFAULT: 'hsl(var(--primary))',
+                    foreground: 'hsl(var(--primary-foreground))'
+                },
+                secondary: {
+                    DEFAULT: 'hsl(var(--secondary))',
+                    foreground: 'hsl(var(--secondary-foreground))'
+                },
+                destructive: {
+                    DEFAULT: 'hsl(var(--destructive))',
+                    foreground: 'hsl(var(--destructive-foreground))'
+                },
+                muted: {
+                    DEFAULT: 'hsl(var(--muted))',
+                    foreground: 'hsl(var(--muted-foreground))'
+                },
+                accent: {
+                    DEFAULT: 'hsl(var(--accent))',
+                    foreground: 'hsl(var(--accent-foreground))'
+                },
+                popover: {
+                    DEFAULT: 'hsl(var(--popover))',
+                    foreground: 'hsl(var(--popover-foreground))'
+                },
+                card: {
+                    DEFAULT: 'hsl(var(--card))',
+                    foreground: 'hsl(var(--card-foreground))'
+                },
+            },
+        },
+    },
+};
+
+
+// Debounce function to limit the rate at which `filterLinks` is called
+function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+}
+
+const debouncedFilterLinks = debounce(filterLinks, 300);
+
+document.getElementById('searchBox').addEventListener('input', debouncedFilterLinks);
+
+document.getElementById('darkModeToggle').addEventListener('click', function() {
+    document.body.classList.toggle('dark');
+});
