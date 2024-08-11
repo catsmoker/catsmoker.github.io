@@ -1,12 +1,6 @@
-// Function to open the side navigation
-const openNav = () => {
-    document.getElementById("mySidenav").style.width = "250px";
-};
-
-// Function to close the side navigation
-const closeNav = () => {
-    document.getElementById("mySidenav").style.width = "0";
-};
+document.getElementById('Downloads').addEventListener('click', function() {
+    window.location.href = 'downloads.html'; // Navigate to the Downloads
+});
 
 // Function to handle email button click
 const handleEmailClick = () => {

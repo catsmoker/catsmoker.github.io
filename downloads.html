@@ -9,13 +9,16 @@
     <script src="https://unpkg.com/unlazy@0.11.3/dist/unlazy.with-hashing.iife.js" defer init></script>
     <script src="downloads.js" defer></script>
 </head>
-<body class="min-h-screen flex flex-col items-center bg-background text-foreground">
+<body>
+<section class="p-9 flex justify-between items-center bg-background text-foreground shadow-lg">
     <div class="absolute top-4 left-4">
         <button id="gohome" class="text-white bg-primary text-primary-foreground rounded-lg px-8 py-3 transition-transform hover:bg-primary/80 hover:scale-110 shadow-lg" aria-label="Go to Home">GO HOME</button>
     </div>
     <div class="absolute top-4 right-4">
         <button id="darkModeToggle" class="text-white bg-primary text-primary-foreground rounded-lg px-8 py-3 transition-transform hover:bg-primary/80 hover:scale-110 shadow-lg" aria-label="Toggle Dark Mode">Dark Mode</button>
     </div>
+</section>
+	
     <main class="text-center mt-6">
         <h1 class="text-5xl font-bold text-accent text-primary">Download Files</h1>
         <p class="mt-2 text-muted-foreground">Type to search for files:</p>

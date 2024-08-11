@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+	<script src="https://unpkg.com/unlazy@0.11.3/dist/unla zy.with-hashing.iife.js" defer init></script>
     <!-- Favicon -->
     <link rel="icon" sizes="32x32" href="catsmoker/images/favicon.ico" type="image/x-icon">
     <!-- Title -->
@@ -24,18 +26,9 @@
 </head>
 <body>
     <!-- navigation -->
-<section id="buttons" class="section">
-        <button class="openbtn" onclick="openNav()">&#9776;</button>
-        <div id="mySidenav" class="sidenav">
-            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-            <a href="downloads.html">Downloads</a>
-            <a href="comingsoon.html">More Comingsoon</a>
-	    </div>
-
-        <!-- Dark Mode Button -->
-        <div class="dark-mode-button">
-            <button id="theme-toggle">Dark Mode</button>
-        </div>
+<section class="p-4 flex justify-between items-center bg-background text-foreground shadow-lg">
+  <button id="Downloads" aria-label="Download Section" class="bg-secondary text-secondary-foreground p-2 rounded hover:bg-secondary/80 transition">Downloads</button>
+  <button id="theme-toggle" aria-label="Toggle Dark Mode" class="bg-secondary text-secondary-foreground p-2 rounded hover:bg-secondary/80 transition">Dark Mode</button>
 </section>
 
     <!-- Main Content -->
@@ -45,8 +38,8 @@
             <header>
 			<!-- Textual Content -->
             <div class="text-content">
-<a href="https://catsmoker.github.io/"><img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=900&size=30&duration=4000&pause=1000&center=true&vCenter=true&width=435&lines=Hi+There!+%F0%9F%91%8B;I'm+catsmoker!+%F0%9F%90%B1" alt="Typing SVG" /></a>
-                <p>Your destination for immersive experiences and captivating content.</p>
+                <a href="https://catsmoker.github.io/"><img src="https://readme-typing-svg.herokuapp.com?font=Orbitron&weight=900&size=30&duration=4000&pause=1000&center=true&vCenter=true&width=435&lines=Hi+There!+%F0%9F%91%8B;I'm+catsmoker!+%F0%9F%90%B1" alt="Typing SVG" /></a>
+                <p class="text-muted-foreground">Your destination for immersive experiences and captivating content.</p>
 			</div>
             </header>
         </section>
@@ -54,13 +47,13 @@
         <!-- About Section -->
         <section id="about" class="section">
             <div class="site-logo">
-                <img src="catsmoker/images/catsmokerlogo.jpg" alt="Catsmoker Logo: A stylized cat" width="132" height="132" loading="lazy">
+                <img src="catsmoker/images/catsmokerlogo.jpg" class="mx-auto rounded-full ring-2 ring-primary" width="132" height="132" loading="lazy" />
             </div>
             <header>
 			<!-- Textual Content -->
             <div class="text-content">
-                <h2>About Catsmoker</h2>
-                <p>Find the latest updates and captivating content here.</p>
+                <h2 class="text-2xl font-bold text-primary">About Catsmoker</h2>
+                <p class="text-muted-foreground">Find the latest updates and captivating content here.</p>
 			</div>
             </header>
             <nav>
@@ -75,7 +68,7 @@
                 </ul>
             </nav>
             <div class="subscription-link">
-                <h2>Subscribe to my YouTube channel!</h2>
+                <h2 class="text-xl font-bold">Subscribe to my YouTube channel!</h2>
                 <a href="https://www.youtube.com/@CATSM0KER?sub_confirmation=1" aria-label="Subscribe on YouTube">
                     <button type="button" class="subscribe-button">Subscribe</button>
                 </a>
@@ -119,18 +112,17 @@
 </section>
 
         <!-- banner Image -->
-		<section id="banner" class="section">
-        <img src="catsmoker/images/catsmokerbanner.png" alt="catsmoker banner" loading="lazy" style="max-width: 100%;">
-		</section>
-
+  <section id="banner" class="rounded-lg overflow-hidden shadow-lg">
+    <img src="catsmoker/images/catsmokerbanner.png" alt="catsmoker banner" class="w-full rounded-lg" loading="lazy" />
+  </section>
 
 <!-- Contact Section -->
 <section id="contact" class="section">
     <header>
 <!-- Textual Content -->
       <div class="text-content">
-	  	<h3>Contact Us</h3>
-        <p>We'd love to hear from you! If you have any questions, comments, or suggestions, please feel free to reach us.</p>
+        <h3 class="text-xl font-bold">Contact Us</h3>
+        <p class="text-muted-foreground">We'd love to hear from you! If you have any questions, comments, or suggestions, please feel free to reach out.</p>
 		</div>
         <div class="contact-info">
             <button onclick="handleEmailClick()" class="email-button">Email Us</button>
@@ -141,18 +133,16 @@
 </section>
 
         <!-- Page Viewers -->
-        <section id="viewers" class="section">
-            <header>
-                <p>Webpage Viewers</p>
-                <img src="https://profile-counter.glitch.me/catsmoker/count.svg" alt="Profile views count">
-            </header>
-        </section>
+<section id="viewers" class="text-center">
+    <p class="text-muted-foreground">Webpage Viewers</p>
+    <img src="https://profile-counter.glitch.me/catsmoker/count.svg" alt="Profile views count" class="mx-auto" />
+  </section>
     </main>
 
     <!-- Footer -->
-    <footer>
-        <p>© 2024 Catsmoker. All rights reserved.</p>
-    </footer>
+<footer class="p-4 text-center bg-background text-foreground border-t border-muted">
+  <p>© 2024 Catsmoker. All rights reserved.</p>
+</footer>
 
     <!-- JavaScript -->
     <script src="script.js" defer></script>
