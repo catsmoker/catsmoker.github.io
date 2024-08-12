@@ -24,7 +24,7 @@ const handleThemeToggle = () => {
     const themeToggleBtn = document.getElementById('theme-toggle');
     
     // Update the button text based on the current mode
-    themeToggleBtn.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
+    themeToggleBtn.textContent = isDarkMode ? '🌞' : '🌙';
 };
 
 // Function to initialize the theme toggle button
