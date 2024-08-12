@@ -44,26 +44,26 @@ ul {
     margin: 0;
 }
 
-/* animated text */
+/* Animated Text */
 .animated-text {
-  text-align: center;
+    text-align: center;
 }
 
 .animated-text span {
-  display: block; /* Makes each span a new line */
-  opacity: 0;
-  color: #00FF00FF;
-  font-size: 20px;
-  animation: type 2s forwards;
+    display: block;
+    opacity: 0;
+    color: var(--primary-color);
+    font-size: 20px;
+    animation: type 2s forwards;
 }
 
 @keyframes type {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 /* Header Styles */
@@ -83,13 +83,13 @@ header {
 }
 
 .openbtn {
-	position: fixed;
+    position: fixed;
     top: 10px;
     left: 10px;
     font-size: 30px;
     cursor: pointer;
     background-color: var(--primary-color);
-    color: White;
+    color: white;
     border: 1px solid var(--primary-color);
     border-radius: 15px;
     padding: 4px;
@@ -98,10 +98,6 @@ header {
 
 .dark-mode .openbtn {
     color: var(--dark-background-color);
-}
-
-.dark-mode .closebtn {
-    color: var(--dark-secondary-color);
 }
 
 /* Dark Mode Button */
@@ -154,11 +150,11 @@ header {
     background-color: var(--primary-hover-color);
 }
 
-.Downloads #Downloads {
+.dark-mode #Downloads {
     background-color: var(--dark-primary-color);
 }
 
-.Downloads #Downloads:hover {
+.dark-mode #Downloads:hover {
     background-color: var(--dark-primary-hover-color);
 }
 
@@ -287,7 +283,7 @@ footer {
 
 footer p {
     margin: 0;
-    color: var(--text-color);
+    color: var(--secondary-color);
     transition: color 0.3s;
 }
 
@@ -316,22 +312,25 @@ footer p {
     text-indent: -9999px;
 }
 
-/* YouTube-like video section */
-.video-section {
+/* YouTube video section and Supporters YouTube video section */
+.video-section,
+.Supporters-section {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     gap: 10px;
 }
 
-.video-container {
+.video-container,
+.Supporters-container {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     justify-content: space-between;
 }
 
-.video-container iframe {
+.video-container iframe,
+.Supporters-container iframe {
     width: calc(50% - 10px);
     height: 200px;
     border: none;
@@ -340,37 +339,42 @@ footer p {
     transition: transform var(--transition-time), box-shadow var(--transition-time);
 }
 
-.video-container iframe:hover {
+.video-container iframe:hover,
+.Supporters-container iframe:hover {
     transform: scale(1.05);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-/* Adjustments for different screen sizes */
+/* YouTube video section and Supporters YouTube video section */
 @media screen and (max-width: 600px) {
-    .video-container iframe {
+    .video-container iframe,
+    .Supporters-container iframe {
         width: calc(100% - 10px);
-        height: 150px;
-    }
-}
-
-@media screen and (min-width: 601px) and (max-width: 768px) {
-    .video-container iframe {
-        width: calc(50% - 10px);
-        height: 180px;
-    }
-}
-
-@media screen and (min-width: 769px) and (max-width: 1024px) {
-    .video-container iframe {
-        width: calc(50% - 10px);
         height: 200px;
     }
 }
 
+@media screen and (min-width: 601px) and (max-width: 768px) {
+    .video-container iframe,
+    .Supporters-container iframe {
+        width: calc(50% - 10px);
+        height: 250px;
+    }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+    .video-container iframe,
+    .Supporters-container iframe {
+        width: calc(50% - 10px);
+        height: 300px;
+    }
+}
+
 @media screen and (min-width: 1025px) {
-    .video-container iframe {
+    .video-container iframe,
+    .Supporters-container iframe {
         width: calc(33.33% - 10px);
-        height: 220px;
+        height: 350px;
     }
 }
 
@@ -418,7 +422,7 @@ footer p {
     font-size: 1em;
     cursor: pointer;
     transition: background-color var(--transition-time);
-    margin: 10px; /* Added margin for spacing between buttons */
+    margin: 10px;
 }
 
 .email-button:hover,
@@ -427,28 +431,16 @@ footer p {
     background-color: var(--primary-hover-color);
 }
 
-.additional-contact {
-    margin-top: 20px;
+.dark-mode .email-button,
+.dark-mode .call-button,
+.dark-mode .whatsapp-button {
+    background-color: var(--dark-primary-color);
 }
 
-.additional-contact h3 {
-    font-size: 1.8em;
-    margin-bottom: 20px;
-    color: var(--secondary-color);
-}
-
-.dark-mode .additional-contact h3 {
-    color: var(--dark-secondary-color);
-}
-
-.additional-contact ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-.additional-contact li {
-    display: inline-block;
-    margin: 0 10px;
+.dark-mode .email-button:hover,
+.dark-mode .call-button:hover,
+.dark-mode .whatsapp-button:hover {
+    background-color: var(--dark-primary-hover-color);
 }
 
 /* Custom styles for call and WhatsApp buttons */
