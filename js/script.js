@@ -1,5 +1,11 @@
+// Function to handle download button click
 document.getElementById('Downloads').addEventListener('click', function() {
     window.location.href = 'downloads.html'; // Navigate to the Downloads
+});
+
+// Function to handle support me button click
+document.getElementById('support-me').addEventListener('click', function() {
+    window.location.href = 'https://www.paypal.com/paypalme/boulhada08'; // Navigate to paypal
 });
 
 // Function to handle email button click
