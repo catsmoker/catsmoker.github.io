@@ -101,12 +101,6 @@ header {
 }
 
 /* Dark Mode Button */
-.dark-mode-button {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-}
-
 #theme-toggle {
     background-color: var(--primary-color);
     color: white;
@@ -130,12 +124,6 @@ header {
 }
 
 /* Downloads Button */
-.Downloads-button {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-}
-
 #Downloads {
     background-color: var(--primary-color);
     color: white;
@@ -159,11 +147,6 @@ header {
 }
 
 /* support me Button */
-.support-me-button {
-    position: fixed;
-    top: 10px;
-}
-
 #support-me {
     background-color: var(--primary-color);
     color: white;
@@ -262,7 +245,7 @@ main {
     padding: 15px 30px;
     border: none;
     border-radius: 5px;
-    background-color: var(--primary-color);
+    background-color: red;
     color: white;
     font-size: 16px;
     cursor: pointer;
@@ -274,7 +257,7 @@ main {
 }
 
 .dark-mode .subscribe-button {
-    background-color: var(--dark-primary-color);
+    background-color: red;
 }
 
 .dark-mode .subscribe-button:hover {
