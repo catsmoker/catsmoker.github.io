@@ -1,29 +1,67 @@
 #============================================================================
-#   Homepages: https://github.com/catsmoker/cs_script.bat
-#   Website: https://catsmoker.github.io
-#   Email: boulhada08@gmail.com
+#
+# WARNING: DO NOT modify this file
+#
 #============================================================================
+<#
+.NOTES
+    Author         : catsmoker
+	Email          : boulhada08@gmail.com
+	Website        : https://catsmoker.github.io
+    GitHub         : https://github.com/catsmoker/cs_script
+    Version        : 1.6
+#>
 
-Write-Host "                                                              cs Script v1.5"
-Write-Host "                                                    Please run this as administrator"
-Write-Host "                                                      'windows 10 & 11 64bit only'"
+# Check if the script is running on a supported operating system
+$osVersion = [System.Environment]::OSVersion.Version
+if ($osVersion.Major -lt 10 -or ($osVersion.Major -eq 10 -and $osVersion.Minor -lt 0))
+{
+    Write-Host "This script is only supported on Windows 10 or newer." -ForegroundColor Red
+    Write-Host "Your current OS version is $($osVersion.Major).$($osVersion.Minor)."
+    exit 1
+}
+
+# Check if the script is running with administrative privileges
+if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
+{
+    Write-Host "Requesting administrative privileges..." -NoNewline
+    $currentPath = $MyInvocation.MyCommand.Definition
+    if ($PSVersionTable.PSVersion.Major -ge 5)
+    {
+        # Use the new Start-Process cmdlet with the -Verb RunAs parameter
+        Start-Process -FilePath "powershell.exe" -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$currentPath`""
+    }
+    else
+    {
+        # Use the old method of creating a new PowerShell process with the -Verb RunAs parameter
+        $arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$currentPath`""
+        Start-Process "powershell.exe" -Verb RunAs -ArgumentList $arguments
+    }
+    exit
+}
+
+# Display the script header
+Write-Host "                                                              cs Script v1.6" -ForegroundColor Green
+Write-Host "                                                    Please run this as administrator" -ForegroundColor Yellow
+Write-Host "                                                      'windows 10 & 11 64bit only'" -ForegroundColor Yellow
 
 # Unblock the script if blocked by the system
 Unblock-File -Path $MyInvocation.MyCommand.Definition
 
-# Check if the script is running with administrative privileges
-If (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator")) {
-    Write-Host "Requesting administrative privileges..."
-    Start-Process -FilePath "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -File `"$($MyInvocation.MyCommand.Definition)`"" -Verb RunAs
-    Write-Host "Couldn't run the script as administrator."
-    Write-Host "Please run this as administrator."
-    Pause
-    Exit
+# Check if the script is running with the expected administrative privileges
+$currentUser = [Security.Principal.WindowsIdentity]::GetCurrent()
+if ($currentUser.Owner.Value -ne "S-1-5-32-544")
+{
+    Write-Host "===========================================" -ForegroundColor Red
+    Write-Host "-- Scripts must be run as Administrator ---" -ForegroundColor Red
+    Write-Host "-- Right-Click Start -> Terminal(Admin) ---" -ForegroundColor Red
+    Write-Host "===========================================" -ForegroundColor Red
+    exit 1
 }
 
 Function Show-Menu {
     Clear-Host
-    Write-Host "                                               cs Script v1.5 (by catsmoker) https://catsmoker.github.io"
+    Write-Host "                                               cs Script v1.6 (by catsmoker) https://catsmoker.github.io"
     Write-Host "Select an option:"
     Write-Host "0. Clean Windows"
     Write-Host "1. Scan and Fix Windows"
