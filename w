@@ -1,6 +1,6 @@
 #============================================================================
 #
-# WARNING: DO NOT modify this file
+# WARNING: DO NOT modify this file!
 #
 #============================================================================
 <#
@@ -11,6 +11,11 @@
     GitHub         : https://github.com/catsmoker/cs_script
     Version        : 1.7
 #>
+$Host.UI.RawUI.WindowTitle = "catsmoker: cs_script"
+
+# Change text color to Green and background color to Black
+$host.UI.RawUI.ForegroundColor = "Green"
+$host.UI.RawUI.BackgroundColor = "Black"
 
 # Check if the script is running on a supported operating system
 $osVersion = [System.Environment]::OSVersion.Version
