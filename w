@@ -115,10 +115,112 @@ Function Fix-Windows {
     Show-Menu
 }
 
-Function Download-Apps {
+function Download-Apps {
     Clear-Host
-    Write-Host "Downloading specific applications..."
-    # App installation functions omitted for brevity
+    Write-Host "Downloading specific applications..." 
+
+    # Upgrade all packages using winget
+    Write-Host "Upgrading all packages using winget..." -NoNewline
+    winget upgrade --all
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "please go to https://winget.run/"
+        Pause
+        Show-Menu
+        return
+    }
+    Write-Host "Done!"
+    Pause
+    Show-Menu
+
+    # Install VLC
+    Write-Host "Installing VLC..." -NoNewline
+    winget install -e --id VideoLAN.VLC
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Installation failed. Please go to https://www.videolan.org/vlc/"
+        Pause
+        Show-Menu
+        return
+    }
+    Write-Host "Done!"
+    Pause
+    Show-Menu
+
+    # Install Firefox
+    Write-Host "Installing Firefox..." -NoNewline
+    winget install -e --id Mozilla.Firefox
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Installation failed. Please go to https://www.mozilla.org/en-US/firefox/new/"
+        Pause
+        Show-Menu
+        return
+    }
+    Write-Host "Done!"
+    Pause
+    Show-Menu
+
+    # Install qBittorrent
+    Write-Host "Installing qBittorrent..." -NoNewline
+    winget install -e --id qBittorrent.qBittorrent
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Installation failed. Please go to https://www.qbittorrent.org/download"
+        Pause
+        Show-Menu
+        return
+    }
+    Write-Host "Done!"
+    Pause
+    Show-Menu
+
+    # Install Neat Download Manager
+    Write-Host "Installing Neat Download Manager..." -NoNewline
+    winget install -e --id JavadMotallebi.NeatDownloadManager
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "winget installation failed."
+        Write-Host "Please go to https://www.neatdownloadmanager.com/index.php/en/"
+        Invoke-WebRequest -Uri 'https://www.neatdownloadmanager.com/file/NeatDM_setup.exe' -OutFile (Join-Path -Path $env:USERPROFILE -ChildPath 'Desktop\NeatDM_setup.exe')
+        Start-Process -Wait -FilePath (Join-Path -Path $env:USERPROFILE -ChildPath 'Desktop\NeatDM_setup.exe')
+        Write-Host "Downloading to Desktop complete."
+        Pause
+        Show-Menu
+        return
+    }
+    Write-Host "Done!"
+    Pause
+    Show-Menu
+
+    # Install MemReduct
+    Write-Host "Downloading mem reduct..." -NoNewline
+    winget install -e --id Henry++.MemReduct
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Installation failed. Please go to https://github.com/henrypp/memreduct/releases"
+        Pause
+        Show-Menu
+        return
+    }
+    Write-Host "Done!"
+    Pause
+    Show-Menu
+
+    # Install Bulk Crap Uninstaller
+    Write-Host "Downloading BC Uninstaller..." -NoNewline
+    winget install -e --id Klocman.BulkCrapUninstaller
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "Installation failed. Please go to https://www.bcuninstaller.com/"
+        Pause
+        Show-Menu
+        return
+    }
+    Write-Host "Done!"
+    Pause
+    Show-Menu
+
+    # Install Office 365 Pro Plus
+    Write-Host "Downloading Office 365 Pro Plus"
+    Write-Host "Please go to https://gravesoft.dev/office_c2r_links"
+    Invoke-WebRequest -Uri 'https://c2rsetup.officeapps.live.com/c2r/download.aspx?ProductreleaseID=O365ProPlusRetail&platform=x64&language=en-us&version=O16GA' -OutFile (Join-Path -Path $env:USERPROFILE -ChildPath 'Desktop\OfficeSetup_2.exe')
+    Start-Process -Wait -FilePath (Join-Path -Path $env:USERPROFILE -ChildPath 'Desktop\OfficeSetup_2.exe')
+    Write-Host "Downloading to Desktop complete."
+    Pause
     Show-Menu
 }
 
