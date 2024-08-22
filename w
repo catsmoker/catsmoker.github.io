@@ -11,6 +11,7 @@
     GitHub         : https://github.com/catsmoker/cs_script
     Version        : 1.7
 #>
+
 $Host.UI.RawUI.WindowTitle = "catsmoker: cs_script"
 
 # Change text color to Green and background color to Black
@@ -19,27 +20,17 @@ $host.UI.RawUI.BackgroundColor = "Black"
 
 # Check if the script is running on a supported operating system
 $osVersion = [System.Environment]::OSVersion.Version
-if ($osVersion.Major -lt 10 -or ($osVersion.Major -eq 10 -and $osVersion.Minor -lt 0))
-{
+if ($osVersion.Major -lt 10 -or ($osVersion.Major -eq 10 -and $osVersion.Minor -lt 0)) {
     Write-Host "This script is only supported on Windows 10 or newer." -ForegroundColor Red
     Write-Host "Your current OS version is $($osVersion.Major).$($osVersion.Minor)."
     exit 1
 }
 
 # Check if the script is running with administrative privileges
-if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
-{
+if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     Write-Host "Requesting administrative privileges..." -NoNewline
     $currentPath = $MyInvocation.MyCommand.Definition
-    if ($PSVersionTable.PSVersion.Major -ge 5)
-    {
-        Start-Process -FilePath "powershell.exe" -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$currentPath`""
-    }
-    else
-    {
-        $arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$currentPath`""
-        Start-Process "powershell.exe" -Verb RunAs -ArgumentList $arguments
-    }
+    Start-Process -FilePath "powershell.exe" -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$currentPath`""
     exit
 }
 
@@ -48,8 +39,7 @@ Unblock-File -Path $PSCommandPath
 
 # Check if the script is running with the expected administrative privileges
 $currentUser = [Security.Principal.WindowsIdentity]::GetCurrent()
-if ($currentUser.Owner.Value -ne "S-1-5-32-544")
-{
+if ($currentUser.Owner.Value -ne "S-1-5-32-544") {
     Write-Host "===========================================" -ForegroundColor Red
     Write-Host "-- Scripts must be run as Administrator ---" -ForegroundColor Red
     Write-Host "-- Right-Click Start -> Terminal(Admin) ---" -ForegroundColor Red
@@ -116,63 +106,93 @@ Function Fix-Windows {
     Show-Menu
 }
 
-function Download-Apps {
+Function Download-Apps {
     Clear-Host
-    Write-Host "Downloading specific applications..." 
+    Write-Host "Downloading specific applications and drivers..." 
+    Write-Host "Select an option:"
+    Write-Host "0. Upgrade all"
+    Write-Host "1. Drivers"
+    Write-Host "2. Firefox"
+    Write-Host "3. Neat Download Manager"
+    Write-Host "4. qBittorrent"
+    Write-Host "5. Mem Reduct"
+    Write-Host "6. BCUninstaller"
+    Write-Host "7. Office 365"
+    Write-Host "8. VLC"
+    Write-Host "x. Exit"
+    $choice = Read-Host "Enter your choice (0-8, or x to exit)"
+    Switch ($choice) {
+        "0" { Upgrade-All }
+        "1" { Install-Drivers }
+        "2" { Install-Firefox }
+        "3" { Install-NeatDownloadManager }
+        "4" { Install-qBittorrent }
+        "5" { Install-MemReduct }
+        "6" { Install-BCUninstaller }
+        "7" { Install-Office365 }
+        "8" { Install-VLC }
+        "x" { Show-Menu }
+        Default { Write-Host "Invalid choice. Please enter a number between 0 to 8 or x."; Pause; Download-Apps }
+    }
+}
 
-    # Upgrade all packages using winget
+Function Upgrade-All {
     Write-Host "Upgrading all packages using winget..." -NoNewline
     winget upgrade --all
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "please go to https://winget.run/"
+        Write-Host "Please go to https://winget.run/"
         Pause
-        Show-Menu
+        Download-Apps
         return
     }
     Write-Host "Done!"
     Pause
-    Show-Menu
+    Download-Apps
+}
 
-    # Install VLC
+Function Install-VLC {
     Write-Host "Installing VLC..." -NoNewline
     winget install -e --id VideoLAN.VLC
     if ($LASTEXITCODE -ne 0) {
         Write-Host "Installation failed. Please go to https://www.videolan.org/vlc/"
         Pause
-        Show-Menu
+        Download-Apps
         return
     }
     Write-Host "Done!"
     Pause
-    Show-Menu
+    Download-Apps
+}
 
-    # Install Firefox
+Function Install-Firefox {
     Write-Host "Installing Firefox..." -NoNewline
     winget install -e --id Mozilla.Firefox
     if ($LASTEXITCODE -ne 0) {
         Write-Host "Installation failed. Please go to https://www.mozilla.org/en-US/firefox/new/"
         Pause
-        Show-Menu
+        Download-Apps
         return
     }
     Write-Host "Done!"
     Pause
-    Show-Menu
+    Download-Apps
+}
 
-    # Install qBittorrent
+Function Install-qBittorrent {
     Write-Host "Installing qBittorrent..." -NoNewline
     winget install -e --id qBittorrent.qBittorrent
     if ($LASTEXITCODE -ne 0) {
         Write-Host "Installation failed. Please go to https://www.qbittorrent.org/download"
         Pause
-        Show-Menu
+        Download-Apps
         return
     }
     Write-Host "Done!"
     Pause
-    Show-Menu
+    Download-Apps
+}
 
-    # Install Neat Download Manager
+Function Install-NeatDownloadManager {
     Write-Host "Installing Neat Download Manager..." -NoNewline
     winget install -e --id JavadMotallebi.NeatDownloadManager
     if ($LASTEXITCODE -ne 0) {
@@ -182,47 +202,102 @@ function Download-Apps {
         Start-Process -Wait -FilePath (Join-Path -Path $env:USERPROFILE -ChildPath 'Desktop\NeatDM_setup.exe')
         Write-Host "Downloading to Desktop complete."
         Pause
-        Show-Menu
+        Download-Apps
         return
     }
     Write-Host "Done!"
     Pause
-    Show-Menu
+    Download-Apps
+}
 
-    # Install MemReduct
+Function Install-MemReduct {
     Write-Host "Downloading mem reduct..." -NoNewline
     winget install -e --id Henry++.MemReduct
     if ($LASTEXITCODE -ne 0) {
         Write-Host "Installation failed. Please go to https://github.com/henrypp/memreduct/releases"
         Pause
-        Show-Menu
+        Download-Apps
         return
     }
     Write-Host "Done!"
     Pause
-    Show-Menu
+    Download-Apps
+}
 
-    # Install Bulk Crap Uninstaller
+Function Install-BCUninstaller {
     Write-Host "Downloading BC Uninstaller..." -NoNewline
     winget install -e --id Klocman.BulkCrapUninstaller
     if ($LASTEXITCODE -ne 0) {
         Write-Host "Installation failed. Please go to https://www.bcuninstaller.com/"
         Pause
-        Show-Menu
+        Download-Apps
         return
     }
     Write-Host "Done!"
     Pause
-    Show-Menu
+    Download-Apps
+}
 
-    # Install Office 365 Pro Plus
+Function Install-Office365 {
     Write-Host "Downloading Office 365 Pro Plus"
     Write-Host "Please go to https://gravesoft.dev/office_c2r_links"
     Invoke-WebRequest -Uri 'https://c2rsetup.officeapps.live.com/c2r/download.aspx?ProductreleaseID=O365ProPlusRetail&platform=x64&language=en-us&version=O16GA' -OutFile (Join-Path -Path $env:USERPROFILE -ChildPath 'Desktop\OfficeSetup_2.exe')
     Start-Process -Wait -FilePath (Join-Path -Path $env:USERPROFILE -ChildPath 'Desktop\OfficeSetup_2.exe')
     Write-Host "Downloading to Desktop complete."
     Pause
-    Show-Menu
+    Download-Apps
+}
+
+Function Install-Drivers {
+    Clear-Host
+    Write-Host "Downloading drivers..."
+	Write-Host "0. windows update drivers"
+    Write-Host "1. intel"
+    Write-Host "2. amd"
+    Write-Host "3. nvidia"
+	Write-Host "x. Exit"
+    Write-Host "Note: Some driver updates may require a system restart to take effect."
+$choice = Read-Host "Enter your choice (0-3, or x to exit)"
+    Switch ($choice) {
+		"0" { windows-drivers }
+        "1" { intel }
+        "2" { amd }
+        "3" { nvidia }
+        "x" { Download-Apps }
+        Default { Write-Host "Invalid choice. Please enter a number between 0 to 3 or x."; Pause; Install-Drivers }
+    }
+}
+
+Function windows-drivers {
+    Write-Host "windows-drivers..." -NoNewline
+    Start-Process "https://www.majorgeeks.com/mg/getmirror/windows_update_minitool,1.html"
+    Write-Host "Done!"
+    Pause
+    Install-Drivers
+}
+
+Function intel {
+    Write-Host "intel..." -NoNewline
+    Start-Process "https://www.intel.com/content/www/us/en/support/intel-driver-support-assistant.html"
+    Write-Host "Done!"
+    Pause
+    Install-Drivers
+}
+
+Function amd {
+    Write-Host "amd..." -NoNewline
+    Start-Process "https://www.amd.com/en/support/download/drivers.html"
+    Write-Host "Done!"
+    Pause
+    Install-Drivers
+}
+
+Function nvidia {
+    Write-Host "nvidia..." -NoNewline
+    Start-Process "https://www.nvidia.com/en-us/geforce/geforce-experience/"
+    Write-Host "Done!"
+    Pause
+    Install-Drivers
 }
 
 Function Activate-Windows {
