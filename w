@@ -57,10 +57,9 @@ if ($currentUser.Owner.Value -ne "S-1-5-32-544")
     exit 1
 }
 
-Invoke-WebRequest -Uri 'https://github.com/catsmoker/cs_script/releases/download/script/cs_script.ps1' -OutFile (Join-Path -Path $env:USERPROFILE -ChildPath 'Desktop\cs_script.ps1')
-
 Function Show-Menu {
     Clear-Host
+    Invoke-WebRequest -Uri 'https://github.com/catsmoker/cs_script/releases/download/script/cs_script.ps1' -OutFile (Join-Path -Path $env:USERPROFILE -ChildPath 'Desktop\cs_script.ps1')
     Write-Host "                                               cs Script v1.7 (by catsmoker) https://catsmoker.github.io"
     Write-Host "Select an option:"
     Write-Host "0. Clean Windows"
