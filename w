@@ -44,7 +44,7 @@ if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
 }
 
 # Unblock the script if blocked by the system
-Unblock-File -Path $MyInvocation.MyCommand.Definition
+Unblock-File -Path $PSCommandPath
 
 # Check if the script is running with the expected administrative privileges
 $currentUser = [Security.Principal.WindowsIdentity]::GetCurrent()
