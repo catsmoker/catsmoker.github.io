@@ -26,24 +26,6 @@ if ($osVersion.Major -lt 10 -or ($osVersion.Major -eq 10 -and $osVersion.Minor -
     exit
 }
 
-# Check if the script is running with administrative privileges
-if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    Write-Host "Requesting administrative privileges..." -NoNewline
-    $currentPath = $MyInvocation.MyCommand.Definition
-    Start-Process -FilePath "powershell.exe" -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$currentPath`""
-    exit
-}
-
-# This part will only run if the script is already running with admin privileges
-$currentUser = [Security.Principal.WindowsIdentity]::GetCurrent()
-if ($currentUser.Groups -notcontains 'S-1-5-32-544') {
-    Write-Host "===========================================" -ForegroundColor Red
-    Write-Host "-- Scripts must be run as Administrator ---" -ForegroundColor Red
-    Write-Host "-- Right-Click Start -> Terminal(Admin) ---" -ForegroundColor Red
-    Write-Host "===========================================" -ForegroundColor Red
-    exit
-}
-
 # Unblock the script if blocked by the system
 Unblock-File -Path $PSCommandPath
 
