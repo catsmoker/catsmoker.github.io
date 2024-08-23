@@ -23,7 +23,7 @@ $osVersion = [System.Environment]::OSVersion.Version
 if ($osVersion.Major -lt 10 -or ($osVersion.Major -eq 10 -and $osVersion.Minor -lt 0)) {
     Write-Host "This script is only supported on Windows 10 or newer." -ForegroundColor Red
     Write-Host "Your current OS version is $($osVersion.Major).$($osVersion.Minor)."
-    exit 1
+    exit
 }
 
 # Check if the script is running with administrative privileges
@@ -34,31 +34,64 @@ if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdenti
     exit
 }
 
-# Unblock the script if blocked by the system
-Unblock-File -Path $PSCommandPath
-
-# Check if the script is running with the expected administrative privileges
+# This part will only run if the script is already running with admin privileges
 $currentUser = [Security.Principal.WindowsIdentity]::GetCurrent()
-if ($currentUser.Owner.Value -ne "S-1-5-32-544") {
+if ($currentUser.Groups -notcontains 'S-1-5-32-544') {
     Write-Host "===========================================" -ForegroundColor Red
     Write-Host "-- Scripts must be run as Administrator ---" -ForegroundColor Red
     Write-Host "-- Right-Click Start -> Terminal(Admin) ---" -ForegroundColor Red
     Write-Host "===========================================" -ForegroundColor Red
-    exit 1
+    exit
 }
+
+# Unblock the script if blocked by the system
+Unblock-File -Path $PSCommandPath
+
+# Define the path to the shortcut and the target PowerShell command
+$shortcutPath = [System.IO.Path]::Combine([System.Environment]::GetFolderPath('Desktop'), 'CS_script.lnk')
+$targetPath = "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
+$arguments = "-NoProfile -ExecutionPolicy Bypass -Command `"powershell.exe -NoProfile -ExecutionPolicy Bypass -Command 'irm https://catsmoker.github.io/w | iex'`""
+
+# Define the URL for the icon and the path to save it locally
+$iconUrl = "https://catsmoker.github.io/assets/ico/favicon.ico"
+$localIconPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'favicon.ico')
+
+# Download the icon file
+Invoke-WebRequest -Uri $iconUrl -OutFile $localIconPath
+
+# Create a WScript.Shell COM object to create the shortcut
+$wshShell = New-Object -ComObject WScript.Shell
+$shortcut = $wshShell.CreateShortcut($shortcutPath)
+
+# Set the properties of the shortcut
+$shortcut.TargetPath = $targetPath
+$shortcut.Arguments = $arguments
+$shortcut.WorkingDirectory = [System.IO.Path]::GetDirectoryName($targetPath)
+$shortcut.IconLocation = $localIconPath
+
+# Save the shortcut
+$shortcut.Save()
 
 Function Show-Menu {
     Clear-Host
-    Invoke-WebRequest -Uri 'https://github.com/catsmoker/cs_script/releases/download/script/cs_script.ps1' -OutFile (Join-Path -Path $env:USERPROFILE -ChildPath 'Desktop\cs_script.ps1')
     Write-Host "                                               cs Script v1.7 (by catsmoker) https://catsmoker.github.io"
-    Write-Host "Select an option:"
-    Write-Host "0. Clean Windows"
-    Write-Host "1. Scan and Fix Windows"
-    Write-Host "2. Download Specific Applications"
-    Write-Host "3. Activate Windows"
-    Write-Host "4. Download Atlas OS Playbook and AME Wizard"
-    Write-Host "5. ctt Utility"
-    Write-Host "x. Exit"
+    Write-Host " "
+    Write-Host "            Select an option:"
+    Write-Host " "
+    Write-Host "            0. Clean Windows"
+    Write-Host " "
+    Write-Host "            1. Scan and Fix Windows"
+    Write-Host " "
+    Write-Host "            2. Download Specific Applications"
+    Write-Host " "
+    Write-Host "            3. Activate Windows"
+    Write-Host " "
+    Write-Host "            4. Download Atlas OS Playbook and AME Wizard"
+    Write-Host " "
+    Write-Host "            5. ctt Utility"
+    Write-Host " "
+    Write-Host "            x. Exit"
+    Write-Host " "
     $choice = Read-Host "Enter your choice (0-5, or x to exit)"
     Switch ($choice) {
         "0" { Clean-Windows }
