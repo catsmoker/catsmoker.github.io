@@ -12,10 +12,6 @@
     Version        : 1.7
 #>
 
-# Unblock the script if blocked by the system
-Unblock-File -Path $PSCommandPath
-
-
 # Check if the script is running as administrator
 Write-Host "Checking if running as administrator..."
 $adminCheck = [System.Security.Principal.WindowsPrincipal] [System.Security.Principal.WindowsIdentity]::GetCurrent()
