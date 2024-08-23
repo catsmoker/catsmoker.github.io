@@ -16,14 +16,27 @@
 Write-Host "Checking if running as administrator..."
 $adminCheck = [System.Security.Principal.WindowsPrincipal] [System.Security.Principal.WindowsIdentity]::GetCurrent()
 $adminRole = [System.Security.Principal.WindowsBuiltInRole]::Administrator
-
 if (-not $adminCheck.IsInRole($adminRole)) {
-    Write-Host "Script is not running as administrator. Restarting with elevated privileges..."
-    # Restart the script with administrative privileges
-    $newProcess = Start-Process -FilePath "powershell.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs -Wait
-    exit
+
+# text
+$separator = "============================================================="
+$adminMessage = "$warningSymbol  Attention Required!  $warningSymbol"
+Write-Host $separator -ForegroundColor Yellow
+Write-Host ""
+Write-Host $adminMessage -ForegroundColor Red -BackgroundColor Black
+Write-Host ""
+Write-Host "Oops! It looks like this script is not running with administrator privileges." -ForegroundColor Magenta
+Write-Host "For optimal performance and access to all features, we need to restart this script with elevated rights." -ForegroundColor Magenta
+Write-Host ""
+Write-Host "Attempting to relaunch with administrative privileges... Please wait." -ForegroundColor Green
+Write-Host ""
+Write-Host $separator -ForegroundColor Yellow
+
+# Restart the script with administrative privileges
+$newProcess = Start-Process -FilePath "powershell.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs -Wait
+exit
 } else {
-    Write-Host "Script is running as administrator."
+Write-Host "Script is running as administrator."
 }
 
 # Check if the script is running on a supported operating system
