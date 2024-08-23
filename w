@@ -12,11 +12,23 @@
     Version        : 1.7
 #>
 
-$Host.UI.RawUI.WindowTitle = "catsmoker: cs_script"
+# Unblock the script if blocked by the system
+Unblock-File -Path $PSCommandPath
 
-# Change text color to Green and background color to Black
-$host.UI.RawUI.ForegroundColor = "Green"
-$host.UI.RawUI.BackgroundColor = "Black"
+
+# Check if the script is running as administrator
+Write-Host "Checking if running as administrator..."
+$adminCheck = [System.Security.Principal.WindowsPrincipal] [System.Security.Principal.WindowsIdentity]::GetCurrent()
+$adminRole = [System.Security.Principal.WindowsBuiltInRole]::Administrator
+
+if (-not $adminCheck.IsInRole($adminRole)) {
+    Write-Host "Script is not running as administrator. Restarting with elevated privileges..."
+    # Restart the script with administrative privileges
+    $newProcess = Start-Process -FilePath "powershell.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs -Wait
+    exit
+} else {
+    Write-Host "Script is running as administrator."
+}
 
 # Check if the script is running on a supported operating system
 $osVersion = [System.Environment]::OSVersion.Version
@@ -25,9 +37,6 @@ if ($osVersion.Major -lt 10 -or ($osVersion.Major -eq 10 -and $osVersion.Minor -
     Write-Host "Your current OS version is $($osVersion.Major).$($osVersion.Minor)."
     exit
 }
-
-# Unblock the script if blocked by the system
-Unblock-File -Path $PSCommandPath
 
 # Define the path to the shortcut and the target PowerShell command
 $shortcutPath = [System.IO.Path]::Combine([System.Environment]::GetFolderPath('Desktop'), 'CS_script.lnk')
@@ -54,6 +63,14 @@ $shortcut.IconLocation = $localIconPath
 # Save the shortcut
 $shortcut.Save()
 
+# Window Title
+$Host.UI.RawUI.WindowTitle = "catsmoker: cs_script"
+
+# Change text color to Green and background color to Black
+$host.UI.RawUI.ForegroundColor = "Green"
+$host.UI.RawUI.BackgroundColor = "Black"
+
+# start
 Function Show-Menu {
     Clear-Host
     Write-Host "                                               cs Script v1.7 (by catsmoker) https://catsmoker.github.io"
