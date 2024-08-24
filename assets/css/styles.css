@@ -29,10 +29,6 @@ a {
     transition: color var(--transition-time) ease;
 }
 
-a:hover {
-    color: var(--primary-hover-color);
-}
-
 h1, h2, h3 {
     margin: 0;
     color: var(--secondary-color);
@@ -82,24 +78,6 @@ header {
     border-bottom: 2px solid var(--dark-primary-color);
 }
 
-.openbtn {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    font-size: 30px;
-    cursor: pointer;
-    background-color: var(--primary-color);
-    color: white;
-    border: 1px solid var(--primary-color);
-    border-radius: 15px;
-    padding: 4px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.dark-mode .openbtn {
-    color: var(--dark-background-color);
-}
-
 /* Dark Mode Button */
 #theme-toggle {
     background-color: var(--primary-color);
@@ -111,16 +89,9 @@ header {
     transition: background-color var(--transition-time);
 }
 
-#theme-toggle:hover {
-    background-color: var(--primary-hover-color);
-}
 
 .dark-mode #theme-toggle {
     background-color: var(--dark-primary-color);
-}
-
-.dark-mode #theme-toggle:hover {
-    background-color: var(--dark-primary-hover-color);
 }
 
 /* Downloads Button */
@@ -134,17 +105,10 @@ header {
     transition: background-color var(--transition-time);
 }
 
-#Downloads:hover {
-    background-color: var(--primary-hover-color);
-}
-
 .dark-mode #Downloads {
     background-color: var(--dark-primary-color);
 }
 
-.dark-mode #Downloads:hover {
-    background-color: var(--dark-primary-hover-color);
-}
 
 /* support me Button */
 #support-me {
@@ -157,16 +121,9 @@ header {
     transition: background-color var(--transition-time);
 }
 
-#support-me:hover {
-    background-color: var(--primary-hover-color);
-}
 
 .dark-mode #support-me {
     background-color: var(--dark-primary-color);
-}
-
-.dark-mode #support-me:hover {
-    background-color: var(--dark-primary-hover-color);
 }
 
 /* Main Content */
@@ -252,16 +209,8 @@ main {
     transition: background-color var(--transition-time) ease;
 }
 
-.subscribe-button:hover {
-    background-color: var(--primary-hover-color);
-}
-
 .dark-mode .subscribe-button {
     background-color: red;
-}
-
-.dark-mode .subscribe-button:hover {
-    background-color: var(--dark-primary-hover-color);
 }
 
 /* Style for the banner image */
@@ -351,42 +300,13 @@ footer p {
 	object-fit: cover;
 }
 
-.video-container iframe:hover,
-.Supporters-container iframe:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-/* Responsive adjustments */
-@media screen and (max-width: 360px) {
-    .video-container iframe,
-    .Supporters-container iframe {
-        width: calc(100% - 10px); /* Full width for very small screens */
-    }
-}
 
 /* Contact Section */
-#contact .section {
-    padding: 40px;
-    background-color: var(--background-color);
-    text-align: center;
-    transition: background-color var(--transition-time);
-}
-
-#contact header h2 {
-    font-size: 2.5em;
-    margin-bottom: 10px;
-    color: var(--secondary-color);
-}
 
 #contact header p {
     font-size: 1.2em;
     color: var(--secondary-color);
     margin-bottom: 30px;
-}
-
-.dark-mode #contact .section {
-    background-color: var(--dark-background-color);
 }
 
 .dark-mode #contact header h2, 
@@ -412,31 +332,14 @@ footer p {
     margin: 10px;
 }
 
-.email-button:hover,
-.call-button:hover,
-.whatsapp-button:hover {
-    background-color: var(--primary-hover-color);
-}
-
 .dark-mode .email-button,
 .dark-mode .call-button,
 .dark-mode .whatsapp-button {
     background-color: var(--dark-primary-color);
 }
 
-.dark-mode .email-button:hover,
-.dark-mode .call-button:hover,
-.dark-mode .whatsapp-button:hover {
-    background-color: var(--dark-primary-hover-color);
-}
-
 /* Custom styles for call and WhatsApp buttons */
 .call-button,
 .whatsapp-button {
     background-color: #28a745;
-}
-
-.call-button:hover,
-.whatsapp-button:hover {
-    background-color: #218838;
 }
