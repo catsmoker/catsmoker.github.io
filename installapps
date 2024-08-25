@@ -1,73 +1,29 @@
-# Exit if wingetCheck.cmd fails
-& "$([Environment]::GetFolderPath('Windows'))\AtlasModules\Scripts\wingetCheck.cmd"
-if ($LASTEXITCODE -ne 0) { exit 1 }
-
-Clear-Host
-$ErrorActionPreference = 'SilentlyContinue'
-
-# Global Variables
-[int] $column = 0
-[int] $verticalSpacing = 30
-[int] $lastPosY = 50
-[int] $itemCount = 0
-[int] $currentIndex = 0
-[array] $itemsList = @()
-[bool] $installSelected = $false
-
-# Function to Initialize Item
-function Add-ItemToList {
-    param(
-        [string]$labelText,
-        [string]$packageId
-    )
-    $itemsList += , @($labelText, $packageId)
-}
-
-# Function to Create Checkbox
-function Create-Checkbox {
-    param(
-        [string]$labelText,
-        [string]$packageId,
-        [bool]$enabled = $true
-    )
-    $checkbox = New-Object System.Windows.Forms.CheckBox
-    if ($currentIndex -eq [math]::Ceiling($itemCount / 2)) {
-        $column = 1
-        $lastPosY = 50
-    }
-    $checkbox.Location = [System.Drawing.Point]::new($column * 300, $lastPosY)
-    $lastPosY += $verticalSpacing
-    $checkbox.Size = [System.Drawing.Size]::new(250, 18)
-    $checkbox.Text = $labelText
-    $checkbox.Name = $packageId
-    $checkbox.Enabled = $enabled
-    $checkbox
-}
-
-# Load Assemblies
+# Load necessary assemblies
 [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
 [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing")
 
-# Create Form
+# Create the main form
 $Form = New-Object System.Windows.Forms.Form
-$Form.Text = "Install Software | cs_script by catsmoker"
-$Form.ShowIcon = $false
-$Form.MaximizeBox = $false
-$Form.MinimizeBox = $false
-$Form.Size = [System.Drawing.Size]::new(600, 210)
-$Form.AutoSizeMode = 0
-$Form.KeyPreview = $True
-$Form.SizeGripStyle = 2
+$Form.Text = "Install Software"
+$Form.Size = New-Object System.Drawing.Size(400, 500)
+$Form.StartPosition = "CenterScreen"
 
-# Add Label to Form
+# Create a label
 $Label = New-Object System.Windows.Forms.Label
-$Label.Location = [System.Drawing.Point]::new(11, 15)
-$Label.Size = [System.Drawing.Size]::new(255, 15)
-$Label.Text = "Download and install software using WinGet:"
+$Label.Location = New-Object System.Drawing.Size(10, 10)
+$Label.Size = New-Object System.Drawing.Size(380, 20)
+$Label.Text = "Select software to install:"
 $Form.Controls.Add($Label)
 
-# Add Items to List
-$softwareList = @{
+# Create a Panel to hold the checkboxes
+$Panel = New-Object System.Windows.Forms.Panel
+$Panel.Location = New-Object System.Drawing.Size(10, 40)
+$Panel.Size = New-Object System.Drawing.Size(360, 350)  # Adjust height for 15 items with room for scrolling
+$Panel.AutoScroll = $true  # Enable scrolling
+$Form.Controls.Add($Panel)
+
+# Create a list of software items
+$softwareItems = @{
     "Ungoogled Chromium" = "eloston.ungoogled-chromium"
     "Mozilla Firefox" = "Mozilla.Firefox"
     "Waterfox" = "Waterfox.Waterfox"
@@ -106,139 +62,42 @@ $softwareList = @{
     "ExplorerPatcher" = "valinet.ExplorerPatcher"
 }
 
-# Conditional Item Addition Based on OS Version
-if ([System.Environment]::OSVersion.Version.Build -ge 22000) {
-    $softwareList["StartAllBack"] = "StartIsBack.StartAllBack"
-} else {
-    $softwareList["StartIsBack"] = "StartIsBack.StartIsBack"
+# Add checkboxes for each software item
+$y = 0
+foreach ($name in $softwareItems.Keys) {
+    $checkbox = New-Object System.Windows.Forms.CheckBox
+    $checkbox.Location = New-Object System.Drawing.Size(10, $y)
+    $checkbox.Size = New-Object System.Drawing.Size(300, 20)
+    $checkbox.Text = $name
+    $checkbox.Name = $softwareItems[$name]
+    $Panel.Controls.Add($checkbox)
+    $y += 30
 }
 
-foreach ($key in $softwareList.Keys) {
-    Add-ItemToList $key $softwareList[$key]
-}
-
-$itemCount = $itemsList.Length
-
-# Add Checkboxes to Form
-foreach ($item in $itemsList) {
-    $Form.Controls.Add(Create-Checkbox $item[0] $item[1])
-    $currentIndex++
-}
-
-if ($column -ne 0) {
-    $lastPosY += $verticalSpacing
-}
-
-$Form.Height = $lastPosY + 80
-
-# Toggle Dark/Light Mode
-$ToggleBtn = New-Object System.Windows.Forms.Button
-$ToggleBtn.Location = [System.Drawing.Point]::new(500, 20)
-$ToggleBtn.Size = [System.Drawing.Size]::new(80, 23)
-$ToggleBtn.Text = "Dark Mode"
-$ToggleBtn.Add_Click({
-    if ($this.Text -eq "Dark Mode") {
-        $this.Text = "Light Mode"
-        Set-DarkMode
-    } else {
-        $this.Text = "Dark Mode"
-        Set-LightMode
-    }
-})
-
-# Dark Mode Function
-function Set-DarkMode {
-    $Form.BackColor = [System.Drawing.Color]::FromArgb(26, 26, 26)
-    $Form.ForeColor = [System.Drawing.Color]::White
-    foreach ($control in $Form.Controls) {
-        if ($control.GetType().Name -eq "CheckBox") {
-            $control.BackColor = [System.Drawing.Color]::FromArgb(26, 26, 26)
-            $control.ForeColor = [System.Drawing.Color]::White
-        }
-    }
-}
-
-# Light Mode Function
-function Set-LightMode {
-    $Form.BackColor = [System.Drawing.Color]::FromArgb(240, 240, 240)
-    $Form.ForeColor = [System.Drawing.Color]::Black
-    foreach ($control in $Form.Controls) {
-        if ($control.GetType().Name -eq "CheckBox") {
-            $control.BackColor = [System.Drawing.Color]::FromArgb(240, 240, 240)
-            $control.ForeColor = [System.Drawing.Color]::Black
-        }
-    }
-}
-
-# Check and Apply System Theme
-$registryPath = "HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize\"
-$keyName = "AppsUseLightTheme"
-function Apply-SystemTheme {
-    $isLightTheme = (Get-ItemProperty -Path $registryPath -Name $keyName).$keyName -eq 1
-    if ($isLightTheme) {
-        Set-LightMode
-        $ToggleBtn.Text = "Dark Mode"
-    } else {
-        Set-DarkMode
-        $ToggleBtn.Text = "Light Mode"
-    }
-}
-Apply-SystemTheme
-
-$Form.Controls.Add($ToggleBtn)
-
-# Install Button
+# Create Install button
 $InstallButton = New-Object System.Windows.Forms.Button
-$InstallButton.Location = [System.Drawing.Point]::new($Form.Width - 111, $lastPosY)
-$InstallButton.Size = [System.Drawing.Size]::new(80, 23)
+$InstallButton.Location = New-Object System.Drawing.Size(150, 400)
+$InstallButton.Size = New-Object System.Drawing.Size(80, 30)
 $InstallButton.Text = "Install"
 $InstallButton.Add_Click({
-    $checkedBoxes = $Form.Controls | Where-Object { $_ -is [System.Windows.Forms.CheckBox] -and $_.Checked }
+    $checkedBoxes = $Panel.Controls | Where-Object { $_ -is [System.Windows.Forms.CheckBox] -and $_.Checked }
     if ($checkedBoxes.Count -eq 0) {
         [System.Windows.Forms.MessageBox]::Show("Please select at least one software package to install.", "No package selected", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
     } else {
-        $installSelected = $true
-        $Form.Close()
+        # Run the upgrade command first
+        Start-Process "winget" -ArgumentList "upgrade --all" -NoNewWindow -Wait
+
+        $installPackages = $checkedBoxes | ForEach-Object { $_.Name }
+
+        # Run the installation commands
+        foreach ($package in $installPackages) {
+            Start-Process "winget" -ArgumentList "install -e --id $package --accept-package-agreements --accept-source-agreements --disable-interactivity --force" -NoNewWindow
+        }
+
+        [System.Windows.Forms.MessageBox]::Show("Installation started. Please wait for the processes to complete.", "Installation Started", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
     }
 })
 $Form.Controls.Add($InstallButton)
 
-# Show Form
-$Form.Add_Shown({ $Form.Activate() })
+# Show the form
 [void] $Form.ShowDialog()
-
-# Execute Install
-if ($installSelected) {
-    $installPackages = [System.Collections.ArrayList]::new()
-    $Form.Controls | Where-Object { $_ -is [System.Windows.Forms.CheckBox] } | ForEach-Object {
-        if ($_.Checked) {
-            [void]$installPackages.Add($_.Name)
-        }
-    }
-
-    if ($installPackages.Count -ne 0) {
-        Write-Host "Installing: " -ForegroundColor Yellow
-        foreach ($package in $installPackages) {
-            Write-Host "- $package" -ForegroundColor Blue
-        }
-        Write-Host ""
-        Start-Sleep 1
-
-        foreach ($package in $installPackages) {
-            & winget install -e --id $package --accept-package-agreements --accept-source-agreements --disable-interactivity --force -h
-        }
-
-        # Additional Installations and Downloads
-        & winget install -e --id qBittorrent.qBittorrent
-        Invoke-WebRequest -Uri 'https://www.neatdownloadmanager.com/file/NeatDM_setup.exe' -OutFile (Join-Path -Path $env:USERPROFILE -ChildPath 'Desktop\NeatDM_setup.exe')
-        Start-Process -Wait -FilePath (Join-Path -Path $env:USERPROFILE -ChildPath 'Desktop\NeatDM_setup.exe')
-
-        & winget install -e --id Henry++.MemReduct
-        & winget install -e --id Klocman.BulkCrapUninstaller
-        Invoke-WebRequest -Uri 'https://c2rsetup.officeapps.live.com/c2r/download.aspx?ProductreleaseID=O365ProPlusRetail&platform=x64&language=en-us&version=O16GA' -OutFile (Join-Path -Path $env:USERPROFILE -ChildPath 'Desktop\OfficeSetup_2.exe')
-        Start-Process -Wait -FilePath (Join-Path -Path $env:USERPROFILE -ChildPath 'Desktop\OfficeSetup_2.exe')
-
-        Write-Host ""
-        pause
-    }
-}
