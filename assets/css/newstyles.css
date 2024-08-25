@@ -145,18 +145,6 @@ small, .small {
   margin-left: auto;
 }
 
-@media (min-width: 576px) {
-  .container {
-    max-width: 540px;
-  }
-}
-
-@media (min-width: 768px) {
-  .container {
-    max-width: 720px;
-  }
-}
-
 .row {
   display: flex;
   flex-wrap: wrap;
@@ -291,13 +279,33 @@ small, .small {
 }
 
 .navbar-toggler {
-  padding: 0.25rem 0.75rem;
-  font-size: 1.25rem;
-  line-height: 1;
-  background-color: transparent;
-  border: 1px solid transparent;
-  border-radius: 0.1rem;
+    padding: 0.25rem 0.75rem;
+    font-size: 1.25rem;
+    line-height: 1;
+    background-color: var(--dark);
+    color: var(--white);
+    border: 1px solid var(--dark);
+    border-radius: 0.25rem;
+    transition: background-color var(--transition-time) ease, transform var(--transition-time) ease;
 }
+
+.navbar-toggler:hover, .navbar-toggler:focus {
+    text-decoration: none;
+    background-color: var(--secondary);
+    border-color: var(--secondary);
+    transform: scale(1.05);
+}
+
+.navbar-toggler-icon {
+    display: inline-block;
+    width: 1.5em;
+    height: 1.5em;
+    vertical-align: middle;
+    background: no-repeat center center;
+    background-size: 100% 100%;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='var(--white)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e"); /* Hamburger menu icon with white lines */
+}
+
 
 @media (min-width: 768px) {
   .navbar-expand-md {
@@ -560,12 +568,24 @@ p {
   top: 4px;
   margin-left: auto;
   margin-right: auto;
-  animation-name: drop;
+  animation-name: moveDown;
   animation-duration: 1.4s;
   animation-timing-function: linear;
   animation-delay: 0s;
   animation-iteration-count: infinite;
   animation-play-state: running;
+}
+
+@keyframes moveDown {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(20px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 .navbar {
