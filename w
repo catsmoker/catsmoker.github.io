@@ -124,6 +124,13 @@ Function Run-CTT {
 
 Function Clean-Windows {
     Clear-Host
+    $globalTempPath = [System.IO.Path]::GetTempPath()
+    Write-Host "Clearing global temp folder: $globalTempPath"
+    Get-ChildItem -Path $globalTempPath -Recurse -Force | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+    $userTempPath = $env:TEMP
+    Write-Host "Clearing user temp folder: $userTempPath"
+    Get-ChildItem -Path $userTempPath -Recurse -Force | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+    Write-Host "Temporary folders cleared successfully."
     Write-Host "Running Disk Cleanup..."
     $diskCleanupPath = "$env:windir\System32\cleanmgr.exe"
     Start-Process -FilePath $diskCleanupPath -ArgumentList "/sagerun:1" -Wait
