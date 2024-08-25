@@ -10,7 +10,7 @@ Click the button below to go to the Catsmoker website:
 
 <a href="https://catsmoker.github.io" class="button">Go to Catsmoker Website</a>
 
-or check the new (still in devlopment) website:
+or check the new (still in development) website
 
 <a href="https://catsmoker.github.io/newindex" class="button">Go to new Catsmoker Website</a>
 
