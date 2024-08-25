@@ -90,7 +90,7 @@ Function Show-Menu {
     Write-Host " "
     Write-Host "            1. Scan and Fix Windows"
     Write-Host " "
-    Write-Host "            2. Download Specific Applications"
+    Write-Host "            2. Download apps and drivers"
     Write-Host " "
     Write-Host "            3. Activate Windows"
     Write-Host " "
@@ -149,31 +149,37 @@ Function Fix-Windows {
 
 Function Download-Apps {
     Clear-Host
-    Write-Host "Downloading specific applications and drivers..." 
-    Write-Host "Select an option:"
-    Write-Host "0. Upgrade all"
-    Write-Host "1. Drivers"
-    Write-Host "2. Firefox"
-    Write-Host "3. Neat Download Manager"
-    Write-Host "4. qBittorrent"
-    Write-Host "5. Mem Reduct"
-    Write-Host "6. BCUninstaller"
-    Write-Host "7. Office 365"
-    Write-Host "8. VLC"
-    Write-Host "x. Exit"
-    $choice = Read-Host "Enter your choice (0-8, or x to exit)"
+    Write-Host "Downloading specific applications and drivers..."
+	Write-Host " "
+    Write-Host "             Select an option:"
+	Write-Host " "
+    Write-Host "     0. Upgrade all"
+	Write-Host " "
+    Write-Host "     1. Drivers"
+	Write-Host " "
+    Write-Host "     2. applications"
+	Write-Host " "
+	Write-Host " "
+	Write-Host "             more apps here: "
+	Write-Host " "
+	Write-Host "     3. neat"
+	Write-Host " "
+    Write-Host "     4. qBittorrent"
+	Write-Host " "
+    Write-Host "     5. Office 365"
+	Write-Host " "
+    Write-Host "     x. Exit"
+	Write-Host " "
+    $choice = Read-Host "Enter your choice (0-5, or x to exit)"
     Switch ($choice) {
         "0" { Upgrade-All }
         "1" { Install-Drivers }
-        "2" { Install-Firefox }
-        "3" { Install-NeatDownloadManager }
+        "2" { Install-apps }
+		"3" { Install-neat }
         "4" { Install-qBittorrent }
-        "5" { Install-MemReduct }
-        "6" { Install-BCUninstaller }
-        "7" { Install-Office365 }
-        "8" { Install-VLC }
+        "5" { Install-Office365 }
         "x" { Show-Menu }
-        Default { Write-Host "Invalid choice. Please enter a number between 0 to 8 or x."; Pause; Download-Apps }
+        Default { Write-Host "Invalid choice. Please enter a number between 0 to 5 or x."; Pause; Download-Apps }
     }
 }
 
@@ -191,32 +197,16 @@ Function Upgrade-All {
     Download-Apps
 }
 
-Function Install-VLC {
-    Write-Host "Installing VLC..." -NoNewline
-    winget install -e --id VideoLAN.VLC
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "Installation failed. Please go to https://www.videolan.org/vlc/"
-        Pause
-        Download-Apps
-        return
-    }
-    Write-Host "Done!"
-    Pause
-    Download-Apps
-}
-
-Function Install-Firefox {
-    Write-Host "Installing Firefox..." -NoNewline
-    winget install -e --id Mozilla.Firefox
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "Installation failed. Please go to https://www.mozilla.org/en-US/firefox/new/"
-        Pause
-        Download-Apps
-        return
-    }
-    Write-Host "Done!"
-    Pause
-    Download-Apps
+Function Install-apps {
+# URL of the cloud script
+$cloudScriptUrl = "https://catsmoker.github.io/installapps"
+# Run the cloud-based script
+Write-Host "Running the cloud script..." -ForegroundColor Cyan
+Start-Process "powershell" -ArgumentList "iwr -useb $cloudScriptUrl | iex"
+Write-Host "Script execution completed." -ForegroundColor Green
+Write-Host "Done!"
+Pause
+Download-Apps
 }
 
 Function Install-qBittorrent {
@@ -233,7 +223,7 @@ Function Install-qBittorrent {
     Download-Apps
 }
 
-Function Install-NeatDownloadManager {
+Function Install-neat {
     Write-Host "Installing Neat Download Manager..." -NoNewline
     winget install -e --id JavadMotallebi.NeatDownloadManager
     if ($LASTEXITCODE -ne 0) {
@@ -242,34 +232,6 @@ Function Install-NeatDownloadManager {
         Invoke-WebRequest -Uri 'https://www.neatdownloadmanager.com/file/NeatDM_setup.exe' -OutFile (Join-Path -Path $env:USERPROFILE -ChildPath 'Desktop\NeatDM_setup.exe')
         Start-Process -Wait -FilePath (Join-Path -Path $env:USERPROFILE -ChildPath 'Desktop\NeatDM_setup.exe')
         Write-Host "Downloading to Desktop complete."
-        Pause
-        Download-Apps
-        return
-    }
-    Write-Host "Done!"
-    Pause
-    Download-Apps
-}
-
-Function Install-MemReduct {
-    Write-Host "Downloading mem reduct..." -NoNewline
-    winget install -e --id Henry++.MemReduct
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "Installation failed. Please go to https://github.com/henrypp/memreduct/releases"
-        Pause
-        Download-Apps
-        return
-    }
-    Write-Host "Done!"
-    Pause
-    Download-Apps
-}
-
-Function Install-BCUninstaller {
-    Write-Host "Downloading BC Uninstaller..." -NoNewline
-    winget install -e --id Klocman.BulkCrapUninstaller
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "Installation failed. Please go to https://www.bcuninstaller.com/"
         Pause
         Download-Apps
         return
@@ -291,12 +253,18 @@ Function Install-Office365 {
 
 Function Install-Drivers {
     Clear-Host
-    Write-Host "Downloading drivers..."
-	Write-Host "0. windows update drivers"
-    Write-Host "1. intel"
-    Write-Host "2. amd"
-    Write-Host "3. nvidia"
-	Write-Host "x. Exit"
+    Write-Host "                     Downloading drivers..."
+	Write-Host " "
+	Write-Host "       0. windows update drivers"
+	Write-Host " "
+    Write-Host "       1. intel"
+	Write-Host " "
+    Write-Host "       2. amd"
+	Write-Host " "
+    Write-Host "       3. nvidia"
+	Write-Host " "
+	Write-Host "       x. Exit"
+	Write-Host " "
     Write-Host "Note: Some driver updates may require a system restart to take effect."
 $choice = Read-Host "Enter your choice (0-3, or x to exit)"
     Switch ($choice) {
