@@ -4,7 +4,7 @@
 
 # Create the main form
 $Form = New-Object System.Windows.Forms.Form
-$Form.Text = "Install Software"
+$Form.Text = "Install Software | cs_script by catsmoker"
 $Form.Size = New-Object System.Drawing.Size(400, 500)
 $Form.StartPosition = "CenterScreen"
 
