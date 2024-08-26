@@ -1,0 +1,133 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+		<script src="https://unpkg.com/unlazy@0.11.3/dist/unlazy.with-hashing.iife.js" defer init></script>
+		<script type="text/javascript">
+			window.tailwind.config = {
+				darkMode: ['class'],
+				theme: {
+					extend: {
+						colors: {
+							border: 'hsl(var(--border))',
+							input: 'hsl(var(--input))',
+							ring: 'hsl(var(--ring))',
+							background: 'hsl(var(--background))',
+							foreground: 'hsl(var(--foreground))',
+							primary: {
+								DEFAULT: 'hsl(var(--primary))',
+								foreground: 'hsl(var(--primary-foreground))'
+							},
+							secondary: {
+								DEFAULT: 'hsl(var(--secondary))',
+								foreground: 'hsl(var(--secondary-foreground))'
+							},
+							destructive: {
+								DEFAULT: 'hsl(var(--destructive))',
+								foreground: 'hsl(var(--destructive-foreground))'
+							},
+							muted: {
+								DEFAULT: 'hsl(var(--muted))',
+								foreground: 'hsl(var(--muted-foreground))'
+							},
+							accent: {
+								DEFAULT: 'hsl(var(--accent))',
+								foreground: 'hsl(var(--accent-foreground))'
+							},
+							popover: {
+								DEFAULT: 'hsl(var(--popover))',
+								foreground: 'hsl(var(--popover-foreground))'
+							},
+							card: {
+								DEFAULT: 'hsl(var(--card))',
+								foreground: 'hsl(var(--card-foreground))'
+							},
+						},
+					}
+				}
+			}
+		</script>
+		<style type="text/tailwindcss">
+			@layer base {
+				:root {
+					--background: 0 0% 100%;
+--foreground: 222.2 84% 4.9%;
+--card: 0 0% 100%;
+--card-foreground: 222.2 84% 4.9%;
+--popover: 0 0% 100%;
+--popover-foreground: 222.2 84% 4.9%;
+--primary: 221.2 83.2% 53.3%;
+--primary-foreground: 210 40% 98%;
+--secondary: 210 40% 96.1%;
+--secondary-foreground: 222.2 47.4% 11.2%;
+--muted: 210 40% 96.1%;
+--muted-foreground: 215.4 16.3% 46.9%;
+--accent: 210 40% 96.1%;
+--accent-foreground: 222.2 47.4% 11.2%;
+--destructive: 0 84.2% 60.2%;
+--destructive-foreground: 210 40% 98%;
+--border: 214.3 31.8% 91.4%;
+--input: 214.3 31.8% 91.4%;
+--ring: 221.2 83.2% 53.3%;
+				}
+				.dark {
+					--background: 222.2 84% 4.9%;
+--foreground: 210 40% 98%;
+--card: 222.2 84% 4.9%;
+--card-foreground: 210 40% 98%;
+--popover: 222.2 84% 4.9%;
+--popover-foreground: 210 40% 98%;
+--primary: 217.2 91.2% 59.8%;
+--primary-foreground: 222.2 47.4% 11.2%;
+--secondary: 217.2 32.6% 17.5%;
+--secondary-foreground: 210 40% 98%;
+--muted: 217.2 32.6% 17.5%;
+--muted-foreground: 215 20.2% 65.1%;
+--accent: 217.2 32.6% 17.5%;
+--accent-foreground: 210 40% 98%;
+--destructive: 0 62.8% 30.6%;
+--destructive-foreground: 210 40% 98%;
+--border: 217.2 32.6% 17.5%;
+--input: 217.2 32.6% 17.5%;
+--ring: 224.3 76.3% 48%;
+				}
+			}
+		</style>
+  </head>
+  <body>
+    <div class="min-h-screen bg-background text-foreground flex flex-col items-center p-4">
+  <header class="w-full max-w-3xl text-center py-8">
+    <h1 class="text-5xl font-extrabold mb-4 text-primary">Support My Work</h1>
+	    <p class="text-muted-foreground text-lg">This space is more than just a digital tip jar—it's a way for you to directly support the content and projects you love. Every contribution helps fuel my passion for creating high-quality tutorials, innovative tech tools, and creative content. Your support means the world to me, and it keeps the coffee brewing as I dive into new challenges and share them with you. Thank you for being a part of this journey!</p>
+    <p class="text-muted-foreground text-lg">Your donations help me continue creating amazing content. Choose your preferred method to support me!</p>
+  </header>
+  <main class="w-full max-w-3xl flex flex-col items-center space-y-8">
+    
+    <section class="w-full bg-card p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+      <h2 class="text-3xl font-semibold mb-2 text-foreground">Donate via PayPal</h2>
+      <p class="text-muted-foreground mb-4">Quick and easy way to send your support.</p>
+      <a href="https://www.paypal.com/paypalme/boulhada08" target="_blank" class="bg-primary text-primary-foreground py-2 px-4 rounded-lg hover:bg-primary/80 transition-colors">Donate with PayPal</a>
+    </section>
+    
+    <section class="w-full bg-card p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+      <h2 class="text-3xl font-semibold mb-2 text-foreground">Support on Patreon</h2>
+      <p class="text-muted-foreground mb-4">Join my Patreon community for exclusive content.</p>
+      <a href="https://patreon.com/catsmoker" target="_blank" class="bg-secondary text-secondary-foreground py-2 px-4 rounded-lg hover:bg-secondary/80 transition-colors">Become a Patron</a>
+    </section>
+    
+    <section class="w-full bg-card p-6 rounded-lg shadow-lg transition-transform transform hover:scale-105">
+      <h2 class="text-3xl font-semibold mb-2 text-foreground">Buy Me a Coffee</h2>
+      <p class="text-muted-foreground mb-4">Show your support by buying me a coffee.</p>
+      <a href="https://buymeacoffee.com/boulhada" target="_blank" class="bg-accent text-accent-foreground py-2 px-4 rounded-lg hover:bg-accent/80 transition-colors">Buy Me a Coffee</a>
+    </section>
+  </main>
+  <footer class="w-full max-w-3xl text-center py-8 mt-auto">
+    <p class="text-muted-foreground text-lg">Thank you for your support! 💖</p>
+  </footer>
+</div>
+
+
+
+  </body>
+</html>
