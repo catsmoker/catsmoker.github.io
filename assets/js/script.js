@@ -5,7 +5,7 @@ document.getElementById('Downloads').addEventListener('click', function() {
 
 // Function to handle support me button click
 document.getElementById('support-me').addEventListener('click', function() {
-    window.location.href = 'https://www.paypal.com/paypalme/boulhada08'; // Navigate to paypal
+    window.location.href = 'donation.html'; // Navigate to donation
 });
 
 // Function to handle email button click
