@@ -67,6 +67,7 @@ $softwareItems = @{
     "ShareX" = "ShareX.ShareX"
     "Snipping Tool" = "9MZ95KL8MR0L"
     "ExplorerPatcher" = "valinet.ExplorerPatcher"
+    "MemReduct" = "Henry++.MemReduct"
 }
 
 # Add checkboxes for each software item
