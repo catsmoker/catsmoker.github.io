@@ -5,21 +5,28 @@
 # Create the main form
 $Form = New-Object System.Windows.Forms.Form
 $Form.Text = "Install Software | cs_script by catsmoker"
-$Form.Size = New-Object System.Drawing.Size(400, 500)
+$Form.Size = New-Object System.Drawing.Size(450, 600)
 $Form.StartPosition = "CenterScreen"
+$Form.BackColor = [System.Drawing.Color]::FromArgb(50, 50, 50)  # Dark background
+$Form.FormBorderStyle = 'FixedDialog'
+$Form.MaximizeBox = $false
 
 # Create a label
 $Label = New-Object System.Windows.Forms.Label
-$Label.Location = New-Object System.Drawing.Size(10, 10)
-$Label.Size = New-Object System.Drawing.Size(380, 20)
+$Label.Location = New-Object System.Drawing.Size(20, 20)
+$Label.Size = New-Object System.Drawing.Size(400, 30)
 $Label.Text = "Select software to install:"
+$Label.Font = New-Object System.Drawing.Font("Segoe UI", 12, [System.Drawing.FontStyle]::Bold)
+$Label.ForeColor = [System.Drawing.Color]::White
 $Form.Controls.Add($Label)
 
 # Create a Panel to hold the checkboxes
 $Panel = New-Object System.Windows.Forms.Panel
-$Panel.Location = New-Object System.Drawing.Size(10, 40)
-$Panel.Size = New-Object System.Drawing.Size(360, 350)  # Adjust height for 15 items with room for scrolling
+$Panel.Location = New-Object System.Drawing.Size(20, 60)
+$Panel.Size = New-Object System.Drawing.Size(400, 400)  # Adjust height for 15 items with room for scrolling
 $Panel.AutoScroll = $true  # Enable scrolling
+$Panel.BorderStyle = 'FixedSingle'
+$Panel.BackColor = [System.Drawing.Color]::FromArgb(35, 35, 35)  # Slightly darker panel background
 $Form.Controls.Add($Panel)
 
 # Create a list of software items
@@ -67,18 +74,26 @@ $y = 0
 foreach ($name in $softwareItems.Keys) {
     $checkbox = New-Object System.Windows.Forms.CheckBox
     $checkbox.Location = New-Object System.Drawing.Size(10, $y)
-    $checkbox.Size = New-Object System.Drawing.Size(300, 20)
+    $checkbox.Size = New-Object System.Drawing.Size(360, 25)
     $checkbox.Text = $name
     $checkbox.Name = $softwareItems[$name]
+    $checkbox.ForeColor = [System.Drawing.Color]::White
+    $checkbox.BackColor = [System.Drawing.Color]::FromArgb(35, 35, 35)
+    $checkbox.Font = New-Object System.Drawing.Font("Segoe UI", 10)
     $Panel.Controls.Add($checkbox)
     $y += 30
 }
 
 # Create Install button
 $InstallButton = New-Object System.Windows.Forms.Button
-$InstallButton.Location = New-Object System.Drawing.Size(150, 400)
-$InstallButton.Size = New-Object System.Drawing.Size(80, 30)
+$InstallButton.Location = New-Object System.Drawing.Size(185, 480)
+$InstallButton.Size = New-Object System.Drawing.Size(100, 40)
 $InstallButton.Text = "Install"
+$InstallButton.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
+$InstallButton.BackColor = [System.Drawing.Color]::FromArgb(70, 130, 180)  # SteelBlue color
+$InstallButton.ForeColor = [System.Drawing.Color]::White
+$InstallButton.FlatStyle = 'Flat'
+$InstallButton.FlatAppearance.BorderSize = 0
 $InstallButton.Add_Click({
     $checkedBoxes = $Panel.Controls | Where-Object { $_ -is [System.Windows.Forms.CheckBox] -and $_.Checked }
     if ($checkedBoxes.Count -eq 0) {
