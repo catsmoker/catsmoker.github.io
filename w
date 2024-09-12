@@ -12,6 +12,8 @@
     Version        : 1.7
 #>
 
+                                                      
+
 # Check if the script is running as administrator
 Write-Host "Checking if running as administrator..."
 $adminCheck = [System.Security.Principal.WindowsPrincipal] [System.Security.Principal.WindowsIdentity]::GetCurrent()
@@ -82,15 +84,28 @@ $host.UI.RawUI.BackgroundColor = "Black"
 # start
 Function Show-Menu {
     Clear-Host
+Write-Host " "
+Write-Host "                               ________  ________   ________  ________  ________  ___  ________  _________   " -ForegroundColor Cyan
+Write-Host "                              |\   ____\|\   ____\ |\   ____\|\   ____\|\   __  \|\  \|\   __  \|\___   ___\ " -ForegroundColor Cyan
+Write-Host "                              \ \  \___|\ \  \___|_\ \  \___|\ \  \___|\ \  \|\  \ \  \ \  \|\  \|___ \  \_| " -ForegroundColor Cyan
+Write-Host "                               \ \  \    \ \_____  \\ \_____  \ \  \    \ \   _  _\ \  \ \   ____\   \ \  \  " -ForegroundColor Cyan
+Write-Host "                                \ \  \____\|____|\  \\|____|\  \ \  \____\ \  \\  \\ \  \ \  \___|    \ \  \ " -ForegroundColor Cyan
+Write-Host "                                 \ \_______\____\_\  \ ____\_\  \ \_______\ \__\\ _\\ \__\ \__\        \ \__\" -ForegroundColor Cyan
+Write-Host "                                  \|_______|\_________\\_________\|_______|\|__|\|__|\|__|\|__|         \|__|" -ForegroundColor Cyan
+Write-Host "                                           \|_________\|_________|                                           " -ForegroundColor Cyan
+	Write-Host " "
+	Write-Host " "
     Write-Host "                                               cs Script v1.7 (by catsmoker) https://catsmoker.github.io"
     Write-Host " "
+	Write-Host " "
     Write-Host "            Select an option:"
     Write-Host " "
+	Write-Host " "
     Write-Host "            0. Clean Windows"
     Write-Host " "
     Write-Host "            1. Scan and Fix Windows"
     Write-Host " "
-    Write-Host "            2. Downloads / drivers"
+    Write-Host "            2. Downloads / drivers / updates / fixes"
     Write-Host " "
     Write-Host "            3. Activate Windows"
     Write-Host " "
@@ -99,6 +114,7 @@ Function Show-Menu {
     Write-Host "            5. ctt Utility"
     Write-Host " "
     Write-Host "            x. Exit"
+    Write-Host " "
     Write-Host " "
     $choice = Read-Host "Enter your choice (0-5, or x to exit)"
     Switch ($choice) {
@@ -157,13 +173,13 @@ Function Download-Apps {
     Clear-Host
     Write-Host "Downloading specific applications and drivers..."
 	Write-Host " "
-        Write-Host "                Select an option:"
+    Write-Host "                Select an option:"
 	Write-Host " "
-        Write-Host "     0. Upgrade all"
+    Write-Host "     0. Upgrade all"
 	Write-Host " "
-        Write-Host "     1. Drivers"
+    Write-Host "     1. Drivers / updates"
 	Write-Host " "
-        Write-Host "     2. Applications"
+    Write-Host "     2. Applications"
 	Write-Host " "
 	Write-Host "     3. Fix Digital Flat Panel (640x480 60Hz) problem"
 	Write-Host " "
@@ -173,9 +189,9 @@ Function Download-Apps {
 	Write-Host " "
 	Write-Host "     4. neat"
 	Write-Host " "
-        Write-Host "     5. Office 365"
+    Write-Host "     5. Office 365"
 	Write-Host " "
-        Write-Host "     x. Exit"
+    Write-Host "     x. Exit"
 	Write-Host " "
     $choice = Read-Host "Enter your choice (0-5, or x to exit)"
     Switch ($choice) {
@@ -260,33 +276,46 @@ Function Install-Office365 {
 
 Function Install-Drivers {
     Clear-Host
-    Write-Host "                     Downloading drivers..."
+    Write-Host "                     Downloading drivers / updates..."
 	Write-Host " "
-	Write-Host "       0. windows update drivers"
+	Write-Host "       0. windows update app"
 	Write-Host " "
-        Write-Host "       1. intel"
+	Write-Host "       1. windows updates using powershell"
 	Write-Host " "
-        Write-Host "       2. amd"
+    Write-Host "       2. intel"
 	Write-Host " "
-        Write-Host "       3. nvidia"
+    Write-Host "       3. amd"
+	Write-Host " "
+    Write-Host "       4. nvidia"
 	Write-Host " "
 	Write-Host "       x. Exit"
 	Write-Host " "
     Write-Host "Note: Some driver updates may require a system restart to take effect."
-$choice = Read-Host "Enter your choice (0-3, or x to exit)"
+$choice = Read-Host "Enter your choice (0-4, or x to exit)"
     Switch ($choice) {
-		"0" { windows-drivers }
-        "1" { intel }
-        "2" { amd }
-        "3" { nvidia }
+		"0" { windows-update }
+		"1" { windows-ps }
+        "2" { intel }
+        "3" { amd }
+        "4" { nvidia }
         "x" { Download-Apps }
-        Default { Write-Host "Invalid choice. Please enter a number between 0 to 3 or x."; Pause; Install-Drivers }
+        Default { Write-Host "Invalid choice. Please enter a number between 0 to 4 or x."; Pause; Install-Drivers }
     }
 }
 
-Function windows-drivers {
-    Write-Host "windows-drivers..." -NoNewline
+Function windows-update {
+    Write-Host "windows updates app..." -NoNewline
     Start-Process "https://www.majorgeeks.com/mg/getmirror/windows_update_minitool,1.html"
+    Write-Host "Done!"
+    Pause
+    Install-Drivers
+}
+
+Function windows-ps {
+    Write-Host "windows updates using ps..." -NoNewline
+Install-Module PSWindowsUpdate
+Add-WUServiceManager -MicrosoftUpdate
+Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -AutoReboot | Out-File "C:\($env.computername-Get-Date -f yyyy-MM-dd)-MSUpdates.log" -Force
     Write-Host "Done!"
     Pause
     Install-Drivers
