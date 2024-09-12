@@ -139,16 +139,48 @@ Function Run-CTT {
 
 Function Clean-Windows {
     Clear-Host
+    Write-Host "Starting cleanup process..." -ForegroundColor Cyan
+    
+    # Start timer to track process duration
+    $startTime = Get-Date
+
     $globalTempPath = [System.IO.Path]::GetTempPath()
     Write-Host "Clearing global temp folder: $globalTempPath"
-    Get-ChildItem -Path $globalTempPath -Recurse -Force | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+    
+    # Get list of files and display progress bar
+    $globalFiles = Get-ChildItem -Path $globalTempPath -Recurse -Force -ErrorAction SilentlyContinue
+    $count = 0
+    foreach ($file in $globalFiles) {
+        $count++
+        Write-Progress -Activity "Cleaning global temp folder" -Status "Deleting file $count of $($globalFiles.Count)" -PercentComplete (($count / $globalFiles.Count) * 100)
+        Remove-Item -Path $file.FullName -Recurse -Force -ErrorAction SilentlyContinue
+    }
+    Write-Progress -Activity "Cleaning global temp folder" -Completed
+
     $userTempPath = $env:TEMP
     Write-Host "Clearing user temp folder: $userTempPath"
-    Get-ChildItem -Path $userTempPath -Recurse -Force | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+    
+    # Get list of files and display progress bar
+    $userFiles = Get-ChildItem -Path $userTempPath -Recurse -Force -ErrorAction SilentlyContinue
+    $count = 0
+    foreach ($file in $userFiles) {
+        $count++
+        Write-Progress -Activity "Cleaning user temp folder" -Status "Deleting file $count of $($userFiles.Count)" -PercentComplete (($count / $userFiles.Count) * 100)
+        Remove-Item -Path $file.FullName -Recurse -Force -ErrorAction SilentlyContinue
+    }
+    Write-Progress -Activity "Cleaning user temp folder" -Completed
+
     Write-Host "Temporary folders cleared successfully."
+    
+    # Run Disk Cleanup with progress indicator
     Write-Host "Running Disk Cleanup..."
     $diskCleanupPath = "$env:windir\System32\cleanmgr.exe"
     Start-Process -FilePath $diskCleanupPath -ArgumentList "/sagerun:1" -Wait
+
+    # Calculate and display elapsed time
+    $elapsedTime = (Get-Date) - $startTime
+    Write-Host "Cleanup completed in $($elapsedTime.TotalSeconds) seconds." -ForegroundColor Green
+    
     Pause
     Show-Menu
 }
