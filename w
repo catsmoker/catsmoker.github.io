@@ -125,7 +125,32 @@ Write-Host "                                           \|_________\|_________|  
         "4" { Download-Playbook }
         "5" { Run-CTT }
         "x" { Exit-Script }
+		"f" { Trigger-f }
         Default { Write-Host "Invalid choice. Please enter a number between 0 to 5 or x."; Pause; Show-Menu }
+    }
+}
+
+# Define what happens when "f" is typed
+function Trigger-f {
+    Clear-Host
+	Write-Host " "
+    Write-Host "F in the chat for respects!"
+	Write-Host " "
+    Write-Host "But wait... why are you pressing F?! You okay?"
+	Write-Host " "
+
+    # Ask user to press a key
+    $input = Read-Host "Press 'f' to get candy or any other key to return to the menu"
+    
+    # Check if they pressed "f"
+    if ($input -eq 'f') {
+        Write-Host "You pressed 'f'. Shutting down the computer..."
+        # Shutdown the computer
+         Stop-Computer
+    }
+    else {
+        Write-Host "You didn't press 'f'. Returning to the menu..."
+        Show-Menu  # Assuming Show-Menu is another function you've defined
     }
 }
 
@@ -144,10 +169,10 @@ Function Clean-Windows {
     # Start timer to track process duration
     $startTime = Get-Date
 
+    # Clean Global Temp Folder
     $globalTempPath = [System.IO.Path]::GetTempPath()
     Write-Host "Clearing global temp folder: $globalTempPath"
-    
-    # Get list of files and display progress bar
+
     $globalFiles = Get-ChildItem -Path $globalTempPath -Recurse -Force -ErrorAction SilentlyContinue
     $count = 0
     foreach ($file in $globalFiles) {
@@ -157,10 +182,10 @@ Function Clean-Windows {
     }
     Write-Progress -Activity "Cleaning global temp folder" -Completed
 
+    # Clean User Temp Folder
     $userTempPath = $env:TEMP
     Write-Host "Clearing user temp folder: $userTempPath"
-    
-    # Get list of files and display progress bar
+
     $userFiles = Get-ChildItem -Path $userTempPath -Recurse -Force -ErrorAction SilentlyContinue
     $count = 0
     foreach ($file in $userFiles) {
@@ -170,9 +195,69 @@ Function Clean-Windows {
     }
     Write-Progress -Activity "Cleaning user temp folder" -Completed
 
-    Write-Host "Temporary folders cleared successfully."
+    # Clean Windows Prefetch Folder
+    $prefetchPath = "$env:windir\Prefetch"
+    Write-Host "Clearing Windows prefetch folder: $prefetchPath"
+
+    $prefetchFiles = Get-ChildItem -Path $prefetchPath -Recurse -Force -ErrorAction SilentlyContinue
+    $count = 0
+    foreach ($file in $prefetchFiles) {
+        $count++
+        Write-Progress -Activity "Cleaning prefetch folder" -Status "Deleting file $count of $($prefetchFiles.Count)" -PercentComplete (($count / $prefetchFiles.Count) * 100)
+        Remove-Item -Path $file.FullName -Recurse -Force -ErrorAction SilentlyContinue
+    }
+    Write-Progress -Activity "Cleaning prefetch folder" -Completed
+
+    # Clean Recycle Bin
+    Write-Host "Emptying Recycle Bin..."
+    $null = (New-Object -ComObject Shell.Application).NameSpace(0xA).Items() | ForEach-Object { $_.InvokeVerb("delete") }
+
+    # Clear Windows Update Cache
+    $windowsUpdatePath = "$env:windir\SoftwareDistribution\Download"
+    Write-Host "Clearing Windows Update cache: $windowsUpdatePath"
     
-    # Run Disk Cleanup with progress indicator
+    $windowsUpdateFiles = Get-ChildItem -Path $windowsUpdatePath -Recurse -Force -ErrorAction SilentlyContinue
+    $count = 0
+    foreach ($file in $windowsUpdateFiles) {
+        $count++
+        Write-Progress -Activity "Cleaning Windows Update cache" -Status "Deleting file $count of $($windowsUpdateFiles.Count)" -PercentComplete (($count / $windowsUpdateFiles.Count) * 100)
+        Remove-Item -Path $file.FullName -Recurse -Force -ErrorAction SilentlyContinue
+    }
+    Write-Progress -Activity "Cleaning Windows Update cache" -Completed
+
+    # Clear Browser Cache (Chrome, Firefox, Edge)
+    # Chrome Cache
+    $chromeCachePath = "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Cache"
+    if (Test-Path $chromeCachePath) {
+        Write-Host "Clearing Chrome browser cache..."
+        Get-ChildItem -Path $chromeCachePath -Recurse -Force -ErrorAction SilentlyContinue | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+    }
+
+    # Firefox Cache
+    $firefoxCachePath = "$env:APPDATA\Mozilla\Firefox\Profiles"
+    if (Test-Path $firefoxCachePath) {
+        Write-Host "Clearing Firefox browser cache..."
+        Get-ChildItem -Path $firefoxCachePath -Recurse -Force -Include "cache2" -ErrorAction SilentlyContinue | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+    }
+
+    # Edge Cache
+    $edgeCachePath = "$env:LOCALAPPDATA\Microsoft\Edge\User Data\Default\Cache"
+    if (Test-Path $edgeCachePath) {
+        Write-Host "Clearing Edge browser cache..."
+        Get-ChildItem -Path $edgeCachePath -Recurse -Force -ErrorAction SilentlyContinue | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+    }
+
+    # Clean Windows Thumbnail Cache
+    $thumbnailCachePath = "$env:LOCALAPPDATA\Microsoft\Windows\Explorer"
+    Write-Host "Clearing Windows thumbnail cache: $thumbnailCachePath"
+    
+    Get-ChildItem -Path $thumbnailCachePath -Recurse -Include "*.db" -Force -ErrorAction SilentlyContinue | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
+
+    # Clean Temporary Internet Files
+    Write-Host "Clearing Internet Explorer/Edge temporary internet files..."
+    RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8  # 8 = Temporary Internet Files
+
+    # Run Disk Cleanup
     Write-Host "Running Disk Cleanup..."
     $diskCleanupPath = "$env:windir\System32\cleanmgr.exe"
     Start-Process -FilePath $diskCleanupPath -ArgumentList "/sagerun:1" -Wait
@@ -180,26 +265,42 @@ Function Clean-Windows {
     # Calculate and display elapsed time
     $elapsedTime = (Get-Date) - $startTime
     Write-Host "Cleanup completed in $($elapsedTime.TotalSeconds) seconds." -ForegroundColor Green
-    
+
     Pause
     Show-Menu
 }
 
 Function Fix-Windows {
     Clear-Host
-    Write-Host "Scanning and fixing Windows..."
-    Write-Host "Running chkdsk..."
+    Write-Host "Starting Windows repair process..." -ForegroundColor Cyan
+    
+    # Start timer to track process duration
+    $startTime = Get-Date
+    
+    Write-Host "Running chkdsk..." -ForegroundColor Yellow
     Start-Process -FilePath "chkdsk.exe" -ArgumentList "/scan /perf" -NoNewWindow -Wait
-    Write-Host "Running sfc..."
+    Write-Host "chkdsk completed." -ForegroundColor Green
+
+    Write-Host "Running sfc /scannow..." -ForegroundColor Yellow
     Start-Process -FilePath "sfc.exe" -ArgumentList "/scannow" -NoNewWindow -Wait
-    Write-Host "Running DISM..."
+    Write-Host "sfc completed." -ForegroundColor Green
+
+    Write-Host "Running DISM..." -ForegroundColor Yellow
     Start-Process -FilePath "DISM.exe" -ArgumentList "/Online /Cleanup-Image /RestoreHealth" -NoNewWindow -Wait
-    Write-Host "Running sfc again in case DISM repaired SFC..."
+    Write-Host "DISM completed." -ForegroundColor Green
+
+    Write-Host "Running sfc again in case DISM repaired system files..." -ForegroundColor Yellow
     Start-Process -FilePath "sfc.exe" -ArgumentList "/scannow" -NoNewWindow -Wait
-    Write-Host "Windows repair process completed."
+    Write-Host "Second sfc scan completed." -ForegroundColor Green
+    
+    # Calculate and display elapsed time
+    $elapsedTime = (Get-Date) - $startTime
+    Write-Host "Windows repair process completed in $($elapsedTime.TotalMinutes) minutes." -ForegroundColor Green
+
     Pause
     Show-Menu
 }
+
 
 Function Download-Apps {
     Clear-Host
