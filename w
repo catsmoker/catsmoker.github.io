@@ -105,13 +105,13 @@ Write-Host "                                           \|_________\|_________|  
     Write-Host " "
     Write-Host "            1. Scan and Fix Windows"
     Write-Host " "
-    Write-Host "            2. Downloads / drivers / updates / fixes"
+    Write-Host "            2. apps / drivers / updates / fixes"
     Write-Host " "
     Write-Host "            3. Activate Windows"
     Write-Host " "
     Write-Host "            4. Atlas OS Playbook and AME Wizard"
     Write-Host " "
-    Write-Host "            5. ctt Utility"
+    Write-Host "            5. CTT Utility"
     Write-Host " "
     Write-Host "            x. Exit"
     Write-Host " "
@@ -133,6 +133,7 @@ Write-Host "                                           \|_________\|_________|  
 # Define what happens when "f" is typed
 function Trigger-f {
     Clear-Host
+    Write-Host "Invalid choice. Please enter a number between 0 to 4 or x."
 	Write-Host " "
     Write-Host "F in the chat for respects!"
 	Write-Host " "
@@ -140,7 +141,7 @@ function Trigger-f {
 	Write-Host " "
 
     # Ask user to press a key
-    $input = Read-Host "Press 'f' to get candy or any other key to return to the menu"
+    $input = Read-Host "Press 'f' to get f**ked or any other key to return to the menu"
     
     # Check if they pressed "f"
     if ($input -eq 'f') {
@@ -156,7 +157,7 @@ function Trigger-f {
 
 Function Run-CTT {
     Clear-Host
-    Write-Host "Running The Ultimate Windows Utility by ctt..."
+    Write-Host "Running The Ultimate Windows Utility by CTT..."
     Start-Process "powershell" -ArgumentList "iwr -useb https://christitus.com/win | iex"
     Pause
     Show-Menu
@@ -324,6 +325,8 @@ Function Download-Apps {
 	Write-Host " "
     Write-Host "     5. Office 365"
 	Write-Host " "
+ 	Write-Host "--------------------------------------------------------------"
+  	Write-Host " "
     Write-Host "     x. Exit"
 	Write-Host " "
     $choice = Read-Host "Enter your choice (0-5, or x to exit)"
@@ -342,12 +345,6 @@ Function Download-Apps {
 Function Upgrade-All {
     Write-Host "Upgrading all packages using winget..." -NoNewline
     winget upgrade --all
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "Please go to https://winget.run/"
-        Pause
-        Download-Apps
-        return
-    }
     Write-Host "Done!"
     Pause
     Download-Apps
@@ -366,14 +363,8 @@ Download-Apps
 }
 
 Function cru {
-    Write-Host "Installing cru..." -NoNewline
+    Write-Host "cru website..." -NoNewline
     Start-Process "https://www.monitortests.com/forum/Thread-Custom-Resolution-Utility-CRU"
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "Installation failed. Please go to https://www.monitortests.com/forum/Thread-Custom-Resolution-Utility-CRU"
-        Pause
-        Download-Apps
-        return
-    }
     Write-Host "Done!"
     Pause
     Download-Apps
@@ -409,9 +400,9 @@ Function Install-Office365 {
 
 Function Install-Drivers {
     Clear-Host
-    Write-Host "                     Downloading drivers / updates..."
+    Write-Host " Downloading:          drivers / updates..."
 	Write-Host " "
-	Write-Host "       0. windows update app"
+	Write-Host "       0. windows updates minitool"
 	Write-Host " "
 	Write-Host "       1. windows updates using powershell"
 	Write-Host " "
@@ -437,7 +428,7 @@ $choice = Read-Host "Enter your choice (0-4, or x to exit)"
 }
 
 Function windows-update {
-    Write-Host "windows updates app..." -NoNewline
+    Write-Host "windows updates minitool website..." -NoNewline
     Start-Process "https://www.majorgeeks.com/mg/getmirror/windows_update_minitool,1.html"
     Write-Host "Done!"
     Pause
@@ -481,10 +472,6 @@ Function nvidia {
 Function Activate-Windows {
     Clear-Host
     Write-Host "Activating Windows..."
-    Write-Host "                             use PowerShell (Recommended)"
-    Write-Host "       1. Right-click on the Windows start menu and select PowerShell or Terminal (Not CMD)."
-    Write-Host "       2. Copy and paste the code below and press enter"
-    Write-Host "       3. irm https://get.activated.win | iex"
     Start-Process "powershell" -ArgumentList "irm https://get.activated.win | iex"
     Write-Host "Done!"
     Pause
