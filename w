@@ -263,6 +263,10 @@ Function Clean-Windows {
     $diskCleanupPath = "$env:windir\System32\cleanmgr.exe"
     Start-Process -FilePath $diskCleanupPath -ArgumentList "/sagerun:1" -Wait
 
+    # Flush the DNS Cache
+    Write-Host "Flushing the DNS Cache..."
+    ipconfig /flushdns
+
     # Calculate and display elapsed time
     $elapsedTime = (Get-Date) - $startTime
     Write-Host "Cleanup completed in $($elapsedTime.TotalSeconds) seconds." -ForegroundColor Green
