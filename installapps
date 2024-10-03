@@ -1,3 +1,30 @@
+# Check if winget is installed
+if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+    Write-Host "winget is not installed. Attempting to install..."
+
+    # Download the latest version of the App Installer from the Microsoft Store
+    $installerUrl = "https://aka.ms/getwinget"
+    
+    # Define the path for the installer
+    $installerPath = "$env:TEMP\AppInstaller.msixbundle"
+
+    # Download the installer
+    try {
+        Invoke-WebRequest -Uri $installerUrl -OutFile $installerPath
+        Write-Host "Downloaded winget installer."
+
+        # Install the downloaded package
+        Add-AppxPackage -Path $installerPath
+        Write-Host "winget installation completed."
+    } catch {
+        Write-Host "Failed to download or install winget. Please try again."
+        Write-Host $_.Exception.Message
+    }
+} else {
+    Write-Host "winget is already installed."
+    Write-Host "select software from the menu."
+}
+
 # Load necessary assemblies
 [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Windows.Forms")
 [void] [System.Reflection.Assembly]::LoadWithPartialName("System.Drawing")
