@@ -490,7 +490,7 @@ Function Download-Playbook {
 
     Write-Host "Downloading Atlas OS playbook..."
     $atlasPath = [System.IO.Path]::Combine($downloadsPath, 'AtlasPlaybook_v0.4.0.zip')
-    Invoke-WebRequest -Uri 'https://github.com/Atlas-OS/Atlas/releases/download/0.4.0/AtlasPlaybook_v0.4.0.zip' -OutFile $atlasPath
+    Invoke-WebRequest -Uri 'https://github.com/Atlas-OS/Atlas/releases/download/0.4.1/AtlasPlaybook_v0.4.1.zip' -OutFile $atlasPath
 
     Write-Host "Downloading AME Wizard to Desktop..."
     $amePath = [System.IO.Path]::Combine($downloadsPath, 'AME Wizard Beta.zip')
