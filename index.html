@@ -18,8 +18,47 @@
 
     <title>Redirecting to Foxsmoker</title>
     <meta http-equiv="refresh" content="0; url=https://catsmoker.github.io/oldindex">
+    
+    <!-- Dark Mode CSS -->
+    <style>
+        body {
+            background-color: #fff;
+            color: #000;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        a {
+            color: #007bff;
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        a.dark-mode {
+            color: #80cbc4;
+        }
+    </style>
+
+    <!-- JavaScript for Dark Mode Toggle -->
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+        }
+
+        // Optionally enable dark mode based on user preference
+        const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (prefersDarkScheme) {
+            document.body.classList.add('dark-mode');
+        }
+    </script>
 </head>
 <body>
     <p>If you are not redirected automatically, follow this <a href="https://catsmoker.github.io/oldindex">link</a>.</p>
+
+    <!-- Dark Mode Toggle Button -->
+    <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
 </body>
 </html>
