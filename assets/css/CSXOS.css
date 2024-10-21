@@ -47,7 +47,7 @@ p {
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExeDljNnVteHlpcW80bzAybzloZGhuaWVwZm1obzF0cWR3NXk0Nnk2dCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/12bF3AWU423YeA/giphy.webp') no-repeat center center/cover;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNGo0ZDdyd2Zwdjg5cHc5amd2YW02anFzbzJmN2VuaTI3dmR6YWp4dSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/GeimqsH0TLDt4tScGw/giphy.webp') no-repeat center center/cover;
     height: 100vh;
     display: flex;
     flex-direction: column;
