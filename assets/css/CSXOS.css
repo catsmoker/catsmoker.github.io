@@ -14,7 +14,7 @@ body {
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('background-image.jpg') no-repeat center center/cover;
+    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('assets/imgs/xp.gif') no-repeat center center/cover;
     height: 100vh;
     display: flex;
     justify-content: center;
