@@ -47,7 +47,7 @@ p {
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('XXXXXXXXXXXXXXXXXXXX') no-repeat center center/cover;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://raw.githubusercontent.com/catsmoker/catsmoker.github.io/refs/heads/main/assets/imgs/xp.gif') no-repeat center center/cover;
     height: 100vh;
     display: flex;
     flex-direction: column;
