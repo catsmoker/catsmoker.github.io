@@ -102,7 +102,7 @@ button, select {
 }
 
 button, [type="button"], [type="reset"], [type="submit"] {
-  -webkit-appearance: button;
+  -webkit-user-drag: button;
 }
 
 button:not(:disabled), [type="button"]:not(:disabled), [type="reset"]:not(:disabled), [type="submit"]:not(:disabled) {
