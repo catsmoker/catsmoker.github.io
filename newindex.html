@@ -9,6 +9,17 @@
     <!-- Meta Description -->
     <meta name="description" content="Catsmoker - Your destination for immersive experiences and captivating content.">
     
+    <!-- Schema Markup for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Catsmoker",
+      "url": "https://catsmoker.com",
+      "logo": "https://catsmoker.com/assets/logo/logo.png"
+    }
+    </script>
+
     <!-- Favicon -->
     <link rel="icon" sizes="32x32" href="assets/ico/newfavicon.ico" type="image/x-icon">
     
@@ -16,10 +27,9 @@
     <title>CatSmoker</title>
     
     <!-- CSS Stylesheet -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/css/newstyles.css">
     
-    <!-- Google html tag -->
-    <meta name="google-site-verification" content="94yikHgXPrOKpgz16lV4EGVhfTQoGgm-ZVwHfQdl4M8" />
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-9L0YJB8T77"></script>
     <script>
@@ -30,44 +40,29 @@
     </script>
     <!-- AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6395046646821342" crossorigin="anonymous"></script>
-    <!-- <google-meta> tag -->
-    <meta name="google-adsense-account" content="ca-pub-6395046646821342">
 </head>
 <body data-spy="scroll" data-target=".navbar" data-offset="40" id="home">
 
     <!-- Page Navigation -->
-    <nav class="navbar custom-navbar navbar-expand-md navbar-light fixed-top" data-spy="affix" data-offset-top="10">
-        <div class="container">
-            <a class="navbar-brand" href="#">
-                <img src="assets/logo/logo.png" alt="Catsmoker Logo">
-            </a>
-            <button class="navbar-toggler ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ml-auto">                     
-                    <li class="nav-item">
-                        <a class="nav-link" href="downloads.html">Downloads</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#about">About Us</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#content">Content</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="donation.html">Support Me</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#contact">Contact</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="https://www.youtube.com/@CATSM0KER?sub_confirmation=1" class="ml-4 nav-link btn btn-primary btn-sm rounded">Subscribe</a>
-                    </li>
-                </ul>
-            </div>
+<nav class="navbar custom-navbar navbar-expand-md fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="#home">
+            <img src="assets/logo/logo.png" alt="Catsmoker Logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="#about">About Us</a></li>
+                <li class="nav-item"><a class="nav-link" href="#content">Content</a></li>
+                <li class="nav-item"><a class="nav-link" href="downloads.html">Downloads</a></li>
+                <li class="nav-item"><a class="nav-link" href="donation.html">Support</a></li>
+                <li class="nav-item"><a class="nav-link btn btn-primary" href="https://www.youtube.com/@CATSM0KER?sub_confirmation=1">Subscribe</a></li>
+            </ul>
         </div>
-    </nav>
+    </div>
+</nav>
     <!-- End Of Navigation -->
 
     <!-- Page Header -->
@@ -86,15 +81,14 @@
     <!-- End Of Page Header -->
 
     <!-- Content Section -->
-    <section id="content" class="section pt-0">
-        <div class="container">
-            <h6 class="section-title text-center">Content</h6>
-            <h6 class="section-subtitle text-center mb-5 pb-3">Your destination for immersive experiences and captivating content.</h6>
-            <h6>Unleash the Power of Content.</h6>
-            <h6>Dive into a personalized content journey featuring videos, and more that match your interests.</h6>
-            <h6>Start exploring now</h6>
+    <main id="content" class="section pt-0">
+        <div class="container text-center">
+            <h2 class="section-title">Content</h2>
+            <p class="section-subtitle mb-5">Your destination for immersive experiences and captivating content.</p>
+            <p>Unleash the Power of Content.</p>
+            <p>Start exploring now.</p>
         </div>
-    </section>
+    </main>
 
     <!-- Videos Section -->
     <section id="videos" class="section videos-center">
@@ -102,12 +96,12 @@
             <!-- YouTube Videos -->
             <div class="video-container">
                 <!-- Individual Videos Embeds -->
-	        <iframe width="560" height="315" src="https://www.youtube.com/embed/Ie0vEiQaQek" loading="lazy" title="YouTube video player 1" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/pXZIm_qD2Fg" loading="lazy" title="YouTube video player 1" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/t5TQ0sMYxhE" loading="lazy" title="YouTube video player 2" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/_b-kUbEgP0E" loading="lazy" title="YouTube video player 3" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/eN0nsP9TsOQ" loading="lazy" title="YouTube video player 4" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/_qz02hjemBU" loading="lazy" title="YouTube video player 5" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+	            <iframe width="560" height="315" src="https://www.youtube.com/embed/Ie0vEiQaQek" loading="lazy" title="Video" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/pXZIm_qD2Fg" loading="lazy" title="Video" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/t5TQ0sMYxhE" loading="lazy" title="Video" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/_b-kUbEgP0E" loading="lazy" title="Video" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/eN0nsP9TsOQ" loading="lazy" title="Video" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/_qz02hjemBU" loading="lazy" title="Video" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
         </div>
     </section>
@@ -117,7 +111,7 @@
         <div class="container">
             <h6 class="section-title text-center">Our Supporters</h6>
             <div class="supporters-container text-center">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/qaBDxNMi5eM" loading="lazy" title="Supporters YouTube video player" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/qaBDxNMi5eM" loading="lazy" title="Video" frameborder="0" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
             </div>
         </div>
     </section>
