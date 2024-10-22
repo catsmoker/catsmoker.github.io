@@ -47,7 +47,7 @@ p {
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('xxxxxxx') no-repeat center center/cover;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExNDEzcTZkbHVnaXVzejY2dnNraXZ2MmM2emM2eHd2OWNhN3NzdmlpaiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l2ECXx80AOmXK/giphy.webp') no-repeat center center/cover;
     height: 100vh;
     display: flex;
     flex-direction: column;
