@@ -846,3 +846,52 @@ footer {
   padding: 1rem 0;
   text-align: center;
 }
+
+#introduction header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 15vh;
+    text-align: center;
+}
+
+.text-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.dark-mode #introduction header h1, 
+.dark-mode #introduction header p {
+    color: var(--dark-secondary-color);
+}
+
+#about {
+    text-align: center;
+    padding: 40px;
+    background-color: var(--background-color);
+    border-top: 2px solid var(--primary-color);
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.dark-mode #about {
+    background-color: var(--dark-background-color);
+    border-top: 2px solid var(--dark-primary-color);
+    border-bottom: 2px solid var(--dark-primary-color);
+}
+
+.site-logo img {
+    border-radius: 50%;
+    width: 132px;
+    height: 132px;
+}
+
+#about h2 {
+    margin-top: 10px;
+}
+
+.dark-mode h1, 
+.dark-mode h2, 
+.dark-mode h3, 
+.dark-mode p {
+    color: var(--dark-secondary-color);
+}
