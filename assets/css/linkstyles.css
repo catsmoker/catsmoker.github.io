@@ -6,8 +6,7 @@ body {
   font-family: 'Poppins', sans-serif;
   background: linear-gradient(135deg, #4c83ff, #884aff);
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column; /* Ensures proper column stacking */
   min-height: 100vh;
   color: #fff;
 }
@@ -22,6 +21,7 @@ body {
   width: 90%;
   backdrop-filter: blur(10px);
   animation: fadeIn 1.5s ease;
+  margin: auto; /* Center the container vertically */
 }
 
 .profile {
@@ -119,6 +119,27 @@ p {
 
 .link.donation {
   background: #e4965f;
+}
+
+/* Footer Styles */
+footer {
+  text-align: center;
+  padding: 1rem 0;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-size: 14px;
+  position: relative;
+}
+
+footer p {
+  margin: 0;
+  font-size: 14px;
+  color: #e3e3e3;
+  transition: color 0.3s;
+}
+
+footer p:hover {
+  color: #ffffff;
 }
 
 /* Responsive Styles */
