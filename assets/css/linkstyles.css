@@ -117,6 +117,14 @@ p {
   background: #e4405f;
 }
 
+.link.linkedin {
+  background: #e3088d;
+}
+
+.link.whatsapp {
+  background: #e12211;
+}
+
 .link.donation {
   background: #e4965f;
 }
