@@ -6,7 +6,7 @@ body {
   font-family: 'Poppins', sans-serif;
   background: linear-gradient(135deg, #4c83ff, #884aff);
   display: flex;
-  flex-direction: column; /* Ensures proper column stacking */
+  flex-direction: column;
   min-height: 100vh;
   color: #fff;
 }
@@ -21,7 +21,7 @@ body {
   width: 90%;
   backdrop-filter: blur(10px);
   animation: fadeIn 1.5s ease;
-  margin: auto; /* Center the container vertically */
+  margin: auto;
 }
 
 .profile {
@@ -129,7 +129,6 @@ p {
   background: #e4965f;
 }
 
-/* Footer Styles */
 footer {
   text-align: center;
   padding: 1rem 0;
@@ -150,7 +149,6 @@ footer p:hover {
   color: #ffffff;
 }
 
-/* Responsive Styles */
 @media (max-width: 768px) {
   .profile-pic {
     width: 100px;
