@@ -1,0 +1,214 @@
+
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #4c83ff, #884aff);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  color: #fff;
+}
+
+.container {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  width: 90%;
+  backdrop-filter: blur(10px);
+  animation: fadeIn 1.5s ease;
+  margin: auto;
+}
+
+.profile {
+  margin-bottom: 20px;
+}
+
+.profile-pic {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  margin-bottom: 15px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 600;
+}
+
+p {
+  margin: 5px 0 20px;
+  font-size: 16px;
+  color: #e3e3e3;
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+}
+
+.link {
+  text-decoration: none;
+  padding: 12px 20px;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.link i {
+  font-size: 20px;
+}
+
+.link:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  opacity: 0.9;  /* Optional for a subtle effect */
+}
+
+.back-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 10px 15px;
+  border-radius: 25px;
+  transition: background 0.3s;
+}
+
+.back-button i {
+  font-size: 18px;
+}
+
+.back-button:hover {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.link.paypal {
+  background: #0070ba; /* PayPal blue */
+}
+
+.link.patreon {
+  background: #f96854; /* Patreon red */
+}
+
+.link.buymeacoffee {
+  background: #ff813f; /* BuyMeACoffee orange */
+}
+
+.link.pawns {
+  background: #16c7d0; /* Pawns teal */
+}
+
+.link.honeygain {
+  background: #ffbc00; /* Honeygain yellow */
+}
+
+.link.payoneer {
+  background: #003f87; /* Payoneer blue */
+}
+
+.link.wise {
+  background: #2e7d32; /* Wise green */
+}
+
+footer {
+  text-align: center;
+  padding: 1rem 0;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  font-size: 14px;
+  position: relative;
+}
+
+footer p {
+  margin: 0;
+  font-size: 14px;
+  color: #e3e3e3;
+  transition: color 0.3s;
+}
+
+footer p:hover {
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .profile-pic {
+    width: 100px;
+    height: 100px;
+  }
+
+  h1 {
+    font-size: 22px;
+  }
+
+  .link {
+    font-size: 14px;
+    padding: 10px 15px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container {
+    max-width: 600px;
+  }
+
+  h1 {
+    font-size: 32px;
+  }
+
+  p {
+    font-size: 18px;
+  }
+
+  .link {
+    font-size: 18px;
+    padding: 15px 25px;
+  }
+
+  .profile-pic {
+    width: 140px;
+    height: 140px;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.contact a {
+  color: #ffcc00; /* Example color for the email link */
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.contact a:hover {
+  color: #ffffff; /* Change to white when hovered */
+}
