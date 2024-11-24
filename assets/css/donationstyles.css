@@ -103,31 +103,31 @@ p {
 }
 
 .link.paypal {
-  background: #0070ba; /* PayPal blue */
+  background: #0070ba;
 }
 
 .link.patreon {
-  background: #f96854; /* Patreon red */
+  background: #f96854;
 }
 
 .link.buymeacoffee {
-  background: #ff813f; /* BuyMeACoffee orange */
+  background: #ff813f;
 }
 
 .link.pawns {
-  background: #16c7d0; /* Pawns teal */
+  background: #16c7d0;
 }
 
 .link.honeygain {
-  background: #ffbc00; /* Honeygain yellow */
+  background: #ffbc00;
 }
 
 .link.payoneer {
-  background: #003f87; /* Payoneer blue */
+  background: #003f87;
 }
 
 .link.wise {
-  background: #2e7d32; /* Wise green */
+  background: #2e7d32;
 }
 
 footer {
