@@ -199,3 +199,14 @@ footer p:hover {
     transform: translateY(0);
   }
 }
+
+.contact a {
+  color: #ffcc00;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.contact a:hover {
+  color: #ffffff;
+}
