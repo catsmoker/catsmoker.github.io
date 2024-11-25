@@ -130,6 +130,10 @@ p {
   background: #2e7d32;
 }
 
+.link.binance {
+  background: #f9754f;
+}
+
 footer {
   text-align: center;
   padding: 1rem 0;
