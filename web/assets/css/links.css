@@ -134,6 +134,74 @@ p {
   background: #12161c;
 }
 
+.link.blog {
+  background: #ff6347;
+}
+
+.link.website {
+  background: #5a9bd3;
+}
+
+.link.hire-me {
+  background: #75a987;
+}
+
+.link.youtube {
+  background: #ff0000;
+}
+
+.link.spotify {
+  background: #1db954;
+}
+
+.link.github {
+  background: #333333;
+}
+
+.link.discord {
+  background: #5865f2;
+}
+
+.link.telegram {
+  background: #0088cc;
+}
+
+.link.twitter {
+  background: #1da1f2;
+}
+
+.link.facebook {
+  background: #3b5998;
+}
+
+.link.instagram {
+  background: #e4405f;
+}
+
+.link.linkedin {
+  background: #0000FF;
+}
+
+.link.whatsapp {
+  background: #00ff00;
+}
+
+.link.donation {
+  background: #e4965f;
+}
+
+.link.ytjobs {
+  background: #e4305d;
+}
+
+.link.fiverr {
+  background: #00ff00;
+}
+
+.link.upwork {
+  background: #f720j4;
+}
+
 footer {
   text-align: center;
   padding: 1rem 0;
