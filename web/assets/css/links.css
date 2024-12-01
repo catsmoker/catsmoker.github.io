@@ -202,6 +202,10 @@ p {
   background: #4c4444;
 }
 
+.link.store {
+  background: #4c4834;
+}
+
 footer {
   text-align: center;
   padding: 1rem 0;
