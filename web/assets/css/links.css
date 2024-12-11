@@ -156,10 +156,6 @@ p {
   background: #ff0000;
 }
 
-.link.spotify {
-  background: #1db954;
-}
-
 .link.github {
   background: #333333;
 }
@@ -172,8 +168,8 @@ p {
   background: #0088cc;
 }
 
-.link.twitter {
-  background: #1da1f2;
+.link.x {
+  background: #000000;
 }
 
 .link.facebook {
