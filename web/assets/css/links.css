@@ -332,15 +332,33 @@ footer p:hover {
   display: flex;
   align-items: center;
   gap: 10px;
-  background: rgba(255, 255, 255, 0.2);
-  color: rgba(255, 255, 255, 0.6);
   padding: 12px 25px;
   border-radius: 30px;
   text-decoration: none;
   font-weight: 600;
   transition: all 0.3s ease;
-  cursor: not-allowed;
   position: relative;
+}
+
+.app-button.disabled {
+  background: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.6);
+  cursor: not-allowed;
+}
+
+.app-button.active {
+  background: rgba(255, 255, 255, 0.9);
+  color: #4c83ff;
+  cursor: pointer;
+}
+
+.app-button.active:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.app-button.disabled:hover {
+  background: rgba(255, 255, 255, 0.25);
 }
 
 .coming-soon {
@@ -356,13 +374,11 @@ footer p:hover {
   color: rgba(255, 255, 255, 0.8);
 }
 
-.app-button:hover {
-  background: rgba(255, 255, 255, 0.25);
+.app-button i {
+  font-size: 20px;
 }
 
-.app-button svg {
-  width: 24px;
-  height: 24px;
+.app-button.disabled i {
   opacity: 0.6;
 }
 
