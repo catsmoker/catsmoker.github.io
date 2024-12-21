@@ -282,7 +282,7 @@ footer p:hover {
     transform: translateY(0);
   }
 }
-
+/* ----------------------------- */
 .contact a {
   color: #ffcc00;
   text-decoration: none;
@@ -293,3 +293,90 @@ footer p:hover {
 .contact a:hover {
   color: #ffffff;
 }
+
+    .content {
+      flex: 1;
+      min-width: 300px;
+      color: white;
+    }
+.buttons {
+      display: flex;
+      gap: 20px;
+    }
+
+    .button {
+      background: white;
+      color: #6366f1;
+      padding: 15px 30px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.1rem;
+      transition: transform 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .phone {
+      flex: 1;
+      min-width: 300px;
+      max-width: 400px;
+      position: relative;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .phone-frame {
+      width: 100%;
+      padding-top: 200%;
+      background: #222;
+      border-radius: 40px;
+      position: relative;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+
+    .screen {
+      position: absolute;
+      top: 2%;
+      left: 2%;
+      right: 2%;
+      bottom: 2%;
+      background: #fff;
+      border-radius: 35px;
+      overflow: hidden;
+    }
+
+    .app-preview {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, #f3f4f6 25%, #e5e7eb 25%, #e5e7eb 50%, #f3f4f6 50%, #f3f4f6 75%, #e5e7eb 75%, #e5e7eb 100%);
+      background-size: 20px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #6366f1;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50%;
+      height: 25px;
+      background: #222;
+      border-bottom-left-radius: 20px;
+      border-bottom-right-radius: 20px;
+    }
