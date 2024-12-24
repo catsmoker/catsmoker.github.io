@@ -70,7 +70,7 @@ const debouncedFilterLinks = debounce(filterLinks, 300);
 document.getElementById('searchBox').addEventListener('input', debouncedFilterLinks);
 
 document.getElementById('gohome').addEventListener('click', function() {
-    window.location.href = 'index.html'; // Navigate to the home page
+    window.location.href = 'https://catsmoker.github.io'; // Navigate to the home page
 });
 
 document.getElementById('darkModeToggle').addEventListener('click', function() {
