@@ -449,3 +449,70 @@ footer p:hover {
     max-width: 220px;
   }
 }
+
+/* --------other--------- */
+.downloads-section {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 30px;
+  margin: 20px auto;
+  backdrop-filter: blur(10px);
+  animation: fadeIn 1.5s ease;
+}
+
+.downloads-content {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.downloads-content h2 {
+  font-size: 24px;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+.downloads-content p {
+  color: #e3e3e3;
+  margin-bottom: 25px;
+}
+
+.downloads-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.downloads-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 25px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  background: rgba(255, 255, 255, 0.9);
+  color: #4c83ff;
+  cursor: pointer;
+}
+
+.downloads-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.downloads-button i {
+  font-size: 20px;
+}
+
+@media (max-width: 768px) {
+  .downloads-content h2 {
+    font-size: 20px;
+  }
+  
+  .downloads-button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
