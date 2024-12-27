@@ -68,19 +68,38 @@
 	</a>
       </div>
 	    
-      <div class="btc-address" onclick="navigator.clipboard.writeText('1FCpWous8JmKBSB651u3GJmh5caWvJ6d33')">
-            <p>BTC Address (click to copy):</p>
-            <p>1FCpWous8JmKBSB651u3GJmh5caWvJ6d33</p>
-      </div>
-	    
-    <div class="contact">
-      <p>Email Me: <a href="mailto:catsmoker.lab@gmail.com">Here</a></p>
+       <div class="btc-container">
+            <p>BTC Address:</p>
+            <div class="btc-address">1FCpWous8JmKBSB651u3GJmh5caWvJ6d33</div>
+            <button class="copy-button" onclick="copyBtcAddress()">
+                <i class="fas fa-copy"></i>
+                Copy Address
+            </button>
+            <div class="copied-message" id="copiedMessage">Address copied to clipboard!</div>
+        </div>
+
+        <div class="contact">
+            <p>Email Me: <a href="mailto:catsmoker.lab@gmail.com">Here</a></p>
+        </div>
     </div>
-  </div>
-	  
+
     <footer>
-      <p>© 2024 CATSMOKER. All rights reserved.</p>
+        <p>© 2024 CATSMOKER. All rights reserved.</p>
     </footer>
-	  
+
+    <script>
+        function copyBtcAddress() {
+            const btcAddress = '1FCpWous8JmKBSB651u3GJmh5caWvJ6d33';
+            navigator.clipboard.writeText(btcAddress);
+            
+            const copiedMessage = document.getElementById('copiedMessage');
+            copiedMessage.style.display = 'block';
+            
+            setTimeout(() => {
+                copiedMessage.style.display = 'none';
+            }, 2000);
+        }
+    </script>
+	      
   </body>
 </html>
