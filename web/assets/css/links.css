@@ -516,3 +516,57 @@ footer p:hover {
     font-size: 14px;
   }
 }
+
+/* btc address */
+
+.btc-address {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  border-radius: 8px;
+  margin: 10px 0;
+  font-family: monospace;
+  font-size: 14px;
+  word-break: break-all;
+  color: #fff;
+}
+
+.copy-button {
+  background: rgba(255, 255, 255, 0.9);
+  color: #4c83ff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px auto;
+  transition: all 0.3s ease;
+}
+
+.copy-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.copy-button i {
+  font-size: 16px;
+}
+
+.copied-message {
+  display: none;
+  background: rgba(0, 255, 0, 0.2);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  margin: 10px auto;
+  font-size: 14px;
+  animation: fadeOut 2s ease;
+}
+
+@keyframes fadeOut {
+  0% { opacity: 1; }
+  70% { opacity: 1; }
+  100% { opacity: 0; }
+}
