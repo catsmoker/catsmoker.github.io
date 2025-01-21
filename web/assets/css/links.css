@@ -1,3 +1,4 @@
+/* General Styles */
 body {
   margin: 0;
   padding: 0;
@@ -28,17 +29,17 @@ body {
 }
 
 .profile-pic {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    border: 5px solid transparent;
-    transition: border-color 0.3s ease;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 5px solid transparent;
+  transition: border-color 0.3s ease;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
 }
 
 .profile-pic:hover {
-    border-color: #007bff; /* Add ring effect on hover */
-    box-shadow: 0 0 20px rgba(0, 123, 255, 0.5);
+  border-color: #007bff;
+  box-shadow: 0 0 20px rgba(0, 123, 255, 0.5);
 }
 
 h1 {
@@ -108,110 +109,35 @@ p {
   background: rgba(0, 0, 0, 0.7);
 }
 
-.link.paypal {
-  background: #0070ba;
-}
+/* Link Colors */
+.link.paypal { background: #0070ba; }
+.link.patreon { background: #f96854; }
+.link.buymeacoffee { background: #ff813f; }
+.link.pawns { background: #16c7d0; }
+.link.honeygain { background: #ffbc00; }
+.link.payoneer { background: #003f87; }
+.link.wise { background: #2e7d32; }
+.link.binance { background: #12161c; }
+.link.blog { background: #ff6347; }
+.link.website { background: #5a9bd3; }
+.link.hire-me { background: #75a987; }
+.link.youtube { background: #ff0000; }
+.link.gitlab { background: #FF5733; }
+.link.discord { background: #5865f2; }
+.link.telegram { background: #0088cc; }
+.link.twitter { background: #000000; }
+.link.facebook { background: #3b5998; }
+.link.instagram { background: #e4405f; }
+.link.linkedin { background: #0000FF; }
+.link.whatsapp { background: #00ff00; }
+.link.donation { background: #e4965f; }
+.link.ytjobs { background: #e4305d; }
+.link.fiverr { background: #00ff00; }
+.link.upwork { background: #4c4444; }
+.link.store { background: #4c4834; }
+.link.reddit { background: #FF4500; }
 
-.link.patreon {
-  background: #f96854;
-}
-
-.link.buymeacoffee {
-  background: #ff813f;
-}
-
-.link.pawns {
-  background: #16c7d0;
-}
-
-.link.honeygain {
-  background: #ffbc00;
-}
-
-.link.payoneer {
-  background: #003f87;
-}
-
-.link.wise {
-  background: #2e7d32;
-}
-
-.link.binance {
-  background: #12161c;
-}
-
-.link.blog {
-  background: #ff6347;
-}
-
-.link.website {
-  background: #5a9bd3;
-}
-
-.link.hire-me {
-  background: #75a987;
-}
-
-.link.youtube {
-  background: #ff0000;
-}
-
-.link.gitlab {
-  background: #FF5733;
-}
-
-.link.discord {
-  background: #5865f2;
-}
-
-.link.telegram {
-  background: #0088cc;
-}
-
-.link.twitter {
-  background: #000000;
-}
-
-.link.facebook {
-  background: #3b5998;
-}
-
-.link.instagram {
-  background: #e4405f;
-}
-
-.link.linkedin {
-  background: #0000FF;
-}
-
-.link.whatsapp {
-  background: #00ff00;
-}
-
-.link.donation {
-  background: #e4965f;
-}
-
-.link.ytjobs {
-  background: #e4305d;
-}
-
-.link.fiverr {
-  background: #00ff00;
-}
-
-.link.upwork {
-  background: #4c4444;
-}
-
-.link.store {
-  background: #4c4834;
-}
-
-.link.reddit {
-  background: #FF4500;
-}
-
+/* Footer */
 footer {
   text-align: center;
   padding: 1rem 0;
@@ -232,6 +158,7 @@ footer p:hover {
   color: #ffffff;
 }
 
+/* Media Queries */
 @media (max-width: 768px) {
   .profile-pic {
     width: 100px;
@@ -272,6 +199,7 @@ footer p:hover {
   }
 }
 
+/* Animations */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -294,8 +222,7 @@ footer p:hover {
   color: #ffffff;
 }
 
-/* ---------------APP-------------- */
-
+/* App Section */
 .app-section {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 15px;
@@ -450,7 +377,7 @@ footer p:hover {
   }
 }
 
-/* --------other--------- */
+/* Downloads Section */
 .downloads-section {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 15px;
@@ -517,7 +444,7 @@ footer p:hover {
   }
 }
 
-/* ADS */
+/* Ad Section */
 .ad-section {
   text-align: center;
   margin: 20px 0;
@@ -539,8 +466,7 @@ footer p:hover {
   max-width: 600px;
 }
 
-/* btc address */
-
+/* BTC Address Section */
 .btc-address {
   background: rgba(255, 255, 255, 0.1);
   padding: 12px;
