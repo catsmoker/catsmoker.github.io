@@ -55,7 +55,7 @@ $targetPath = "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
 $arguments = "-NoProfile -ExecutionPolicy Bypass -Command `"powershell.exe -NoProfile -ExecutionPolicy Bypass -Command 'irm https://catsmoker.github.io/w | iex'`""
 
 # Define the URL for the icon and the path to save it locally
-$iconUrl = "https://catsmoker.github.io/assets/ico/favicon.ico"
+$iconUrl = "https://catsmoker.github.io/web/assets/ico/favicon.ico"
 $localIconPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'favicon.ico')
 
 # Download the icon file
