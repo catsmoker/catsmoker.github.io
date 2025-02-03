@@ -6,10 +6,10 @@
 <#
 .NOTES
     Author         : catsmoker
-    Email          : boulhada08@gmail.com
+    Email          : catsmoker.lab@gmail.com
     Website        : https://catsmoker.github.io
     GitHub         : https://github.com/catsmoker/cs_script
-    Version        : 1.7
+    Version        : 1.8
 #>
 
                                                       
@@ -95,7 +95,7 @@ Write-Host "                                  \|_______|\_________\\_________\|_
 Write-Host "                                           \|_________\|_________|                                           " -ForegroundColor Cyan
 	Write-Host " "
 	Write-Host " "
-    Write-Host "                                               cs Script v1.7 (by catsmoker) https://catsmoker.github.io"
+    Write-Host "                                               cs Script v1.8 (by catsmoker) https://catsmoker.github.io"
     Write-Host " "
 	Write-Host " "
     Write-Host "            Select an option:"
