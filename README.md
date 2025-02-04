@@ -8,7 +8,7 @@
 
 Click the button below to go to the Catsmoker website:
 
-<a href="https://catsmoker.gitlab.io" class="button">Go to Catsmoker Website</a>
+<a href="https://catsmoker.github.io" class="button">Go to Catsmoker Website</a>
 
 ---
 
