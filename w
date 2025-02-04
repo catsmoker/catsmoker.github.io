@@ -12,33 +12,29 @@
     Version        : 1.8
 #>
 
-                                                      
-
 # Check if the script is running as administrator
 Write-Host "Checking if running as administrator..."
 $adminCheck = [System.Security.Principal.WindowsPrincipal] [System.Security.Principal.WindowsIdentity]::GetCurrent()
 $adminRole = [System.Security.Principal.WindowsBuiltInRole]::Administrator
 if (-not $adminCheck.IsInRole($adminRole)) {
+    $separator = "============================================================="
+    $adminMessage = "Attention Required!"
+    Write-Host $separator -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host $adminMessage -ForegroundColor Red -BackgroundColor Black
+    Write-Host ""
+    Write-Host "Oops! It looks like this script is not running with administrator privileges." -ForegroundColor Magenta
+    Write-Host "For optimal performance and access to all features, we need to restart this script with elevated rights." -ForegroundColor Magenta
+    Write-Host ""
+    Write-Host "Attempting to relaunch with administrative privileges... Please wait." -ForegroundColor Green
+    Write-Host ""
+    Write-Host $separator -ForegroundColor Yellow
 
-# text
-$separator = "============================================================="
-$adminMessage = "$warningSymbol  Attention Required!  $warningSymbol"
-Write-Host $separator -ForegroundColor Yellow
-Write-Host ""
-Write-Host $adminMessage -ForegroundColor Red -BackgroundColor Black
-Write-Host ""
-Write-Host "Oops! It looks like this script is not running with administrator privileges." -ForegroundColor Magenta
-Write-Host "For optimal performance and access to all features, we need to restart this script with elevated rights." -ForegroundColor Magenta
-Write-Host ""
-Write-Host "Attempting to relaunch with administrative privileges... Please wait." -ForegroundColor Green
-Write-Host ""
-Write-Host $separator -ForegroundColor Yellow
-
-# Restart the script with administrative privileges
-$newProcess = Start-Process -FilePath "powershell.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs -Wait
-exit
+    # Restart the script with administrative privileges
+    $newProcess = Start-Process -FilePath "powershell.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs -Wait
+    exit
 } else {
-Write-Host "Script is running as administrator."
+    Write-Host "Script is running as administrator."
 }
 
 # Check if the script is running on a supported operating system
@@ -74,287 +70,199 @@ $shortcut.IconLocation = $localIconPath
 # Save the shortcut
 $shortcut.Save()
 
-# Window Title
-$Host.UI.RawUI.WindowTitle = "catsmoker: cs_script"
+# Load necessary assemblies for UI
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
 
-# Change text color to Green and background color to Black
-$host.UI.RawUI.ForegroundColor = "Green"
-$host.UI.RawUI.BackgroundColor = "Black"
+# Main Form
+$mainForm = New-Object System.Windows.Forms.Form
+$mainForm.Text = "CS Script v1.8 by catsmoker"
+$mainForm.Size = New-Object System.Drawing.Size(800, 600)
+$mainForm.StartPosition = "CenterScreen"
+$mainForm.BackColor = [System.Drawing.Color]::FromArgb(30, 30, 30)
+$mainForm.ForeColor = [System.Drawing.Color]::White
+$mainForm.FormBorderStyle = 'FixedDialog'
+$mainForm.MaximizeBox = $false
 
-# start
-Function Show-Menu {
-    Clear-Host
-Write-Host " "
-Write-Host "                               ________  ________   ________  ________  ________  ___  ________  _________   " -ForegroundColor Cyan
-Write-Host "                              |\   ____\|\   ____\ |\   ____\|\   ____\|\   __  \|\  \|\   __  \|\___   ___\ " -ForegroundColor Cyan
-Write-Host "                              \ \  \___|\ \  \___|_\ \  \___|\ \  \___|\ \  \|\  \ \  \ \  \|\  \|___ \  \_| " -ForegroundColor Cyan
-Write-Host "                               \ \  \    \ \_____  \\ \_____  \ \  \    \ \   _  _\ \  \ \   ____\   \ \  \  " -ForegroundColor Cyan
-Write-Host "                                \ \  \____\|____|\  \\|____|\  \ \  \____\ \  \\  \\ \  \ \  \___|    \ \  \ " -ForegroundColor Cyan
-Write-Host "                                 \ \_______\____\_\  \ ____\_\  \ \_______\ \__\\ _\\ \__\ \__\        \ \__\" -ForegroundColor Cyan
-Write-Host "                                  \|_______|\_________\\_________\|_______|\|__|\|__|\|__|\|__|         \|__|" -ForegroundColor Cyan
-Write-Host "                                           \|_________\|_________|                                           " -ForegroundColor Cyan
-	Write-Host " "
-	Write-Host " "
-    Write-Host "                                               cs Script v1.8 (by catsmoker) https://catsmoker.github.io"
-    Write-Host " "
-	Write-Host " "
-    Write-Host "            Select an option:"
-    Write-Host " "
-	Write-Host " "
-    Write-Host "            0. Clean Windows"
-    Write-Host " "
-    Write-Host "            1. Scan and Fix Windows"
-    Write-Host " "
-    Write-Host "            2. apps / drivers / updates / fixes"
-    Write-Host " "
-    Write-Host "            3. Activate Windows"
-    Write-Host " "
-    Write-Host "            4. Atlas OS Playbook and AME Wizard"
-    Write-Host " "
-    Write-Host "            5. CTT Utility"
-    Write-Host " "
-    Write-Host "            x. Exit"
-    Write-Host " "
-    Write-Host " "
-    $choice = Read-Host "Enter your choice (0-5, or x to exit)"
-    Switch ($choice) {
-        "0" { Clean-Windows }
-        "1" { Fix-Windows }
-        "2" { Download-Apps }
-        "3" { Activate-Windows }
-        "4" { Download-Playbook }
-        "5" { Run-CTT }
-        "x" { Exit-Script }
-		"f" { Trigger-f }
-        Default { Write-Host "Invalid choice. Please enter a number between 0 to 5 or x."; Pause; Show-Menu }
-    }
-}
+# Title Label
+$titleLabel = New-Object System.Windows.Forms.Label
+$titleLabel.Text = "CS Script v1.8"
+$titleLabel.Font = New-Object System.Drawing.Font("Segoe UI", 18, [System.Drawing.FontStyle]::Bold)
+$titleLabel.Size = New-Object System.Drawing.Size(400, 40)
+$titleLabel.Location = New-Object System.Drawing.Point(200, 20)
+$titleLabel.TextAlign = [System.Windows.Forms.HorizontalAlignment]::Center
+$mainForm.Controls.Add($titleLabel)
 
-# Define what happens when "f" is typed
-function Trigger-f {
-    Clear-Host
-    Write-Host "Invalid choice. Please enter a number between 0 to 4 or x."
-	Write-Host " "
-    Write-Host "F in the chat for respects!"
-	Write-Host " "
-    Write-Host "But wait... why are you pressing F?! You okay?"
-	Write-Host " "
+# Subtitle Label
+$subtitleLabel = New-Object System.Windows.Forms.Label
+$subtitleLabel.Text = "by catsmoker | https://catsmoker.github.io"
+$subtitleLabel.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Italic)
+$subtitleLabel.Size = New-Object System.Drawing.Size(400, 20)
+$subtitleLabel.Location = New-Object System.Drawing.Point(200, 60)
+$subtitleLabel.TextAlign = [System.Windows.Forms.HorizontalAlignment]::Center
+$mainForm.Controls.Add($subtitleLabel)
 
-    # Ask user to press a key
-    $input = Read-Host "Press 'f' to get f**ked or any other key to return to the menu"
-    
-    # Check if they pressed "f"
-    if ($input -eq 'f') {
-        Write-Host "You pressed 'f'. Shutting down the computer..."
-        # Shutdown the computer
-         Stop-Computer
-    }
-    else {
-        Write-Host "You didn't press 'f'. Returning to the menu..."
-        Show-Menu  # Assuming Show-Menu is another function you've defined
-    }
-}
+# Menu Buttons
+$buttonClean = New-Object System.Windows.Forms.Button
+$buttonClean.Text = "Clean Windows"
+$buttonClean.Size = New-Object System.Drawing.Size(200, 40)
+$buttonClean.Location = New-Object System.Drawing.Point(50, 120)
+$buttonClean.Font = New-Object System.Drawing.Font("Segoe UI", 12)
+$buttonClean.BackColor = [System.Drawing.Color]::FromArgb(70, 130, 180)
+$buttonClean.ForeColor = [System.Drawing.Color]::White
+$buttonClean.FlatStyle = 'Flat'
+$buttonClean.FlatAppearance.BorderSize = 0
+$buttonClean.Add_Click({ Clean-Windows })
+$mainForm.Controls.Add($buttonClean)
 
-Function Run-CTT {
-    Clear-Host
-    Write-Host "Running The Ultimate Windows Utility by CTT..."
-    Start-Process "powershell" -ArgumentList "iwr -useb https://christitus.com/win | iex"
-    Pause
-    Show-Menu
-}
+$buttonFix = New-Object System.Windows.Forms.Button
+$buttonFix.Text = "Scan and Fix Windows"
+$buttonFix.Size = New-Object System.Drawing.Size(200, 40)
+$buttonFix.Location = New-Object System.Drawing.Point(50, 180)
+$buttonFix.Font = New-Object System.Drawing.Font("Segoe UI", 12)
+$buttonFix.BackColor = [System.Drawing.Color]::FromArgb(70, 130, 180)
+$buttonFix.ForeColor = [System.Drawing.Color]::White
+$buttonFix.FlatStyle = 'Flat'
+$buttonFix.FlatAppearance.BorderSize = 0
+$buttonFix.Add_Click({ Fix-Windows })
+$mainForm.Controls.Add($buttonFix)
 
+$buttonApps = New-Object System.Windows.Forms.Button
+$buttonApps.Text = "Apps/upgrades"
+$buttonApps.Size = New-Object System.Drawing.Size(200, 40)
+$buttonApps.Location = New-Object System.Drawing.Point(50, 240)
+$buttonApps.Font = New-Object System.Drawing.Font("Segoe UI", 12)
+$buttonApps.BackColor = [System.Drawing.Color]::FromArgb(70, 130, 180)
+$buttonApps.ForeColor = [System.Drawing.Color]::White
+$buttonApps.FlatStyle = 'Flat'
+$buttonApps.FlatAppearance.BorderSize = 0
+$buttonApps.Add_Click({ Download-Apps })
+$mainForm.Controls.Add($buttonApps)
+
+$buttonActivate = New-Object System.Windows.Forms.Button
+$buttonActivate.Text = "Activate Windows"
+$buttonActivate.Size = New-Object System.Drawing.Size(200, 40)
+$buttonActivate.Location = New-Object System.Drawing.Point(50, 300)
+$buttonActivate.Font = New-Object System.Drawing.Font("Segoe UI", 12)
+$buttonActivate.BackColor = [System.Drawing.Color]::FromArgb(70, 130, 180)
+$buttonActivate.ForeColor = [System.Drawing.Color]::White
+$buttonActivate.FlatStyle = 'Flat'
+$buttonActivate.FlatAppearance.BorderSize = 0
+$buttonActivate.Add_Click({ Activate-Windows })
+$mainForm.Controls.Add($buttonActivate)
+
+$buttonAtlas = New-Object System.Windows.Forms.Button
+$buttonAtlas.Text = "windows-Update"
+$buttonAtlas.Size = New-Object System.Drawing.Size(200, 40)
+$buttonAtlas.Location = New-Object System.Drawing.Point(50, 360)
+$buttonAtlas.Font = New-Object System.Drawing.Font("Segoe UI", 12)
+$buttonAtlas.BackColor = [System.Drawing.Color]::FromArgb(70, 130, 180)
+$buttonAtlas.ForeColor = [System.Drawing.Color]::White
+$buttonAtlas.FlatStyle = 'Flat'
+$buttonAtlas.FlatAppearance.BorderSize = 0
+$buttonAtlas.Add_Click({ windows-ps })
+$mainForm.Controls.Add($buttonAtlas)
+
+$buttonCTT = New-Object System.Windows.Forms.Button
+$buttonCTT.Text = "CTT Windows Utility"
+$buttonCTT.Size = New-Object System.Drawing.Size(200, 40)
+$buttonCTT.Location = New-Object System.Drawing.Point(50, 420)
+$buttonCTT.Font = New-Object System.Drawing.Font("Segoe UI", 12)
+$buttonCTT.BackColor = [System.Drawing.Color]::FromArgb(70, 130, 180)
+$buttonCTT.ForeColor = [System.Drawing.Color]::White
+$buttonCTT.FlatStyle = 'Flat'
+$buttonCTT.FlatAppearance.BorderSize = 0
+$buttonCTT.Add_Click({ CTT })
+$mainForm.Controls.Add($buttonCTT)
+
+$buttonExit = New-Object System.Windows.Forms.Button
+$buttonExit.Text = "Exit"
+$buttonExit.Size = New-Object System.Drawing.Size(200, 40)
+$buttonExit.Location = New-Object System.Drawing.Point(50, 480)
+$buttonExit.Font = New-Object System.Drawing.Font("Segoe UI", 12)
+$buttonExit.BackColor = [System.Drawing.Color]::FromArgb(70, 130, 180)
+$buttonExit.ForeColor = [System.Drawing.Color]::White
+$buttonExit.FlatStyle = 'Flat'
+$buttonExit.FlatAppearance.BorderSize = 0
+$buttonExit.Add_Click({ Exit-Script })
+$mainForm.Controls.Add($buttonExit)
+
+# Progress Bar
+$progressBar = New-Object System.Windows.Forms.ProgressBar
+$progressBar.Size = New-Object System.Drawing.Size(500, 20)
+$progressBar.Location = New-Object System.Drawing.Point(50, 530)
+$progressBar.Style = 'Continuous'
+$mainForm.Controls.Add($progressBar)
+
+# Status Label
+$statusLabel = New-Object System.Windows.Forms.Label
+$statusLabel.Text = "Ready"
+$statusLabel.Size = New-Object System.Drawing.Size(500, 20)
+$statusLabel.Location = New-Object System.Drawing.Point(50, 560)
+$statusLabel.Font = New-Object System.Drawing.Font("Segoe UI", 10)
+$mainForm.Controls.Add($statusLabel)
+
+# Functions
 Function Clean-Windows {
-    Clear-Host
-    Write-Host "Starting cleanup process..." -ForegroundColor Cyan
-    
-    # Start timer to track process duration
-    $startTime = Get-Date
+    $statusLabel.Text = "Cleaning Windows..."
+    $progressBar.Value = 0
 
     # Clean Global Temp Folder
     $globalTempPath = [System.IO.Path]::GetTempPath()
     Write-Host "Clearing global temp folder: $globalTempPath"
-
     $globalFiles = Get-ChildItem -Path $globalTempPath -Recurse -Force -ErrorAction SilentlyContinue
     $count = 0
     foreach ($file in $globalFiles) {
         $count++
-        Write-Progress -Activity "Cleaning global temp folder" -Status "Deleting file $count of $($globalFiles.Count)" -PercentComplete (($count / $globalFiles.Count) * 100)
+        $progressBar.Value = ($count / $globalFiles.Count) * 100
         Remove-Item -Path $file.FullName -Recurse -Force -ErrorAction SilentlyContinue
     }
-    Write-Progress -Activity "Cleaning global temp folder" -Completed
 
     # Clean User Temp Folder
     $userTempPath = $env:TEMP
     Write-Host "Clearing user temp folder: $userTempPath"
-
     $userFiles = Get-ChildItem -Path $userTempPath -Recurse -Force -ErrorAction SilentlyContinue
     $count = 0
     foreach ($file in $userFiles) {
         $count++
-        Write-Progress -Activity "Cleaning user temp folder" -Status "Deleting file $count of $($userFiles.Count)" -PercentComplete (($count / $userFiles.Count) * 100)
+        $progressBar.Value = ($count / $userFiles.Count) * 100
         Remove-Item -Path $file.FullName -Recurse -Force -ErrorAction SilentlyContinue
     }
-    Write-Progress -Activity "Cleaning user temp folder" -Completed
-
-    # Clean Windows Prefetch Folder
-    $prefetchPath = "$env:windir\Prefetch"
-    Write-Host "Clearing Windows prefetch folder: $prefetchPath"
-
-    $prefetchFiles = Get-ChildItem -Path $prefetchPath -Recurse -Force -ErrorAction SilentlyContinue
-    $count = 0
-    foreach ($file in $prefetchFiles) {
-        $count++
-        Write-Progress -Activity "Cleaning prefetch folder" -Status "Deleting file $count of $($prefetchFiles.Count)" -PercentComplete (($count / $prefetchFiles.Count) * 100)
-        Remove-Item -Path $file.FullName -Recurse -Force -ErrorAction SilentlyContinue
-    }
-    Write-Progress -Activity "Cleaning prefetch folder" -Completed
 
     # Clean Recycle Bin
     Write-Host "Emptying Recycle Bin..."
     $null = (New-Object -ComObject Shell.Application).NameSpace(0xA).Items() | ForEach-Object { $_.InvokeVerb("delete") }
 
-    # Clear Windows Update Cache
-    $windowsUpdatePath = "$env:windir\SoftwareDistribution\Download"
-    Write-Host "Clearing Windows Update cache: $windowsUpdatePath"
-    
-    $windowsUpdateFiles = Get-ChildItem -Path $windowsUpdatePath -Recurse -Force -ErrorAction SilentlyContinue
-    $count = 0
-    foreach ($file in $windowsUpdateFiles) {
-        $count++
-        Write-Progress -Activity "Cleaning Windows Update cache" -Status "Deleting file $count of $($windowsUpdateFiles.Count)" -PercentComplete (($count / $windowsUpdateFiles.Count) * 100)
-        Remove-Item -Path $file.FullName -Recurse -Force -ErrorAction SilentlyContinue
-    }
-    Write-Progress -Activity "Cleaning Windows Update cache" -Completed
-
-    # Clear Browser Cache (Chrome, Firefox, Edge)
-    # Chrome Cache
-    $chromeCachePath = "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Cache"
-    if (Test-Path $chromeCachePath) {
-        Write-Host "Clearing Chrome browser cache..."
-        Get-ChildItem -Path $chromeCachePath -Recurse -Force -ErrorAction SilentlyContinue | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
-    }
-
-    # Firefox Cache
-    $firefoxCachePath = "$env:APPDATA\Mozilla\Firefox\Profiles"
-    if (Test-Path $firefoxCachePath) {
-        Write-Host "Clearing Firefox browser cache..."
-        Get-ChildItem -Path $firefoxCachePath -Recurse -Force -Include "cache2" -ErrorAction SilentlyContinue | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
-    }
-
-    # Edge Cache
-    $edgeCachePath = "$env:LOCALAPPDATA\Microsoft\Edge\User Data\Default\Cache"
-    if (Test-Path $edgeCachePath) {
-        Write-Host "Clearing Edge browser cache..."
-        Get-ChildItem -Path $edgeCachePath -Recurse -Force -ErrorAction SilentlyContinue | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
-    }
-
-    # Clean Windows Thumbnail Cache
-    $thumbnailCachePath = "$env:LOCALAPPDATA\Microsoft\Windows\Explorer"
-    Write-Host "Clearing Windows thumbnail cache: $thumbnailCachePath"
-    
-    Get-ChildItem -Path $thumbnailCachePath -Recurse -Include "*.db" -Force -ErrorAction SilentlyContinue | Remove-Item -Recurse -Force -ErrorAction SilentlyContinue
-
-    # Clean Temporary Internet Files
-    Write-Host "Clearing Internet Explorer/Edge temporary internet files..."
-    RunDll32.exe InetCpl.cpl,ClearMyTracksByProcess 8  # 8 = Temporary Internet Files
-
-    # Run Disk Cleanup
-    Write-Host "Running Disk Cleanup..."
-    $diskCleanupPath = "$env:windir\System32\cleanmgr.exe"
-    Start-Process -FilePath $diskCleanupPath -ArgumentList "/sagerun:1" -Wait
-
-    # Flush the DNS Cache
-    Write-Host "Flushing the DNS Cache..."
+    # Flush DNS Cache
+    Write-Host "Flushing DNS Cache..."
     ipconfig /flushdns
 
-    # Calculate and display elapsed time
-    $elapsedTime = (Get-Date) - $startTime
-    Write-Host "Cleanup completed in $($elapsedTime.TotalSeconds) seconds." -ForegroundColor Green
-
-    Pause
-    Show-Menu
+    $progressBar.Value = 100
+    $statusLabel.Text = "Cleanup completed!"
 }
 
 Function Fix-Windows {
-    Clear-Host
-    Write-Host "Starting Windows repair process..." -ForegroundColor Cyan
-    
-    # Start timer to track process duration
-    $startTime = Get-Date
-    
-    Write-Host "Running chkdsk..." -ForegroundColor Yellow
+    $statusLabel.Text = "Scanning and fixing Windows..."
+    $progressBar.Value = 0
+
+    # Run chkdsk
+    Write-Host "Running chkdsk..."
     Start-Process -FilePath "chkdsk.exe" -ArgumentList "/scan /perf" -NoNewWindow -Wait
-    Write-Host "chkdsk completed." -ForegroundColor Green
 
-    Write-Host "Running sfc /scannow..." -ForegroundColor Yellow
+    # Run sfc /scannow
+    Write-Host "Running sfc /scannow..."
     Start-Process -FilePath "sfc.exe" -ArgumentList "/scannow" -NoNewWindow -Wait
-    Write-Host "sfc completed." -ForegroundColor Green
 
-    Write-Host "Running DISM..." -ForegroundColor Yellow
+    # Run DISM
+    Write-Host "Running DISM..."
     Start-Process -FilePath "DISM.exe" -ArgumentList "/Online /Cleanup-Image /RestoreHealth" -NoNewWindow -Wait
-    Write-Host "DISM completed." -ForegroundColor Green
 
-    Write-Host "Running sfc again in case DISM repaired system files..." -ForegroundColor Yellow
-    Start-Process -FilePath "sfc.exe" -ArgumentList "/scannow" -NoNewWindow -Wait
-    Write-Host "Second sfc scan completed." -ForegroundColor Green
-    
-    # Calculate and display elapsed time
-    $elapsedTime = (Get-Date) - $startTime
-    Write-Host "Windows repair process completed in $($elapsedTime.TotalMinutes) minutes." -ForegroundColor Green
-
-    Pause
-    Show-Menu
+    $progressBar.Value = 100
+    $statusLabel.Text = "Fix completed!"
 }
-
 
 Function Download-Apps {
-    Clear-Host
-    Write-Host "Downloading specific applications and drivers..."
-	Write-Host " "
-    Write-Host "                Select an option:"
-	Write-Host " "
-    Write-Host "     0. Upgrade all"
-	Write-Host " "
-    Write-Host "     1. Drivers / updates"
-	Write-Host " "
-    Write-Host "     2. Applications"
-	Write-Host " "
-	Write-Host "     3. Fix Digital Flat Panel (640x480 60Hz) problem"
-	Write-Host " "
-	Write-Host "--------------------------------------------------------------"
-	Write-Host " "
-	Write-Host "             more apps here:"
-	Write-Host " "
-	Write-Host "     4. neat"
-	Write-Host " "
-    Write-Host "     5. Office 365"
-	Write-Host " "
- 	Write-Host "--------------------------------------------------------------"
-  	Write-Host " "
-    Write-Host "     x. Exit"
-	Write-Host " "
-    $choice = Read-Host "Enter your choice (0-5, or x to exit)"
-    Switch ($choice) {
-        "0" { Upgrade-All }
-        "1" { Install-Drivers }
-        "2" { Install-apps }
-        "3" { cru }
-	"4" { Install-neat }
-        "5" { Install-Office365 }
-        "x" { Show-Menu }
-        Default { Write-Host "Invalid choice. Please enter a number between 0 to 5 or x."; Pause; Download-Apps }
-    }
-}
-
-Function Upgrade-All {
-    Write-Host "Upgrading all packages using winget..." -NoNewline
-    winget upgrade --all
-    Write-Host "Done!"
-    Pause
-    Download-Apps
-}
-
-Function Install-apps {
+    $statusLabel.Text = "Opening Apps/Drivers menu..."
     # Check if winget is installed
     if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
         Write-Host "winget is not installed. Attempting to install..."
@@ -502,153 +410,38 @@ Function Install-apps {
 
     # Show the form
     [void] $Form.ShowDialog()
-
-    Pause
-    Download-Apps
-}
-
-Function cru {
-    Write-Host "cru website..." -NoNewline
-    Start-Process "https://www.monitortests.com/forum/Thread-Custom-Resolution-Utility-CRU"
-    Write-Host "Done!"
-    Pause
-    Download-Apps
-}
-
-Function Install-neat {
-    Write-Host "Installing Neat Download Manager..." -NoNewline
-    winget install -e --id JavadMotallebi.NeatDownloadManager
-    if ($LASTEXITCODE -ne 0) {
-        Write-Host "winget installation failed."
-        Write-Host "Please go to https://www.neatdownloadmanager.com/index.php/en/"
-        Invoke-WebRequest -Uri 'https://www.neatdownloadmanager.com/file/NeatDM_setup.exe' -OutFile (Join-Path -Path $env:USERPROFILE -ChildPath 'Desktop\NeatDM_setup.exe')
-        Start-Process -Wait -FilePath (Join-Path -Path $env:USERPROFILE -ChildPath 'Desktop\NeatDM_setup.exe')
-        Write-Host "Downloading to Desktop complete."
-        Pause
-        Download-Apps
-        return
-    }
-    Write-Host "Done!"
-    Pause
-    Download-Apps
-}
-
-Function Install-Office365 {
-    Write-Host "Downloading Office 365 Pro Plus"
-    Write-Host "Please go to https://gravesoft.dev/office_c2r_links"
-    Invoke-WebRequest -Uri 'https://c2rsetup.officeapps.live.com/c2r/download.aspx?ProductreleaseID=O365ProPlusRetail&platform=x64&language=en-us&version=O16GA' -OutFile (Join-Path -Path $env:USERPROFILE -ChildPath 'Desktop\OfficeSetup_2.exe')
-    Start-Process -Wait -FilePath (Join-Path -Path $env:USERPROFILE -ChildPath 'Desktop\OfficeSetup_2.exe')
-    Write-Host "Downloading to Desktop complete."
-    Pause
-    Download-Apps
-}
-
-Function Install-Drivers {
-    Clear-Host
-    Write-Host " Downloading:          drivers / updates..."
-	Write-Host " "
-	Write-Host "       0. windows updates minitool"
-	Write-Host " "
-	Write-Host "       1. windows updates using powershell"
-	Write-Host " "
-    Write-Host "       2. intel"
-	Write-Host " "
-    Write-Host "       3. amd"
-	Write-Host " "
-    Write-Host "       4. nvidia"
-	Write-Host " "
-	Write-Host "       x. Exit"
-	Write-Host " "
-    Write-Host "Note: Some driver updates may require a system restart to take effect."
-$choice = Read-Host "Enter your choice (0-4, or x to exit)"
-    Switch ($choice) {
-		"0" { windows-update }
-		"1" { windows-ps }
-        "2" { intel }
-        "3" { amd }
-        "4" { nvidia }
-        "x" { Download-Apps }
-        Default { Write-Host "Invalid choice. Please enter a number between 0 to 4 or x."; Pause; Install-Drivers }
-    }
-}
-
-Function windows-update {
-    Write-Host "windows updates minitool website..." -NoNewline
-    Start-Process "https://www.majorgeeks.com/mg/getmirror/windows_update_minitool,1.html"
-    Write-Host "Done!"
-    Pause
-    Install-Drivers
-}
-
-Function windows-ps {
-    Write-Host "windows updates using ps..." -NoNewline
-Install-Module PSWindowsUpdate
-Add-WUServiceManager -MicrosoftUpdate
-Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -AutoReboot | Out-File "C:\($env.computername-Get-Date -f yyyy-MM-dd)-MSUpdates.log" -Force
-    Write-Host "Done!"
-    Pause
-    Install-Drivers
-}
-
-Function intel {
-    Write-Host "intel..." -NoNewline
-    Start-Process "https://www.intel.com/content/www/us/en/support/intel-driver-support-assistant.html"
-    Write-Host "Done!"
-    Pause
-    Install-Drivers
-}
-
-Function amd {
-    Write-Host "amd..." -NoNewline
-    Start-Process "https://www.amd.com/en/support/download/drivers.html"
-    Write-Host "Done!"
-    Pause
-    Install-Drivers
-}
-
-Function nvidia {
-    Write-Host "nvidia..." -NoNewline
-    Start-Process "https://www.nvidia.com/en-us/geforce/geforce-experience/"
-    Write-Host "Done!"
-    Pause
-    Install-Drivers
+    $statusLabel.Text = "Ready"
 }
 
 Function Activate-Windows {
-    Clear-Host
-    Write-Host "Activating Windows..."
+    $statusLabel.Text = "Activating Windows..."
+    $progressBar.Value = 0
     Start-Process "powershell" -ArgumentList "irm https://get.activated.win | iex"
-    Write-Host "Done!"
-    Pause
-    Show-Menu
+    $progressBar.Value = 100
+    $statusLabel.Text = "Windows activated!"
 }
 
-Function Download-Playbook {
-    Clear-Host
-    Write-Host "Making a Download file on Desktop..."
-    $downloadsPath = [System.IO.Path]::Combine([System.Environment]::GetFolderPath('Desktop'), 'CS Downloads')
-    New-Item -Path $downloadsPath -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
+Function windows-ps {
+    $statusLabel.Text = "windows-ps..."
+    $progressBar.Value = 0
+    Install-Module PSWindowsUpdate -Force
+    Add-WUServiceManager -MicrosoftUpdate
+    Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -AutoReboot | Out-File "C:\($env.computername-Get-Date -f yyyy-MM-dd)-MSUpdates.log" -Force
+    $progressBar.Value = 100
+    $statusLabel.Text = "windows-ps completed!"
+}
 
-    Write-Host "Downloading Atlas OS playbook..."
-    $atlasPath = [System.IO.Path]::Combine($downloadsPath, 'AtlasPlaybook_v0.4.0.zip')
-    Invoke-WebRequest -Uri 'https://github.com/Atlas-OS/Atlas/releases/download/0.4.1/AtlasPlaybook_v0.4.1.zip' -OutFile $atlasPath
-
-    Write-Host "Downloading AME Wizard to Desktop..."
-    $amePath = [System.IO.Path]::Combine($downloadsPath, 'AME Wizard Beta.zip')
-    Invoke-WebRequest -Uri 'https://download.ameliorated.io/AME%20Wizard%20Beta.zip' -OutFile $amePath
-    Write-Host "Please visit https://atlasos.net/"
-
-    Write-Host "Downloads completed successfully!"
-    Pause
-    Show-Menu
+Function CTT {
+    $statusLabel.Text = "CTT Windows Utility..."
+    $progressBar.Value = 0
+    Start-Process "powershell" -ArgumentList "iwr -useb https://christitus.com/win | iex"
+    $progressBar.Value = 100
+    $statusLabel.Text = "CTT completed!"
 }
 
 Function Exit-Script {
-    Clear-Host
-    Write-Host "Exiting script."
-    Start-Process "https://catsmoker.github.io"
-    Pause
-    Exit
+    $mainForm.Close()
 }
 
-Show-Menu
+# Show the Main Form
+[void]$mainForm.ShowDialog()
