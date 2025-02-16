@@ -52,9 +52,9 @@ $arguments = "-NoProfile -ExecutionPolicy Bypass -Command `"powershell.exe -NoPr
 
 # Define the URL for the icon and the path to save it locally
 $iconUrl = "https://catsmoker.github.io/web/assets/ico/favicon.ico"
-$localIconPath = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), 'favicon.ico')
+$localIconPath = "C:\favicon.ico"
 
-# Download the icon file
+# Download the icon and save it locally
 Invoke-WebRequest -Uri $iconUrl -OutFile $localIconPath
 
 # Create a WScript.Shell COM object to create the shortcut
