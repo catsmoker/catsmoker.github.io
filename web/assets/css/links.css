@@ -212,6 +212,17 @@ footer p:hover {
   }
 }
 
+.news a {
+  color: #ffcc00;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.news a:hover {
+  color: #ffffff;
+}
+
 .contact a {
   color: #ffcc00;
   text-decoration: none;
