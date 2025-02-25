@@ -3,23 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CATSMOKER</title>
+  <meta name="description" content="Support CATSMOKER's creative journey through donations, referrals, and ad views. Your contribution helps create high-quality content and tools.">
+  <title>Support CATSMOKER</title>
   
+  <!-- Favicon -->
   <link rel="icon" sizes="32x32" href="assets/ico/newfavicon.ico" type="image/x-icon">
+  
+  <!-- Stylesheets -->
   <link rel="stylesheet" href="assets/css/links.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
   <script src="https://kit.fontawesome.com/2538377e9f.js" crossorigin="anonymous"></script>
-
+  
   <!-- Google Ads -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4717628365066461" crossorigin="anonymous"></script>
   <meta name="google-adsense-account" content="ca-pub-4717628365066461">
 </head>
 
 <body>
-  <a href="links.html" class="back-button" target="_self">
+  <!-- Back Button -->
+  <a href="links.html" class="back-button" target="_self" aria-label="Go back to the previous page">
     <i class="fas fa-arrow-left"></i> Back
   </a>
 
+  <!-- Main Container -->
   <div class="container">
     <!-- Profile Section -->
     <div class="profile">
@@ -36,23 +44,24 @@
       <a href="https://www.paypal.me/catsmoker" target="_blank" class="link paypal" aria-label="Donate via PayPal">
         <i class="fab fa-paypal"></i> PayPal
       </a>
-	    <!--
+      <!-- Uncomment if Patreon is active -->
+      <!--
       <a href="https://patreon.com/catsmoker" target="_blank" class="link patreon" aria-label="Support me on Patreon">
         <i class="fab fa-patreon"></i> Patreon
       </a>
-	   -->
+      -->
     </div>
-	  
-     <h1>My Binance ID: 791299459</h1>
-	  
-	  <!-- USDT Address Section -->
-    <p>USDT Address The Network is XXXX:</p>
-    <div class="usdt-address">xxxx</div>
-    <button class="copy-button" onclick="copyUsdtAddress()">
-      <i class="fas fa-copy"></i> Copy USDT Address
-    </button>
-    <div class="copied-message" id="copiedMessage">USDT Address to clipboard!</div>
-
+    
+    <!-- Binance ID Section -->
+    <h1>My Binance ID: 791299459</h1>
+    
+<!-- USDT Address Section -->
+<p>USDT Address (Network: <span id="usdtNetwork">TRC20</span>):</p>
+<div class="usdt-address" id="usdtAddress">TTdXcExjMTxSnM5HEpsg7mh3huPTxrmvYq</div>
+<button class="copy-button" onclick="copyUsdtAddress()" aria-label="Copy USDT address to clipboard">
+  <i class="fas fa-copy"></i> Copy USDT Address
+</button>
+<div class="copied-message" id="copiedMessage">USDT Address copied to clipboard!</div>
 	  
     <!-- Earn Money Links -->
     <p>Earn Money with Me:</p>
@@ -63,47 +72,51 @@
       <a href="https://r.honeygain.me/BOULHDD212" target="_blank" class="link honeygain" aria-label="Earn money with Honeygain">
         <i class="fa-brands fa-forumbee"></i> Honeygain
       </a>
-      <a href="https://www.binance.com/activity/referral-entry/CPA/together-v4?hl=en&ref=CPA_00VFFJ94GK&utm_medium=web_share_copy" target="_blank" class="link binance" aria-label="Earn money with Binance">
+      <a href="https://www.binance.com/activity/referral-entry/CPA/together-v4?hl=en&ref=CPA_00VFFJ94GK&utm_medium=web_share_copy" target="_blank" class="link binance" aria-label="Earn money with Binance referrals">
         <i class="fa-brands fa-bitcoin"></i> Binance
       </a>
     </div>
 
     <!-- Contact Section -->
     <section class="contact">
-      <p>Email Me: <a href="mailto:catsmoker.lab@gmail.com" aria-label="Send an email to CATSMOKER">Here</a></p>
+      <p>Email Me: <a href="mailto:catsmoker.lab@gmail.com" aria-label="Send an email to CATSMOKER">catsmoker.lab@gmail.com</a></p>
     </section>
   </div>
-	
+
   <!-- Ad Section -->
   <div class="ad-section">
     <p class="ad-message">Support CATSMOKER by viewing a few ads. Your support helps keep the content free and the fridge full! 🍕</p>
     <div class="ad-container">
-	    
-<script async="async" data-cfasync="false" src="//pl25440780.effectiveratecpm.com/34439faefe218f34ecf28196a198b6df/invoke.js"></script>
-<div id="container-34439faefe218f34ecf28196a198b6df"></div>
-	    
-<a href="https://beta.publishers.adsterra.com/referral/EjjBnqjx77" rel="nofollow"><img alt="banner" src="https://landings-cdn.adsterratech.com/referralBanners/png/728%20x%2090%20px.png" /></a>
-	    
+      <script async="async" data-cfasync="false" src="//pl25440780.effectiveratecpm.com/34439faefe218f34ecf28196a198b6df/invoke.js"></script>
+      <div id="container-34439faefe218f34ecf28196a198b6df"></div>
+      <a href="https://beta.publishers.adsterra.com/referral/EjjBnqjx77" rel="nofollow">
+        <img alt="Adsterra Banner" src="https://landings-cdn.adsterratech.com/referralBanners/png/728%20x%2090%20px.png">
+      </a>
     </div>
   </div>
 
   <!-- Footer -->
   <footer>
-    <p>&copy; 2024-2025 CATSMOKER. All rights reserved.</p>
+    <p>&copy; <span id="currentYear">2024</span>-2025 CATSMOKER. All rights reserved.</p>
   </footer>
 
   <script>
-    function copyUsdtAddress() {
-      const usdtAddress = 'xxxx';
-      navigator.clipboard.writeText(usdtAddress);
-      
-      const copiedMessage = document.getElementById('copiedMessage');
-      copiedMessage.style.display = 'block';
-      
-      setTimeout(() => {
-        copiedMessage.style.display = 'none';
-      }, 2000);
-    }
+    // Copy USDT Address Function
+function copyUsdtAddress() {
+  const usdtAddress = document.getElementById('usdtAddress').innerText;
+  navigator.clipboard.writeText(usdtAddress).then(() => {
+    const copiedMessage = document.getElementById('copiedMessage');
+    copiedMessage.style.display = 'block';
+    setTimeout(() => {
+      copiedMessage.style.display = 'none';
+    }, 2000);
+  }).catch((err) => {
+    console.error('Failed to copy USDT address: ', err);
+  });
+}
+
+    // Update Copyright Year Dynamically
+    document.getElementById('currentYear').textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
