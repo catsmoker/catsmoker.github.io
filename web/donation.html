@@ -44,7 +44,6 @@
       <a href="https://www.paypal.me/catsmoker" target="_blank" class="link paypal" aria-label="Donate via PayPal">
         <i class="fab fa-paypal"></i> PayPal
       </a>
-      <!-- Uncomment if Patreon is active -->
       <!--
       <a href="https://patreon.com/catsmoker" target="_blank" class="link patreon" aria-label="Support me on Patreon">
         <i class="fab fa-patreon"></i> Patreon
@@ -55,14 +54,20 @@
     <!-- Binance ID Section -->
     <h1>My Binance ID: 791299459</h1>
     
-<!-- USDT Address Section -->
-<p>USDT Address (Network: <span id="usdtNetwork">TRC20</span>):</p>
-<div class="usdt-address" id="usdtAddress">TTdXcExjMTxSnM5HEpsg7mh3huPTxrmvYq</div>
-<button class="copy-button" onclick="copyUsdtAddress()" aria-label="Copy USDT address to clipboard">
-  <i class="fas fa-copy"></i> Copy USDT Address
-</button>
-<div class="copied-message" id="copiedMessage">USDT Address copied to clipboard!</div>
-	  
+    <!-- USDT Address Section -->
+    <p>USDT Address (Network: 
+      <select id="usdtNetworkSelect" onchange="updateUsdtAddress()">
+        <option value="TRC20">TRC20</option>
+        <option value="ERC20">ERC20</option>
+        <option value="BEP20">BEP20</option>
+      </select>):
+    </p>
+    <div class="usdt-address" id="usdtAddress">TTdXcExjMTxSnM5HEpsg7mh3huPTxrmvYq</div>
+    <button class="copy-button" onclick="copyUsdtAddress()" aria-label="Copy USDT address to clipboard">
+      <i class="fas fa-copy"></i> Copy USDT Address
+    </button>
+    <div class="copied-message" id="copiedMessage">USDT Address copied to clipboard!</div>
+    
     <!-- Earn Money Links -->
     <p>Earn Money with Me:</p>
     <div class="links">
@@ -97,26 +102,36 @@
 
   <!-- Footer -->
   <footer>
-    <p>&copy; <span id="currentYear">2024</span>-2025 CATSMOKER. All rights reserved.</p>
+    <p>&copy; 2024-2025 CATSMOKER. All rights reserved.</p>
   </footer>
 
   <script>
-    // Copy USDT Address Function
-function copyUsdtAddress() {
-  const usdtAddress = document.getElementById('usdtAddress').innerText;
-  navigator.clipboard.writeText(usdtAddress).then(() => {
-    const copiedMessage = document.getElementById('copiedMessage');
-    copiedMessage.style.display = 'block';
-    setTimeout(() => {
-      copiedMessage.style.display = 'none';
-    }, 2000);
-  }).catch((err) => {
-    console.error('Failed to copy USDT address: ', err);
-  });
-}
+    // USDT Addresses for Different Networks
+    const usdtAddresses = {
+      TRC20: "TTdXcExjMTxSnM5HEpsg7mh3huPTxrmvYq",
+      ERC20: "0xb813f07bce7df3c333acc33d0efe021f6c823880",
+      BEP20: "0xb813f07bce7df3c333acc33d0efe021f6c823880"
+    };
 
-    // Update Copyright Year Dynamically
-    document.getElementById('currentYear').textContent = new Date().getFullYear();
+    // Update USDT Address Based on Selected Network
+    function updateUsdtAddress() {
+      const selectedNetwork = document.getElementById('usdtNetworkSelect').value;
+      document.getElementById('usdtAddress').innerText = usdtAddresses[selectedNetwork];
+    }
+
+    // Copy USDT Address Function
+    function copyUsdtAddress() {
+      const usdtAddress = document.getElementById('usdtAddress').innerText;
+      navigator.clipboard.writeText(usdtAddress).then(() => {
+        const copiedMessage = document.getElementById('copiedMessage');
+        copiedMessage.style.display = 'block';
+        setTimeout(() => {
+          copiedMessage.style.display = 'none';
+        }, 2000);
+      }).catch((err) => {
+        console.error('Failed to copy USDT address: ', err);
+      });
+    }
   </script>
 </body>
 </html>
