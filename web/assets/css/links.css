@@ -456,8 +456,8 @@ footer p:hover {
   font-size: clamp(0.8rem, 1.2vw, 1.2rem);
 }
 
-/* BTC Address Section (Unused but included) */
-.btc-address {
+/* usdt Address Section */
+.usdt-address {
   background: rgba(255, 255, 255, 0.1);
   padding: clamp(0.4rem, 0.8vw, 0.8rem);
   border-radius: clamp(6px, 0.8vw, 8px);
