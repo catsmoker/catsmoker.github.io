@@ -33,15 +33,26 @@
     
     <!-- Donation Links -->
     <div class="links">
-      <a href="https://www.paypal.com/paypalme/boulhada08" target="_blank" class="link paypal" aria-label="Donate via PayPal">
+      <a href="https://www.paypal.me/catsmoker" target="_blank" class="link paypal" aria-label="Donate via PayPal">
         <i class="fab fa-paypal"></i> PayPal
       </a>
+	    <!--
       <a href="https://patreon.com/catsmoker" target="_blank" class="link patreon" aria-label="Support me on Patreon">
-        <i class="fab fa-patreon"></i> Patreon 
+        <i class="fab fa-patreon"></i> Patreon
       </a>
+	   -->
     </div>
 	  
-<h1>Binance ID: 791299459</h1>
+     <h1>My Binance ID: 791299459</h1>
+	  
+	  <!-- USDT Address Section -->
+    <p>USDT Address The Network is XXXX:</p>
+    <div class="usdt-address">xxxx</div>
+    <button class="copy-button" onclick="copyUsdtAddress()">
+      <i class="fas fa-copy"></i> Copy USDT Address
+    </button>
+    <div class="copied-message" id="copiedMessage">USDT Address to clipboard!</div>
+
 	  
     <!-- Earn Money Links -->
     <p>Earn Money with Me:</p>
@@ -56,14 +67,6 @@
         <i class="fa-brands fa-bitcoin"></i> Binance
       </a>
     </div>
-
-    <!-- BTC Address Section -->
-    <p>BTC Address The Network is Bitcoin:</p>
-    <div class="btc-address">1FCpWous8JmKBSB651u3GJmh5caWvJ6d33</div>
-    <button class="copy-button" onclick="copyBtcAddress()">
-      <i class="fas fa-copy"></i> Copy BTC Address
-    </button>
-    <div class="copied-message" id="copiedMessage">BTC Address to clipboard!</div>
 
     <!-- Contact Section -->
     <section class="contact">
@@ -90,9 +93,9 @@
   </footer>
 
   <script>
-    function copyBtcAddress() {
-      const btcAddress = '1FCpWous8JmKBSB651u3GJmh5caWvJ6d33';
-      navigator.clipboard.writeText(btcAddress);
+    function copyUsdtAddress() {
+      const usdtAddress = 'xxxx';
+      navigator.clipboard.writeText(usdtAddress);
       
       const copiedMessage = document.getElementById('copiedMessage');
       copiedMessage.style.display = 'block';
