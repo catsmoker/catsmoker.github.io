@@ -620,22 +620,21 @@ footer p:hover {
 }
 
 /* New Section: Image with Link */
-.additional-section {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
+.image-link-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: clamp(1rem, 2vw, 2rem);
 }
 
-.additional-section img {
-    max-width: 100%;
-    height: auto;
-    border: 2px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.image-link {
+  display: block;
+  max-width: 300px;
+  width: 100%;
+  border-radius: clamp(8px, 1vw, 12px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
 }
 
-.additional-section a {
-    display: block;
-    width: 100%;
+.image-link:hover {
+  transform: scale(1.05);
 }
