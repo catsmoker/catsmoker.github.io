@@ -55,6 +55,13 @@ body {
   margin-bottom: clamp(0.5rem, 1vw, 1rem);
 }
 
+.video-grid iframe {
+  width: clamp(800px, 14vw, 900px);
+  height: clamp(400px, 14vw, 500px);
+  border-radius: clamp(8px, 1vw, 10px);
+  aspect-ratio: 16/9;
+}
+
 .video-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(clamp(180px, 25vw, 320px), 1fr));
