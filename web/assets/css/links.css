@@ -618,3 +618,24 @@ footer p:hover {
     padding: clamp(1.5rem, 2vw, 2.5rem);
   }
 }
+
+/* New Section: Image with Link */
+.additional-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.additional-section img {
+    max-width: 100%;
+    height: auto;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.additional-section a {
+    display: block;
+    width: 100%;
+}
