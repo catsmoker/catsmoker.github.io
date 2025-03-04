@@ -63,7 +63,7 @@ body {
 
 .video-grid iframe {
   width: 100%;
-  height: min(600px, max(500px, 14vw));
+  height: 523px;
   border-radius: clamp(8px, 1vw, 10px);
   aspect-ratio: 16/9;
 }
