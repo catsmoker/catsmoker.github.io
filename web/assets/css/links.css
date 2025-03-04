@@ -623,7 +623,7 @@ footer p:hover {
 .image-link-container {
   display: flex;
   justify-content: flex-end;
-  margin-top: clamp(1rem, 2vw, 2rem);
+  margin-top: 20px;
 }
 
 .image-link {
