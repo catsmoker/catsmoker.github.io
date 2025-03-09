@@ -1,17 +1,3 @@
-#============================================================================
-#
-# WARNING: DO NOT modify this file!
-#
-#============================================================================
-<#
-.NOTES
-    Author         : catsmoker
-    Email          : catsmoker.lab@gmail.com
-    Website        : https://catsmoker.github.io
-    GitHub         : https://github.com/catsmoker/cs_script
-    Version        : 1.8
-#>
-
 # Check if the script is running as administrator
 Write-Host "Checking if running as administrator..."
 $adminCheck = [System.Security.Principal.WindowsPrincipal] [System.Security.Principal.WindowsIdentity]::GetCurrent()
@@ -77,7 +63,7 @@ Add-Type -AssemblyName System.Drawing
 # Main Form
 $mainForm = New-Object System.Windows.Forms.Form
 $mainForm.Text = "CS Script v1.8 by catsmoker"
-$mainForm.Size = New-Object System.Drawing.Size(800, 600)
+$mainForm.Size = New-Object System.Drawing.Size(800, 650)  # Increased height to fit new button
 $mainForm.StartPosition = "CenterScreen"
 $mainForm.BackColor = [System.Drawing.Color]::FromArgb(30, 30, 30)
 $mainForm.ForeColor = [System.Drawing.Color]::White
@@ -175,10 +161,23 @@ $buttonCTT.FlatAppearance.BorderSize = 0
 $buttonCTT.Add_Click({ CTT })
 $mainForm.Controls.Add($buttonCTT)
 
+# MRT Scan Button
+$buttonMRT = New-Object System.Windows.Forms.Button
+$buttonMRT.Text = "Virus Scan"
+$buttonMRT.Size = New-Object System.Drawing.Size(200, 40)
+$buttonMRT.Location = New-Object System.Drawing.Point(50, 480)
+$buttonMRT.Font = New-Object System.Drawing.Font("Segoe UI", 12)
+$buttonMRT.BackColor = [System.Drawing.Color]::FromArgb(70, 130, 180)
+$buttonMRT.ForeColor = [System.Drawing.Color]::White
+$buttonMRT.FlatStyle = 'Flat'
+$buttonMRT.FlatAppearance.BorderSize = 0
+$buttonMRT.Add_Click({ Scan-WithMRT })
+$mainForm.Controls.Add($buttonMRT)
+
 $buttonExit = New-Object System.Windows.Forms.Button
 $buttonExit.Text = "Exit"
 $buttonExit.Size = New-Object System.Drawing.Size(200, 40)
-$buttonExit.Location = New-Object System.Drawing.Point(50, 480)
+$buttonExit.Location = New-Object System.Drawing.Point(50, 540)  # Adjusted position
 $buttonExit.Font = New-Object System.Drawing.Font("Segoe UI", 12)
 $buttonExit.BackColor = [System.Drawing.Color]::FromArgb(70, 130, 180)
 $buttonExit.ForeColor = [System.Drawing.Color]::White
@@ -190,7 +189,7 @@ $mainForm.Controls.Add($buttonExit)
 # Progress Bar
 $progressBar = New-Object System.Windows.Forms.ProgressBar
 $progressBar.Size = New-Object System.Drawing.Size(500, 20)
-$progressBar.Location = New-Object System.Drawing.Point(50, 530)
+$progressBar.Location = New-Object System.Drawing.Point(50, 590)  # Adjusted position
 $progressBar.Style = 'Continuous'
 $mainForm.Controls.Add($progressBar)
 
@@ -198,7 +197,7 @@ $mainForm.Controls.Add($progressBar)
 $statusLabel = New-Object System.Windows.Forms.Label
 $statusLabel.Text = "Ready"
 $statusLabel.Size = New-Object System.Drawing.Size(500, 20)
-$statusLabel.Location = New-Object System.Drawing.Point(50, 560)
+$statusLabel.Location = New-Object System.Drawing.Point(50, 620)  # Adjusted position
 $statusLabel.Font = New-Object System.Drawing.Font("Segoe UI", 10)
 $mainForm.Controls.Add($statusLabel)
 
@@ -439,7 +438,68 @@ Function CTT {
     $statusLabel.Text = "CTT completed!"
 }
 
+Function Scan-WithMRT {
+    $statusLabel.Text = "Scanning with Windows Malicious Software Removal Tool..."
+    $progressBar.Value = 0
+
+    # Path to MRT.exe
+    $mrtPath = "C:\Windows\System32\MRT.exe"
+    
+    if (Test-Path $mrtPath) {
+        Write-Host "Starting MRT scan..."
+        # Run MRT in quiet mode with quick scan (/Q for quiet, no UI)
+        Start-Process -FilePath $mrtPath -Wait
+        $progressBar.Value = 100
+        $statusLabel.Text = "MRT scan completed!"
+        Write-Host "MRT scan finished."
+    } else {
+        Write-Host "MRT.exe not found. Attempting to download..." -ForegroundColor Yellow
+        $statusLabel.Text = "MRT.exe not found. Downloading..."
+
+        try {
+            # URL for the latest MRT (Windows Malicious Software Removal Tool) from Microsoft
+            $mrtUrl = "https://www.microsoft.com/en-us/download/confirmation.aspx?id=16"
+            $tempPath = "$env:TEMP\mrt.exe"
+
+            # Download MRT
+            Write-Host "Downloading MRT from Microsoft..."
+            # Using Invoke-WebRequest to get the direct download link from the confirmation page
+            $response = Invoke-WebRequest -Uri $mrtUrl -UseBasicParsing
+            $downloadLink = ($response.Links | Where-Object { $_.href -match "mrt.exe" } | Select-Object -First 1).href
+            
+            if ($downloadLink) {
+                Invoke-WebRequest -Uri $downloadLink -OutFile $tempPath
+                Write-Host "MRT downloaded successfully to $tempPath"
+
+                # Move to System32 if possible
+                Move-Item -Path $tempPath -Destination $mrtPath -Force -ErrorAction SilentlyContinue
+                if (Test-Path $mrtPath) {
+                    Write-Host "MRT moved to $mrtPath"
+                    # Run the newly downloaded MRT
+                    Start-Process -FilePath $mrtPath -ArgumentList "/Q" -NoNewWindow -Wait
+                    $progressBar.Value = 100
+                    $statusLabel.Text = "MRT downloaded and scan completed!"
+                    Write-Host "MRT scan finished."
+                } else {
+                    Write-Host "Failed to move MRT to System32. Running from temp location..."
+                    Start-Process -FilePath $tempPath -ArgumentList "/Q" -NoNewWindow -Wait
+                    $progressBar.Value = 100
+                    $statusLabel.Text = "MRT scan completed from temp location!"
+                    Write-Host "MRT scan finished from temp location."
+                }
+            } else {
+                throw "Could not find MRT download link."
+            }
+        } catch {
+            $statusLabel.Text = "Failed to download/run MRT!"
+            Write-Host "Error downloading or running MRT: $_" -ForegroundColor Red
+            $progressBar.Value = 0
+        }
+    }
+}
+
 Function Exit-Script {
+	start "https://catsmoker.github.io/"
     $mainForm.Close()
 }
 
