@@ -1,3 +1,9 @@
+:root {
+  --black: #000000;
+  --white: #ffffff;
+  --blue: #3700ff;
+}
+
 /* General Styles */
 body {
   margin: 0;
@@ -212,6 +218,58 @@ body {
 .profile-pic:hover {
   transform: scale(1.05);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.typing-text {
+  font-size: 34px;
+  font-weight: 600;
+  min-width: 280px;
+}
+
+.typing-text span {
+  position: relative;
+  color: var(--blue);
+}
+
+.typing-text span::before {
+  content: "x";
+  animation: words 14s infinite;
+}
+
+@keyframes words {
+  0%, 11.1% {
+    content: "Designer";
+  }
+  11.2%, 22.2% {
+    content: "Developer";
+  }
+  22.3%, 33.3% {
+    content: "Editor";
+  }
+  33.4%, 44.4% {
+    content: "Youtuber";
+  }
+  44.5%, 55.5% {
+    content: "Programmer";
+  }
+  55.6%, 66.6% {
+    content: "Content Creator";
+  }
+  66.7%, 77.7% {
+    content: "Video Editor";
+  }
+  77.8%, 88.8% {
+    content: "Tech Enthusiast";
+  }
+  88.9%, 100% {
+    content: "Crypto Investor";
+  }
+}
+
+@media (max-width: 1000px) {
+  .typing-text {
+    font-size: 28px;
+  }
 }
 
 .profile h1 {
