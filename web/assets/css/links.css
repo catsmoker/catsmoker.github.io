@@ -199,6 +199,15 @@ body {
 }
 
 /* Terminal Styling */
+.terminal {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  max-width: 100%;
+}
+
 .terminal-loader {
   border: 0.1em solid #333;
   background-color: #1a1a1a;
