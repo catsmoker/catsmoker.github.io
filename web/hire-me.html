@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CATSMOKER</title>
+  <title>Hire CATSMOKER</title>
   
   <link rel="icon" sizes="32x32" href="assets/ico/newfavicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="assets/css/links.css">
@@ -16,9 +16,12 @@
 </head>
 
 <body>
-  <a href="links.html" class="back-button" target="_self">
-    <i class="fas fa-arrow-left"></i> Back
-  </a>
+      <!-- Back Button -->
+  <header class="header">
+    <a href="links.html" class="back-button" target="_self" aria-label="Go back to main page">
+      <i class="fas fa-arrow-left"></i> Back
+    </a>
+  </header>
 
   <div class="container">
     <!-- Profile Section -->
@@ -154,88 +157,38 @@
 </html>
 
 <style>
-/* Abilities Section */
-.abilities {
-  margin: 2rem 0;
-  padding: 1rem;
-  text-align: center;
-}
-
-.abilities h2 {
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
-  color: #fff;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-}
-
-.ability-card {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 15px;
-  padding: 1.5rem;
-  margin: 1rem 0;
-  text-align: left;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.ability-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
-}
-
-.ability-icon {
-  font-size: 2rem;
-  color: #4c83ff;
-  margin-bottom: 1rem;
-}
-
-.ability-card h3 {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
-  color: #fff;
-}
-
-.ability-card p {
-  font-size: 1rem;
-  color: #e3e3e3;
-  line-height: 1.5;
-}
-
 /* Moving Logos Section */
-.tools-logos {
-  overflow: hidden;
-  white-space: nowrap;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 1rem 0;
-  margin: 2rem 0;
-  border-radius: 10px;
-  position: relative;
-}
-
-.logos-slide {
-  display: inline-block;
-  animation: slide 20s linear infinite;
-}
-
-.logos-slide img {
-  height: 50px;
-  margin: 0 20px;
-  transition: filter 0.3s ease;
-}
-
-.logos-slide img:hover {
-  filter: grayscale(0%);
-}
-
-@keyframes slide {
-  0% {
-    transform: translateX(0);
+  .tools-logos {
+    overflow: hidden;
+    white-space: nowrap;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1rem 0;
+    margin: 2rem 0;
+    border-radius: 10px;
+    position: relative;
   }
-  100% {
-    transform: translateX(-50%);
+  
+  .logos-slide {
+    display: inline-block;
+    animation: slide 20s linear infinite;
   }
-}
-
-</style>
+  
+  .logos-slide img {
+    height: 50px;
+    margin: 0 20px;
+    transition: filter 0.3s ease;
+  }
+  
+  .logos-slide img:hover {
+    filter: grayscale(0%);
+  }
+  
+  @keyframes slide {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+  </style>
