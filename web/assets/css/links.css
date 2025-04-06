@@ -402,6 +402,31 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
+/* see more button */
+.see-more-btn {
+  display: block;
+  margin: 1.5rem auto;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 30px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.see-more-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.see-more-btn:active {
+  transform: translateY(0);
+}
+
 /* Rating Component */
 .rating {
   text-align: center;
