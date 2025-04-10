@@ -816,18 +816,54 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* News and Email Links */
-.news a,
-.contact a {
-  color: #ffdd57;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s ease;
+.card {
+  background: var(--card-bg);
+  border-radius: var(--card-radius);
+  padding: var(--space-md);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--shadow-md);
+  margin: var(--space-sm) 0;
+  transition: all var(--transition-medium);
 }
 
-.news a:hover,
-.contact a:hover {
-  color: #ffc107;
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-title {
+  font-size: var(--text-lg);
+  font-weight: 600;
+  margin-bottom: var(--space-xs);
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.card-content {
+  font-size: var(--text-sm);
+  color: var(--text-lighter);
+}
+
+.card-link {
+  color: var(--success);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xxs);
+}
+
+.card-link:hover {
+  color: var(--primary);
   text-decoration: underline;
+}
+
+.card-link i {
+  font-size: var(--text-sm);
 }
 
 /* Abilities Section */
