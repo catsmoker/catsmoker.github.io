@@ -3,7 +3,6 @@
     cursor: none !important;
   }
 
-
   .cursor-dot, .cursor-dot-outline {
     position: fixed;
     top: 0;
@@ -15,7 +14,7 @@
   .cursor-dot {
     width: 8px;
     height: 8px;
-    background-color: #8F94FB;
+    background-color: #000000;
     border-radius: 50%;
     transition: transform 0s linear;
   }
@@ -23,7 +22,7 @@
   .cursor-dot-outline {
     width: 40px;
     height: 40px;
-    background: #8F94FB33;
+    background: #00000033;
     border-radius: 50%;
     transition: width 0.3s ease-in-out, height 0.3s ease-in-out, opacity 0.3s ease-in-out, transform 0.3s ease-out;
   }
@@ -32,7 +31,7 @@
     width: 60px;
     height: 60px;
     opacity: 0.6;
-    background: #FF6B6B33;
-    border: 2px solid #FF6B6B;
+    background: #00000033;
+    border: 2px solid #000000;
   }
 }
