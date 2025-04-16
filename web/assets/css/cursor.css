@@ -1,0 +1,67 @@
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: #f0f0f0;
+      font-family: Arial, sans-serif;
+    }
+    .content {
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    a {
+      color: #8F94FB;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    @media (min-width: 767px) {
+      html, body, *, a, a:hover {
+        cursor: none !important;
+      }
+
+      .cursor-dot, .cursor-dot-outline {
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 9999;
+      }
+
+      .cursor-dot {
+        width: 8px;
+        height: 8px;
+        background-color: #8F94FB;
+        border-radius: 50%;
+        transition: transform 0s linear;
+      }
+
+      .cursor-dot-outline {
+        width: 40px;
+        height: 40px;
+        background: #8F94FB33;
+        border-radius: 50%;
+        transition: width 0.3s ease-in-out, height 0.3s ease-in-out, opacity 0.3s ease-in-out, transform 0.3s ease-out;
+      }
+
+      .cursor-dot-outline.hovered {
+        width: 60px;
+        height: 60px;
+        opacity: 0.6;
+      }
+	    .cursor-dot-outline.hovered {
+       width: 60px;
+       height: 60px;
+       background: #FF6B6B33;
+       border: 2px solid #FF6B6B;
+       }
