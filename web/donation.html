@@ -15,10 +15,6 @@
   
   <!-- Font Awesome -->
   <script src="https://kit.fontawesome.com/2538377e9f.js" crossorigin="anonymous"></script>
-  
-  <!-- Google Ads -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4717628365066461" crossorigin="anonymous"></script>
-  <meta name="google-adsense-account" content="ca-pub-4717628365066461">
 </head>
 
 <body>
@@ -30,75 +26,111 @@
   </header>
 
   <!-- Main Container -->
-  <div class="container">
-    <!-- Profile Section -->
-    <div class="profile">
-      <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" aria-label="Visit CATSMOKER's YouTube channel">
-        <img src="assets/imgs/catsmokerlogo.jpg" alt="CATSMOKER Logo" class="profile-pic">
-      </a>
-      <h1>Support My Work</h1>
-      <p>Your contribution helps me create high-quality tutorials, innovative tools, and engaging content. Every donation fuels my creative journey. Thank you for being part of it!</p>
-      <p>Choose your favorite way to support me below.</p>
+  <div class="main-container">
+    <div class="left-side">
+      <!-- Profile Section -->
+      <div class="profile container">
+        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" aria-label="Visit CATSMOKER's YouTube channel">
+          <img src="assets/imgs/catsmokerlogo.jpg" alt="CATSMOKER Logo" class="profile-pic">
+        </a>
+        <h1>Support My Work</h1>
+        <p>Your contribution helps me create high-quality tutorials, innovative tools, and engaging content. Every donation fuels my creative journey. Thank you for being part of it!</p>
+        <p>Choose your favorite way to support me below.</p>
+      </div>
+      
+      <!-- Donation Methods Section -->
+      <div class="container">
+        <h2><i class="fas fa-donate"></i> Donation Methods</h2>
+        
+        <!-- Direct Donation Links -->
+        <div class="links">
+          <a href="https://www.paypal.me/catsmoker" target="_blank" class="link paypal" aria-label="Donate via PayPal">
+            <i class="fab fa-paypal"></i> PayPal
+          </a>
+        </div>
+        
+        <!-- Crypto Donations -->
+        <div class="crypto-section">
+          <h3><i class="fab fa-bitcoin"></i> Cryptocurrency</h3>
+          
+          <!-- Binance ID -->
+          <div class="card">
+            <div class="card-title">
+              <i class="fas fa-id-card"></i> Binance ID
+            </div>
+            <div class="card-content">
+              <p>791299459</p>
+              <button class="copy-button" onclick="copyToClipboard('791299459')" aria-label="Copy Binance ID to clipboard">
+                <i class="fas fa-copy"></i> Copy ID
+              </button>
+            </div>
+          </div>
+          
+          <!-- USDT Address -->
+          <div class="card">
+            <div class="card-title">
+              <i class="fas fa-wallet"></i> USDT Address
+            </div>
+            <div class="card-content">
+              <p>Network: 
+                <select id="usdtNetworkSelect" onchange="updateUsdtAddress()" class="network-select">
+                  <option value="TRC20">TRC20</option>
+                  <option value="ERC20">ERC20</option>
+                  <option value="BEP20">BEP20</option>
+                </select>
+              </p>
+              <div class="address-box" id="usdtAddress">TTdXcExjMTxSnM5HEpsg7mh3huPTxrmvYq</div>
+              <button class="copy-button" onclick="copyUsdtAddress()" aria-label="Copy USDT address to clipboard">
+                <i class="fas fa-copy"></i> Copy Address
+              </button>
+              <div class="copied-message" id="copiedMessage">Address copied to clipboard!</div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     
-    <!-- Donation Links -->
-    <div class="links">
-      <a href="https://www.paypal.me/catsmoker" target="_blank" class="link paypal" aria-label="Donate via PayPal">
-        <i class="fab fa-paypal"></i> PayPal
-      </a>
-      <!--
-      <a href="https://patreon.com/catsmoker" target="_blank" class="link patreon" aria-label="Support me on Patreon">
-        <i class="fab fa-patreon"></i> Patreon
-      </a>
-      -->
-    </div>
-    
-    <!-- Binance ID Section -->
-    <h1>My Binance ID: 791299459</h1>
-    
-    <!-- USDT Address Section -->
-    <p>USDT Address (Network: 
-      <select id="usdtNetworkSelect" onchange="updateUsdtAddress()">
-        <option value="TRC20">TRC20</option>
-        <option value="ERC20">ERC20</option>
-        <option value="BEP20">BEP20</option>
-      </select>):
-    </p>
-    <div class="usdt-address" id="usdtAddress">TTdXcExjMTxSnM5HEpsg7mh3huPTxrmvYq</div>
-    <button class="copy-button" onclick="copyUsdtAddress()" aria-label="Copy USDT address to clipboard">
-      <i class="fas fa-copy"></i> Copy USDT Address
-    </button>
-    <div class="copied-message" id="copiedMessage">USDT Address copied to clipboard!</div>
-    
-    <!-- Earn Money Links -->
-    <p>Earn Money with Me:</p>
-    <div class="links">
-      <a href="https://pawns.app/?r=9224323" target="_blank" class="link pawns" aria-label="Earn money with Pawns">
-        <i class="fa-regular fa-chess-pawn"></i> Pawns
-      </a>
-      <a href="https://r.honeygain.me/BOULHDD212" target="_blank" class="link honeygain" aria-label="Earn money with Honeygain">
-        <i class="fa-brands fa-forumbee"></i> Honeygain
-      </a>
-      <a href="https://www.binance.com/activity/referral-entry/CPA/together-v4?hl=en&ref=CPA_00VFFJ94GK&utm_medium=web_share_copy" target="_blank" class="link binance" aria-label="Earn money with Binance referrals">
-        <i class="fa-brands fa-bitcoin"></i> Binance
-      </a>
-    </div>
-
-    <!-- Contact Section -->
-    <section class="contact">
-      <p>Email Me: <a href="mailto:catsmoker.lab@gmail.com" aria-label="Send an email to CATSMOKER">catsmoker.lab@gmail.com</a></p>
-    </section>
-  </div>
-
-  <!-- Ad Section -->
-  <div class="ad-section">
-    <p class="ad-message">Support CATSMOKER by viewing a few ads. Your support helps keep the content free and the fridge full! 🍕</p>
-    <div class="ad-container">
-      <script async="async" data-cfasync="false" src="//pl25440780.effectiveratecpm.com/34439faefe218f34ecf28196a198b6df/invoke.js"></script>
-      <div id="container-34439faefe218f34ecf28196a198b6df"></div>
-      <a href="https://beta.publishers.adsterra.com/referral/EjjBnqjx77" rel="nofollow">
-        <img alt="Adsterra Banner" src="https://landings-cdn.adsterratech.com/referralBanners/png/728%20x%2090%20px.png">
-      </a>
+    <div class="right-side">
+      <!-- Earn Money Section -->
+      <div class="container">
+        <h2><i class="fas fa-money-bill-wave"></i> Earn Money With Me</h2>
+        <p>Join these platforms using my referral links and we both earn when you participate!</p>
+        
+        <div class="links">
+          <a href="https://pawns.app/?r=9224323" target="_blank" class="link pawns" aria-label="Earn money with Pawns">
+            <i class="fa-regular fa-chess-pawn"></i> Pawns
+          </a>
+          <a href="https://r.honeygain.me/BOULHDD212" target="_blank" class="link honeygain" aria-label="Earn money with Honeygain">
+            <i class="fa-brands fa-forumbee"></i> Honeygain
+          </a>
+          <a href="https://www.binance.com/activity/referral-entry/CPA/together-v4?hl=en&ref=CPA_00VFFJ94GK&utm_medium=web_share_copy" target="_blank" class="link binance" aria-label="Earn money with Binance referrals">
+            <i class="fa-brands fa-bitcoin"></i> Binance
+          </a>
+        </div>
+        
+        <div class="card info-card">
+          <div class="card-title">
+            <i class="fas fa-info-circle"></i> How It Works
+          </div>
+          <div class="card-content">
+            <p>When you sign up using my referral links and meet the platform requirements, both of us receive bonuses. It's a great way to support me while earning for yourself!</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Contact Section -->
+      <div class="card contact">
+        <h3 class="card-title">
+          <i class="fas fa-envelope" aria-hidden="true"></i>
+          Contact Me
+        </h3>
+        <div class="card-content">
+          <p>Have a project in mind or want to collaborate?</p>
+          <a href="mailto:catsmoker.lab@gmail.com" class="card-link" aria-label="Send an email to CATSMOKER">
+            Email me <i class="fas fa-arrow-right" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -124,14 +156,19 @@
     // Copy USDT Address Function
     function copyUsdtAddress() {
       const usdtAddress = document.getElementById('usdtAddress').innerText;
-      navigator.clipboard.writeText(usdtAddress).then(() => {
-        const copiedMessage = document.getElementById('copiedMessage');
-        copiedMessage.style.display = 'block';
-        setTimeout(() => {
-          copiedMessage.style.display = 'none';
-        }, 2000);
-      }).catch((err) => {
-        console.error('Failed to copy USDT address: ', err);
+      copyToClipboard(usdtAddress);
+      
+      const copiedMessage = document.getElementById('copiedMessage');
+      copiedMessage.style.display = 'block';
+      setTimeout(() => {
+        copiedMessage.style.display = 'none';
+      }, 2000);
+    }
+    
+    // Generic copy to clipboard function
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).catch((err) => {
+        console.error('Failed to copy text: ', err);
       });
     }
   </script>
