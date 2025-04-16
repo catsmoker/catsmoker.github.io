@@ -15,6 +15,78 @@
   
   <!-- Font Awesome -->
   <script src="https://kit.fontawesome.com/2538377e9f.js" crossorigin="anonymous"></script>
+  
+  <style>
+    /* Additional styles for the improved buttons */
+    .copy-button {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      margin-top: 0.5rem;
+    }
+    
+    .copy-button:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+    
+    .copy-button:active {
+      transform: translateY(0);
+    }
+    
+    .address-box {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 0.75rem;
+      border-radius: 8px;
+      word-break: break-all;
+      margin: 0.5rem 0;
+      font-family: monospace;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .network-select {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      padding: 0.5rem;
+      border-radius: 8px;
+      margin-left: 0.5rem;
+    }
+    
+    .copied-message {
+      display: none;
+      background: rgba(76, 201, 240, 0.2);
+      color: var(--success);
+      padding: 0.5rem;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .support-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    
+    .section {
+      margin-bottom: 2rem;
+    }
+  </style>
 </head>
 
 <body>
@@ -26,110 +98,106 @@
   </header>
 
   <!-- Main Container -->
-  <div class="main-container">
-    <div class="left-side">
-      <!-- Profile Section -->
-      <div class="profile container">
-        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" aria-label="Visit CATSMOKER's YouTube channel">
-          <img src="assets/imgs/catsmokerlogo.jpg" alt="CATSMOKER Logo" class="profile-pic">
+  <div class="support-container">
+    <!-- Profile Section -->
+    <div class="profile container section">
+      <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" aria-label="Visit CATSMOKER's YouTube channel">
+        <img src="assets/imgs/catsmokerlogo.jpg" alt="CATSMOKER Logo" class="profile-pic">
+      </a>
+      <h1>Support My Work</h1>
+      <p>Your contribution helps me create high-quality tutorials, innovative tools, and engaging content. Every donation fuels my creative journey. Thank you for being part of it!</p>
+    </div>
+    
+    <!-- Donation Methods Section -->
+    <div class="container section">
+      <h2><i class="fas fa-donate"></i> Direct Donations</h2>
+      
+      <!-- PayPal Button -->
+      <div class="links">
+        <a href="https://www.paypal.me/catsmoker" target="_blank" class="link paypal" aria-label="Donate via PayPal">
+          <i class="fab fa-paypal"></i> PayPal
         </a>
-        <h1>Support My Work</h1>
-        <p>Your contribution helps me create high-quality tutorials, innovative tools, and engaging content. Every donation fuels my creative journey. Thank you for being part of it!</p>
-        <p>Choose your favorite way to support me below.</p>
       </div>
       
-      <!-- Donation Methods Section -->
-      <div class="container">
-        <h2><i class="fas fa-donate"></i> Donation Methods</h2>
+      <!-- Crypto Donations -->
+      <div class="crypto-section">
+        <h3><i class="fab fa-bitcoin"></i> Cryptocurrency</h3>
         
-        <!-- Direct Donation Links -->
-        <div class="links">
-          <a href="https://www.paypal.me/catsmoker" target="_blank" class="link paypal" aria-label="Donate via PayPal">
-            <i class="fab fa-paypal"></i> PayPal
-          </a>
+        <!-- Binance ID -->
+        <div class="card">
+          <div class="card-title">
+            <i class="fas fa-id-card"></i> Binance ID
+          </div>
+          <div class="card-content">
+            <div class="address-box">791299459</div>
+            <button class="copy-button" onclick="copyToClipboard('791299459')" aria-label="Copy Binance ID to clipboard">
+              <i class="fas fa-copy"></i> Copy ID
+            </button>
+            <div class="copied-message" id="copiedMessageBinance">Binance ID copied to clipboard!</div>
+          </div>
         </div>
         
-        <!-- Crypto Donations -->
-        <div class="crypto-section">
-          <h3><i class="fab fa-bitcoin"></i> Cryptocurrency</h3>
-          
-          <!-- Binance ID -->
-          <div class="card">
-            <div class="card-title">
-              <i class="fas fa-id-card"></i> Binance ID
-            </div>
-            <div class="card-content">
-              <p>791299459</p>
-              <button class="copy-button" onclick="copyToClipboard('791299459')" aria-label="Copy Binance ID to clipboard">
-                <i class="fas fa-copy"></i> Copy ID
-              </button>
-            </div>
+        <!-- USDT Address -->
+        <div class="card">
+          <div class="card-title">
+            <i class="fas fa-wallet"></i> USDT (Tether)
           </div>
-          
-          <!-- USDT Address -->
-          <div class="card">
-            <div class="card-title">
-              <i class="fas fa-wallet"></i> USDT Address
-            </div>
-            <div class="card-content">
-              <p>Network: 
-                <select id="usdtNetworkSelect" onchange="updateUsdtAddress()" class="network-select">
-                  <option value="TRC20">TRC20</option>
-                  <option value="ERC20">ERC20</option>
-                  <option value="BEP20">BEP20</option>
-                </select>
-              </p>
-              <div class="address-box" id="usdtAddress">TTdXcExjMTxSnM5HEpsg7mh3huPTxrmvYq</div>
-              <button class="copy-button" onclick="copyUsdtAddress()" aria-label="Copy USDT address to clipboard">
-                <i class="fas fa-copy"></i> Copy Address
-              </button>
-              <div class="copied-message" id="copiedMessage">Address copied to clipboard!</div>
-            </div>
+          <div class="card-content">
+            <p>Select network: 
+              <select id="usdtNetworkSelect" onchange="updateUsdtAddress()" class="network-select">
+                <option value="TRC20">TRC20</option>
+                <option value="ERC20">ERC20</option>
+                <option value="BEP20">BEP20</option>
+              </select>
+            </p>
+            <div class="address-box" id="usdtAddress">TTdXcExjMTxSnM5HEpsg7mh3huPTxrmvYq</div>
+            <button class="copy-button" onclick="copyUsdtAddress()" aria-label="Copy USDT address to clipboard">
+              <i class="fas fa-copy"></i> Copy Address
+            </button>
+            <div class="copied-message" id="copiedMessageUSDT">USDT address copied to clipboard!</div>
           </div>
         </div>
       </div>
     </div>
     
-    <div class="right-side">
-      <!-- Earn Money Section -->
-      <div class="container">
-        <h2><i class="fas fa-money-bill-wave"></i> Earn Money With Me</h2>
-        <p>Join these platforms using my referral links and we both earn when you participate!</p>
-        
-        <div class="links">
-          <a href="https://pawns.app/?r=9224323" target="_blank" class="link pawns" aria-label="Earn money with Pawns">
-            <i class="fa-regular fa-chess-pawn"></i> Pawns
-          </a>
-          <a href="https://r.honeygain.me/BOULHDD212" target="_blank" class="link honeygain" aria-label="Earn money with Honeygain">
-            <i class="fa-brands fa-forumbee"></i> Honeygain
-          </a>
-          <a href="https://www.binance.com/activity/referral-entry/CPA/together-v4?hl=en&ref=CPA_00VFFJ94GK&utm_medium=web_share_copy" target="_blank" class="link binance" aria-label="Earn money with Binance referrals">
-            <i class="fa-brands fa-bitcoin"></i> Binance
-          </a>
-        </div>
-        
-        <div class="card info-card">
-          <div class="card-title">
-            <i class="fas fa-info-circle"></i> How It Works
-          </div>
-          <div class="card-content">
-            <p>When you sign up using my referral links and meet the platform requirements, both of us receive bonuses. It's a great way to support me while earning for yourself!</p>
-          </div>
-        </div>
+    <!-- Earn Money Section -->
+    <div class="container section">
+      <h2><i class="fas fa-money-bill-wave"></i> Earn Together</h2>
+      <p>Join these platforms using my referral links and we both earn when you participate!</p>
+      
+      <div class="links">
+        <a href="https://pawns.app/?r=9224323" target="_blank" class="link pawns" aria-label="Earn money with Pawns">
+          <i class="fa-regular fa-chess-pawn"></i> Pawns
+        </a>
+        <a href="https://r.honeygain.me/BOULHDD212" target="_blank" class="link honeygain" aria-label="Earn money with Honeygain">
+          <i class="fa-brands fa-forumbee"></i> Honeygain
+        </a>
+        <a href="https://www.binance.com/activity/referral-entry/CPA/together-v4?hl=en&ref=CPA_00VFFJ94GK&utm_medium=web_share_copy" target="_blank" class="link binance" aria-label="Earn money with Binance referrals">
+          <i class="fa-brands fa-bitcoin"></i> Binance
+        </a>
       </div>
       
-      <!-- Contact Section -->
-      <div class="card contact">
-        <h3 class="card-title">
-          <i class="fas fa-envelope" aria-hidden="true"></i>
-          Contact Me
-        </h3>
-        <div class="card-content">
-          <p>Have a project in mind or want to collaborate?</p>
-          <a href="mailto:catsmoker.lab@gmail.com" class="card-link" aria-label="Send an email to CATSMOKER">
-            Email me <i class="fas fa-arrow-right" aria-hidden="true"></i>
-          </a>
+      <div class="card info-card">
+        <div class="card-title">
+          <i class="fas fa-info-circle"></i> How Referrals Work
         </div>
+        <div class="card-content">
+          <p>When you sign up using my referral links and meet the platform requirements, both of us receive bonuses. It's a great way to support me while earning for yourself!</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Contact Section -->
+    <div class="card contact section">
+      <h3 class="card-title">
+        <i class="fas fa-envelope" aria-hidden="true"></i>
+        Contact Me
+      </h3>
+      <div class="card-content">
+        <p>Have a project in mind or want to collaborate?</p>
+        <a href="mailto:catsmoker.lab@gmail.com" class="card-link" aria-label="Send an email to CATSMOKER">
+          Email me <i class="fas fa-arrow-right" aria-hidden="true"></i>
+        </a>
       </div>
     </div>
   </div>
@@ -156,18 +224,26 @@
     // Copy USDT Address Function
     function copyUsdtAddress() {
       const usdtAddress = document.getElementById('usdtAddress').innerText;
-      copyToClipboard(usdtAddress);
-      
-      const copiedMessage = document.getElementById('copiedMessage');
-      copiedMessage.style.display = 'block';
-      setTimeout(() => {
-        copiedMessage.style.display = 'none';
-      }, 2000);
+      copyToClipboard(usdtAddress, 'copiedMessageUSDT');
     }
     
     // Generic copy to clipboard function
-    function copyToClipboard(text) {
-      navigator.clipboard.writeText(text).catch((err) => {
+    function copyToClipboard(text, messageId) {
+      navigator.clipboard.writeText(text).then(() => {
+        // Hide any previously shown messages
+        document.querySelectorAll('.copied-message').forEach(msg => {
+          msg.style.display = 'none';
+        });
+        
+        // Show the specific message
+        if (messageId) {
+          const copiedMessage = document.getElementById(messageId);
+          copiedMessage.style.display = 'block';
+          setTimeout(() => {
+            copiedMessage.style.display = 'none';
+          }, 2000);
+        }
+      }).catch((err) => {
         console.error('Failed to copy text: ', err);
       });
     }
