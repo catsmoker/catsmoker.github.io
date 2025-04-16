@@ -1,31 +1,4 @@
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      min-height: 100vh;
-      background: #f0f0f0;
-      font-family: Arial, sans-serif;
-    }
-    .content {
-      padding: 20px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    a {
-      color: #8F94FB;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    a:hover {
-      text-decoration: underline;
-    }
-
-    @media (min-width: 767px) {
+      @media (min-width: 767px) {
       html, body, *, a, a:hover {
         cursor: none !important;
       }
