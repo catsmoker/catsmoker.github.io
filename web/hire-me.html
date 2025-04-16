@@ -11,6 +11,43 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/2538377e9f.js" crossorigin="anonymous"></script>
 
+<style>
+/* Moving Logos Section */
+  .tools-logos {
+    overflow: hidden;
+    white-space: nowrap;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1rem 0;
+    margin: 2rem 0;
+    border-radius: 10px;
+    position: relative;
+  }
+  
+  .logos-slide {
+    display: inline-block;
+    animation: slide 20s linear infinite;
+  }
+  
+  .logos-slide img {
+    height: 50px;
+    margin: 0 20px;
+    transition: filter 0.3s ease;
+  }
+  
+  .logos-slide img:hover {
+    filter: grayscale(0%);
+  }
+  
+  @keyframes slide {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+  </style>
+	
 </head>
 
 <body>
@@ -149,42 +186,8 @@
   <footer>
     <p>&copy; 2024-2025 CATSMOKER. All rights reserved.</p>
   </footer>
+	
+<!-- JavaScript -->
+<script src="assets/js/cursor.js" defer></script>
 </body>
 </html>
-
-<style>
-/* Moving Logos Section */
-  .tools-logos {
-    overflow: hidden;
-    white-space: nowrap;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 1rem 0;
-    margin: 2rem 0;
-    border-radius: 10px;
-    position: relative;
-  }
-  
-  .logos-slide {
-    display: inline-block;
-    animation: slide 20s linear infinite;
-  }
-  
-  .logos-slide img {
-    height: 50px;
-    margin: 0 20px;
-    transition: filter 0.3s ease;
-  }
-  
-  .logos-slide img:hover {
-    filter: grayscale(0%);
-  }
-  
-  @keyframes slide {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-50%);
-    }
-  }
-  </style>
