@@ -20,10 +20,8 @@
   <script src="https://kit.fontawesome.com/2538377e9f.js" crossorigin="anonymous" defer></script>
   
     <link rel="stylesheet" href="assets/css/cursor.css">
-  <noscript>
     <link rel="stylesheet" href="assets/css/links.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  </noscript>
 </head>
 
 <body>
@@ -317,8 +315,16 @@
   </footer>
 
   <!-- JavaScript -->
-  <script src="assets/js/links.js" defer></script>
+	
   <script src="assets/js/cursor.js" defer></script>
+  <script src="assets/js/links.js" defer></script>
+	
+<script>
+  // Replace the redirect page in history with the current page
+  if (window.history && window.history.replaceState) {
+    window.history.replaceState(null, null, window.location.href);
+  }
+</script>
 
 </body>
 </html>
