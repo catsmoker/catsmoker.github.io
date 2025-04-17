@@ -11,20 +11,32 @@
   
   <title>CATSMOKER - Professional Video Editor & Content Creator</title>
   
+  <!-- Favicon -->
   <link rel="icon" href="https://img.icons8.com/?size=100&id=QWmWrCxghblr&format=png&color=000000" type="image/x-icon">
-  <link rel="preload" href="assets/css/links.css" as="style">
-  <link rel="stylesheet" href="assets/css/links.css" media="print" onload="this.media='all'">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  
+  <!-- Preload critical resources -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"></noscript>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="assets/css/cursor.css">
+  <link rel="stylesheet" href="assets/css/links.css">
+  
+  <!-- Font Awesome with defer -->
   <script src="https://kit.fontawesome.com/2538377e9f.js" crossorigin="anonymous" defer></script>
   
-    <link rel="stylesheet" href="assets/css/cursor.css">
-    <link rel="stylesheet" href="assets/css/links.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
+  <!-- Video Background -->
+  <video class="video-background" autoplay loop playsinline>
+    <source src="assets/vids/video.webM" type="video/webm" loading="lazy">
+    Your browser does not support the video tag.
+  </video>
+  
   <!-- Custom cursor elements -->
   <div class="cursor-dot"></div>
   <div class="cursor-dot-outline"></div>
@@ -298,10 +310,31 @@
   <div class="ad-section">
     <p class="ad-message">Support CATSMOKER by viewing a few ads. Your support helps keep the content free and the fridge full! 🍕</p>
     <div class="ad-container">
-      <script async="async" data-cfasync="false" src="//pl25440780.effectiveratecpm.com/34439faefe218f34ecf28196a198b6df/invoke.js"></script>
-      <div id="container-34439faefe218f34ecf28196a198b6df"></div>
-      <a href="https://beta.publishers.adsterratech.com/referral/EjjBnqjx77" rel="nofollow">
-        <img alt="banner" src="https://landings-cdn.adsterratech.com/referralBanners/png/728%20x%2090%20px.png" width="728" height="90" loading="lazy" />
+	  <!-- Sandboxed iframe for ad script isolation -->
+      <iframe sandbox="allow-scripts" style="border: none; width: 100%; height: 300px;" srcdoc='
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { margin: 0; }
+            .ad-fallback { display: none; text-align: center; }
+            .ad-fallback.show { display: block; }
+          </style>
+        </head>
+        <body>
+          <!-- Ad script with SRI (replace hash with actual) -->
+          <script async src="https://pl25440780.effectiveratecpm.com/34439faefe218f34ecf28196a198b6df/invoke.js" integrity="sha256-abc123xyz789..." crossorigin="anonymous" onerror="document.querySelector(`.ad-fallback`).classList.add(`show`)"></script>
+          <div id="container-34439faefe218f34ecf28196a198b6df"></div>
+          <!-- Fallback message if ad fails -->
+          <div class="ad-fallback">
+            <p>Ad loading failed. Please refresh or support us via <a href="https://beta.publishers.adsterratech.com/referral/EjjBnqjx77" rel="nofollow noopener">our sponsor</a>.</p>
+          </div>
+        </body>
+        </html>
+      '></iframe>
+      <!-- Static fallback banner -->
+      <a href="https://beta.publishers.adsterratech.com/referral/EjjBnqjx77" rel="nofollow noopener">
+        <img alt="banner" src="https://landings-cdn.adsterratech.com/referralBanners/png/728%20x%2090%20px.png" width="728" height="90" loading="lazy" class="img-fluid rounded-3" />
       </a>
     </div>
   </div>
@@ -314,17 +347,19 @@
     <img src="https://profile-counter.glitch.me/catsmoker/count.svg" alt="Profile views count" class="mx-auto" />
   </footer>
 
-  <!-- JavaScript -->
-	
+  <!-- Bootstrap JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous" defer></script>
+  
+  <!-- Custom JavaScript -->
   <script src="assets/js/cursor.js" defer></script>
   <script src="assets/js/links.js" defer></script>
-	
-<script>
-  // Replace the redirect page in history with the current page
-  if (window.history && window.history.replaceState) {
-    window.history.replaceState(null, null, window.location.href);
-  }
-</script>
-
+  
+  <!-- Main Script -->
+  <script>
+    // Replace the redirect page in history with the current
+    if (window.history && window.history.replaceState) {
+      window.history.replaceState(null, null, window.location.href);
+    }
+  </script>
 </body>
 </html>
