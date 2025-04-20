@@ -731,54 +731,99 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 0.6;
 }
 
+/* Smaller Phone Mockup */
 .phone-mockup {
-  max-width: 280px;
+  --phone-color: #111;
+  --phone-accent: #222;
+  --screen-radius: 16px;
+  --frame-radius: 24px;
+  
+  width: 280px;
+  height: 500px;
   margin: 0 auto;
   position: relative;
-  animation: float 4s ease-in-out infinite;
 }
 
 .phone-frame {
-  background: #222;
-  border-radius: 40px;
-  padding: var(--space-sm);
-  box-shadow: var(--shadow-2xl);
   position: relative;
+  width: 280px;
+  height: 500px;
+  background: var(--phone-color);
+  border-radius: var(--frame-radius);
+  padding: 10px;
+  box-shadow: 
+    0 0 0 1px rgba(255,255,255,0.05),
+    0 0 0 6px var(--phone-accent),
+    0 15px 30px rgba(0,0,0,0.2);
+  overflow: hidden;
 }
 
 .phone-screen {
-  background: linear-gradient(45deg, var(--primary) 0%, var(--secondary) 100%);
-  border-radius: 28px;
-  overflow: hidden;
-  aspect-ratio: 9/19;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.phone-notch {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 40%;
-  height: var(--space-sm);
-  background: #222;
-  border-bottom-left-radius: var(--radius-md);
-  border-bottom-right-radius: var(--radius-md);
-}
-
-.app-preview-img {
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--white);
-  font-weight: bold;
-  font-size: var(--text-2xl);
-  text-align: center;
-  padding: var(--space-md);
+  border-radius: var(--screen-radius);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Discrete home indicator */
+.home-indicator {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 25%;
+  height: 3px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 2px;
+  backdrop-filter: blur(2px);
+}
+
+.app-gif {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Subtle metallic frame highlight */
+.phone-frame::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: var(--frame-radius);
+  box-shadow: inset 0 0 12px rgba(255,255,255,0.03);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .phone-mockup {
+    width: 220px;
+    height: 400px;
+    --screen-radius: 14px;
+    --frame-radius: 20px;
+  }
+  
+  .phone-notch {
+    height: 12px;
+  }
+}
+
+/* Slight tilt on hover for depth */
+@media (hover: hover) {
+  .phone-mockup:hover {
+    transform: rotateX(3deg) rotateY(2deg) translateY(-3px);
+    transition: transform 0.3s ease;
+  }
+  
+  .phone-mockup {
+    transition: transform 0.4s ease;
+  }
 }
 
 /* Projects Links Section */
