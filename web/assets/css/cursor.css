@@ -1,0 +1,37 @@
+@media (min-width: 767px) {
+  html, body, *, a, a:hover {
+    cursor: none !important;
+  }
+
+  .cursor-dot, .cursor-dot-outline {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  .cursor-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #000000;
+    border-radius: 50%;
+    transition: transform 0s linear;
+  }
+
+  .cursor-dot-outline {
+    width: 40px;
+    height: 40px;
+    background: #00000033;
+    border-radius: 50%;
+    transition: width 0.3s ease-in-out, height 0.3s ease-in-out, opacity 0.3s ease-in-out, transform 0.3s ease-out;
+  }
+
+  .cursor-dot-outline.hovered {
+    width: 60px;
+    height: 60px;
+    opacity: 0.6;
+    background: #00000033;
+    border: 2px solid #000000;
+  }
+}
