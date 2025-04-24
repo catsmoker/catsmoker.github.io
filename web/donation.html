@@ -97,7 +97,7 @@
     Your browser does not support the video tag.
   </video>
   
-    <!-- Custom cursor elements -->
+  <!-- Custom cursor elements -->
   <div class="cursor-dot"></div>
   <div class="cursor-dot-outline"></div>
   
@@ -141,31 +141,33 @@
           </div>
           <div class="card-content">
             <div class="address-box">791299459</div>
-            <button class="copy-button" onclick="copyToClipboard('791299459')" aria-label="Copy Binance ID to clipboard">
+            <button class="copy-button" onclick="copyToClipboard('791299459', 'copiedMessageBinance')" aria-label="Copy Binance ID to clipboard">
               <i class="fas fa-copy"></i> Copy ID
             </button>
             <div class="copied-message" id="copiedMessageBinance">Binance ID copied to clipboard!</div>
           </div>
         </div>
         
-        <!-- USDT Address -->
+        <!-- Cryptocurrencies Address -->
         <div class="card">
           <div class="card-title">
-            <i class="fas fa-wallet"></i> USDT (Tether)
+            <i class="fas fa-wallet"></i> Cryptocurrencies
           </div>
           <div class="card-content">
-            <p>Select network: 
-              <select id="usdtNetworkSelect" onchange="updateUsdtAddress()" class="network-select">
-                <option value="TRC20">TRC20</option>
-                <option value="ERC20">ERC20</option>
-                <option value="BEP20">BEP20</option>
+            <p>Select Cryptocurrency & Network: 
+              <select id="AddressSelect" onchange="updateAddress()" class="network-select" aria-label="Select cryptocurrency network">
+                <option value="USDT_TRC20">USDT (TRC20)</option>
+                <option value="USDT_ERC20">USDT (ERC20)</option>
+                <option value="USDT_BEP20">USDT (BEP20)</option>
+                <option value="USDC_ERC20">USDC (ERC20)</option>
+                <option value="USDC_BEP20">USDC (BEP20)</option>
               </select>
             </p>
-            <div class="address-box" id="usdtAddress">TTdXcExjMTxSnM5HEpsg7mh3huPTxrmvYq</div>
-            <button class="copy-button" onclick="copyUsdtAddress()" aria-label="Copy USDT address to clipboard">
+            <div class="address-box" id="Address">TTdXcExjMTxSnM5HEpsg7mh3huPTxrmvYq</div>
+            <button class="copy-button" onclick="copyAddress()" aria-label="Copy cryptocurrency address to clipboard">
               <i class="fas fa-copy"></i> Copy Address
             </button>
-            <div class="copied-message" id="copiedMessageUSDT">USDT address copied to clipboard!</div>
+            <div class="copied-message" id="copiedMessage">Address copied to clipboard!</div>
           </div>
         </div>
       </div>
@@ -219,23 +221,30 @@
   </footer>
 
   <script>
-    // USDT Addresses for Different Networks
-    const usdtAddresses = {
-      TRC20: "TTdXcExjMTxSnM5HEpsg7mh3huPTxrmvYq",
-      ERC20: "0xb813f07bce7df3c333acc33d0efe021f6c823880",
-      BEP20: "0xb813f07bce7df3c333acc33d0efe021f6c823880"
+    // Addresses for Different Networks
+    const Addresses = {
+      USDT_TRC20: "TTdXcExjMTxSnM5HEpsg7mh3huPTxrmvYq",
+      USDT_ERC20: "0xb813f07bce7df3c333acc33d0efe021f6c823880",
+      USDT_BEP20: "0xb813f07bce7df3c333acc33d0efe021f6c823880",
+      USDC_ERC20: "0xb813f07bce7df3c333acc33d0efe021f6c823880",
+      USDC_BEP20: "0xb813f07bce7df3c333acc33d0efe021f6c823880"
     };
 
-    // Update USDT Address Based on Selected Network
-    function updateUsdtAddress() {
-      const selectedNetwork = document.getElementById('usdtNetworkSelect').value;
-      document.getElementById('usdtAddress').innerText = usdtAddresses[selectedNetwork];
+    // Initialize the page with default address
+    document.addEventListener('DOMContentLoaded', function() {
+      updateAddress();
+    });
+
+    // Update Address Based on Selected Network
+    function updateAddress() {
+      const selectedNetwork = document.getElementById('AddressSelect').value;
+      document.getElementById('Address').innerText = Addresses[selectedNetwork];
     }
 
-    // Copy USDT Address Function
-    function copyUsdtAddress() {
-      const usdtAddress = document.getElementById('usdtAddress').innerText;
-      copyToClipboard(usdtAddress, 'copiedMessageUSDT');
+    // Copy Address Function
+    function copyAddress() {
+      const address = document.getElementById('Address').innerText;
+      copyToClipboard(address, 'copiedMessage');
     }
     
     // Generic copy to clipboard function
@@ -260,6 +269,6 @@
     }
   </script>
 
-<script src="assets/js/cursor.js" defer></script>
+  <script src="assets/js/cursor.js" defer></script>
 </body>
 </html>
