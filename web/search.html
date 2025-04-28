@@ -189,5 +189,17 @@
     // Initialize
     loadSettings();
   </script>
+<script>
+  if (window.location.search.includes('q=')) {
+  // search logic
+} else {
+  // Register as a search engine
+  window.addEventListener('DOMContentLoaded', () => {
+    if (window.external && 'AddSearchProvider' in window.external) {
+      window.external.AddSearchProvider('https://catsmoker.github.io/web/search.xml');
+    }
+  });
+}
+</script>
 </body>
 </html>
