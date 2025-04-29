@@ -3,130 +3,222 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Google V2</title>
+  <title>Search V2</title>
   <link rel="search" type="application/opensearchdescription+xml" href="https://catsmoker.github.io/web/search.xml" title="Search">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg-color: #f8f9fa;
+      --text-color: #000;
+      --border-color: #dfe1e5;
+      --button-bg: #f8f9fa;
+      --panel-bg: #f8f9fa;
+    }
+    
+    body.dark-mode {
+      --bg-color: #202124;
+      --text-color: #e8eaed;
+      --border-color: #5f6368;
+      --button-bg: #303134;
+      --panel-bg: #303134;
+    }
     
     body {
       font-family: "Georama", sans-serif;
-      font-optical-sizing: auto;
-      font-weight: <weight>;
-      font-style: normal;
-      font-variation-settings: "wdth" 100;
+      background: var(--bg-color);
+      color: var(--text-color);
       text-align: center;
-      margin-top: 100px;
-      background: #f8f9fa;
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
     }
+    
     .logo {
-      font-size: 72px;
-      font-weight: bold;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
-    .blue { color: #4285F4; }
-    .red { color: #EA4335; }
-    .yellow { color: #FBBC05; }
-    .green { color: #34A853; }
+    
+    .logo img {
+      height: 100px;
+      max-width: 100%;
+    }
+    
     .subtext {
       color: #5f6368;
       font-size: 14px;
       margin-bottom: 20px;
     }
+    
+    .search-container {
+      width: 100%;
+      max-width: 580px;
+      padding: 0 15px;
+      box-sizing: border-box;
+    }
+    
     .search-box {
-      width: 580px;
+      width: 100%;
       height: 44px;
       border-radius: 24px;
-      border: 1px solid #dfe1e5;
+      border: 1px solid var(--border-color);
       padding: 0 20px;
       font-size: 16px;
       outline: none;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      background: var(--bg-color);
+      color: var(--text-color);
+      margin-bottom: 20px;
     }
+    
     .search-box:hover, .search-box:focus {
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
+    
     .buttons {
-      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 20px;
     }
-    .search-btn, .lucky-btn {
-      background-color: #f8f9fa;
-      border: 1px solid #f8f9fa;
+    
+    .search-btn, .lucky-btn, .settings-btn {
+      background-color: var(--button-bg);
+      border: 1px solid var(--border-color);
       border-radius: 4px;
-      color: #3c4043;
+      color: var(--text-color);
       padding: 10px 16px;
-      margin: 0 4px;
       font-size: 14px;
       cursor: pointer;
+      min-width: 120px;
     }
-    .search-btn:hover, .lucky-btn:hover {
-      border: 1px solid #dadce0;
+    
+    .search-btn:hover, .lucky-btn:hover, .settings-btn:hover {
+      border: 1px solid var(--border-color);
       box-shadow: 0 1px 1px rgba(0,0,0,0.1);
     }
-    .settings-btn {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      color: #5f6368;
-      cursor: pointer;
+    
+    #settings-panel {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      background: var(--panel-bg);
+      border-radius: 8px;
+      width: 100%;
+      max-width: 500px;
+      border: 1px solid var(--border-color);
+    }
+    
+    #settings-panel h3 {
+      margin-top: 0;
+    }
+    
+    .bang-inputs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    
+    .bang-inputs input {
+      flex: 1;
+      min-width: 120px;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-color);
+      color: var(--text-color);
+    }
+    
+    @media (max-width: 480px) {
+      .logo img {
+        height: 80px;
+      }
+      
+      .search-box {
+        height: 40px;
+        font-size: 14px;
+      }
+      
+      .search-btn, .lucky-btn, .settings-btn {
+        padding: 8px 12px;
+        min-width: 100px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="settings-btn" onclick="toggleSettings()">⚙️</div>
   <div class="logo">
-    <span class="blue">G</span>
-    <span class="red">o</span>
-    <span class="yellow">o</span>
-    <span class="blue">g</span>
-    <span class="green">l</span>
-    <span class="red">e</span>
+    <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Search">
   </div>
   <div class="subtext">V2 By catsmoker</div>
-  <input type="text" class="search-box" id="search" placeholder="Search Google or use !bang (e.g., !yt cats)" autofocus>
-  <div class="buttons">
-    <button class="search-btn" onclick="search()">Google Search</button>
-    <button class="lucky-btn" onclick="imFeelingLucky()">I'm Feeling Lucky</button>
-  </div>
-
-  <!-- Hidden Settings Panel -->
-  <div id="settings-panel" style="display: none; margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 8px; max-width: 500px; margin-left: auto; margin-right: auto;">
-    <h3>🔧 Settings</h3>
-    <div>
-      <label><input type="checkbox" id="dark-mode"> Dark Mode</label>
+  
+  <div class="search-container">
+    <input type="text" class="search-box" id="search" placeholder="Search or use !bang (e.g., !yt cats)" autofocus>
+    
+    <div class="buttons">
+      <button class="search-btn" onclick="search()">Search</button>
+      <button class="lucky-btn" onclick="imFeelingLucky()">I'm Feeling Lucky</button>
+      <button class="settings-btn" onclick="toggleSettings()">Settings</button>
     </div>
-    <div style="margin-top: 15px;">
-      <h4>Custom !bangs</h4>
-      <input type="text" id="custom-bang" placeholder="!mybang" style="padding: 8px;">
-      <input type="text" id="custom-url" placeholder="https://example.com/?q=%s" style="padding: 8px; width: 300px;">
-      <button onclick="saveCustomBang()" style="padding: 8px 12px;">Add</button>
-    </div>
-    <div style="margin-top: 15px;">
-      <h4>Privacy</h4>
-      <label><input type="checkbox" id="strip-trackers"> Remove tracking parameters (utm_, fbclid, etc.)</label>
+    
+    <!-- Settings Panel -->
+    <div id="settings-panel">
+      <h3>🔧 Settings</h3>
+      <div>
+        <label><input type="checkbox" id="dark-mode"> Dark Mode</label>
+      </div>
+      <div style="margin-top: 15px;">
+        <h4>Custom !bangs</h4>
+        <div class="bang-inputs">
+          <input type="text" id="custom-bang" placeholder="!mybang">
+          <input type="text" id="custom-url" placeholder="https://example.com/?q=%s">
+        </div>
+        <button onclick="saveCustomBang()" style="padding: 8px 12px;">Add</button>
+      </div>
+      <div style="margin-top: 15px;">
+        <h4>Privacy</h4>
+        <label><input type="checkbox" id="strip-trackers"> Remove tracking parameters (utm_, fbclid, etc.)</label>
+      </div>
     </div>
   </div>
 
   <script>
-    // !bang database (Rebang + custom)
+    // Enhanced !bang database
     let bangs = {
       "!g": "https://www.google.com/search?q=%s",
       "!yt": "https://www.youtube.com/results?search_query=%s",
       "!w": "https://en.wikipedia.org/wiki/Special:Search/%s",
       "!gh": "https://github.com/search?q=%s",
-      "!d": "https://duckduckgo.com/?q=%s"
+      "!d": "https://duckduckgo.com/?q=%s",
+      "!r": "https://www.reddit.com/search/?q=%s",
+      "!tw": "https://twitter.com/search?q=%s",
+      "!amz": "https://www.amazon.com/s?k=%s",
+      "!gm": "https://www.google.com/maps/search/%s",
+      "!t": "https://www.thesaurus.com/browse/%s",
+      "!tr": "https://translate.google.com/?sl=auto&tl=en&text=%s",
+      "!aw": "https://wiki.archlinux.org/index.php?search=%s",
+      "!so": "https://stackoverflow.com/search?q=%s",
+      "!imdb": "https://www.imdb.com/find?q=%s",
+      "!ud": "https://www.urbandictionary.com/define.php?term=%s"
     };
 
     // Load saved settings
     function loadSettings() {
-      if (localStorage.getItem('dark-mode') === 'true') {
-        document.body.style.backgroundColor = '#202124';
-        document.body.style.color = '#e8eaed';
-      }
-      if (localStorage.getItem('strip-trackers') === 'true') {
-        document.getElementById('strip-trackers').checked = true;
-      }
+      // Dark mode
+      const darkMode = localStorage.getItem('dark-mode') === 'true';
+      document.getElementById('dark-mode').checked = darkMode;
+      if (darkMode) document.body.classList.add('dark-mode');
+      
+      // Tracker stripping
+      document.getElementById('strip-trackers').checked = localStorage.getItem('strip-trackers') === 'true';
+      
       // Load custom !bangs
       Object.entries(localStorage).forEach(([key, val]) => {
         if (key.startsWith('bang:')) bangs[key.slice(5)] = val;
@@ -147,6 +239,8 @@
         bangs[bang] = url;
         localStorage.setItem(`bang:${bang}`, url);
         alert(`Added ${bang} → ${url}`);
+        document.getElementById('custom-bang').value = '';
+        document.getElementById('custom-url').value = '';
       } else {
         alert('Invalid !bang or URL. Format: !mytag https://site.com/?q=%s');
       }
@@ -155,11 +249,10 @@
     // Toggle dark mode
     document.getElementById('dark-mode').addEventListener('change', (e) => {
       localStorage.setItem('dark-mode', e.target.checked);
-      document.body.style.backgroundColor = e.target.checked ? '#202124' : '#f8f9fa';
-      document.body.style.color = e.target.checked ? '#e8eaed' : '#000';
+      document.body.classList.toggle('dark-mode', e.target.checked);
     });
 
-    // Search function (with tracker stripping)
+    // Improved search function
     function search() {
       let query = document.getElementById('search').value.trim();
       if (!query) return;
@@ -177,14 +270,27 @@
           return;
         }
       }
+      
       // Default to Google
       window.location.href = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
     }
 
-    // "I'm Feeling Lucky"
+    // Fixed "I'm Feeling Lucky" function
     function imFeelingLucky() {
-      const query = document.getElementById('search').value.trim();
+      let query = document.getElementById('search').value.trim();
       if (!query) return;
+      
+      // Check for bangs first
+      const bangMatch = query.match(/^(!\w+)\s?(.*)?/);
+      if (bangMatch) {
+        const [full, bang, rest = ''] = bangMatch;
+        if (bangs[bang]) {
+          window.location.href = bangs[bang].replace('%s', encodeURIComponent(rest));
+          return;
+        }
+      }
+      
+      // Use Google's I'm Feeling Lucky
       window.location.href = `https://www.google.com/search?q=${encodeURIComponent(query)}&btnI=I%27m+Feeling+Lucky`;
     }
 
@@ -193,20 +299,26 @@
       if (e.key === 'Enter') search();
     });
 
-    // Initialize
-    loadSettings();
-  </script>
-<script>
-  if (window.location.search.includes('q=')) {
-  // search logic
-} else {
-  // Register as a search engine
-  window.addEventListener('DOMContentLoaded', () => {
-    if (window.external && 'AddSearchProvider' in window.external) {
-      window.external.AddSearchProvider('https://catsmoker.github.io/web/search.xml');
+    // Handle URL parameters
+    function handleUrlParams() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const query = urlParams.get('q');
+      if (query) {
+        document.getElementById('search').value = query;
+        search();
+      }
     }
-  });
-}
-</script>
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSettings();
+      handleUrlParams();
+      
+      // Register search provider if not coming from a search
+      if (!window.location.search.includes('q=') && window.external && 'AddSearchProvider' in window.external) {
+        window.external.AddSearchProvider('https://catsmoker.github.io/web/search.xml');
+      }
+    });
+  </script>
 </body>
 </html>
