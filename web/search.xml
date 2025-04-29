@@ -1,4 +1,5 @@
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
   <ShortName>Search</ShortName>
-  <Url type="text/html" template="https://catsmoker.github.io/web/search.html?q={searchTerms}"/>
+  <Description>Search using Google V2</Description>
+  <Url type="text/html" method="get" template="https://catsmoker.github.io/web/search.html?q={searchTerms}"/>
 </OpenSearchDescription>
