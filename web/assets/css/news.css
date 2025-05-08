@@ -16,7 +16,7 @@
     font-weight: bold;
     color: var(--white);
     text-decoration: none;
-    display: inline-flex; /* Changed to inline-flex */
+    display: inline-flex;
     align-items: center;
     gap: var(--space-xs);
     background: rgba(255, 255, 255, 0.1);

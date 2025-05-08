@@ -18,6 +18,24 @@ body {
     /* Use the gradient from home.css by default */
     transition: background-color 0.3s ease;
 }
+
+.back-button-page {
+    font-size: var(--text-sm);
+    font-weight: bold;
+    color: var(--white);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    transition: background var(--transition-medium);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.back-button-page i { font-size: var(--text-md); }
+.back-button-page:hover { background: rgba(255, 255, 255, 0.2); }
+
 body.search-dark-mode {
     background: var(--search-bg-color); /* Solid dark background when dark mode is active */
     color: var(--search-text-color);
