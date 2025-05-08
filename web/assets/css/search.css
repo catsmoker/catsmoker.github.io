@@ -7,9 +7,8 @@ body.search-dark-mode {
     --search-text-color: #e8eaed;
     --search-border-color: #5f6368;
     --search-button-bg: #303134;
-    --search-panel-bg: #292a2d; /* Slightly different for panel */
+    --search-panel-bg: #292a2d;
     --search-input-bg: #303134;
-    --search-logo-svg-fill: #e8eaed; /* Default text color for logo in dark mode */
     --search-subtext-color: #9aa0a6;
     --search-icon-color: #9aa0a6;
 }
@@ -37,12 +36,12 @@ body {
 .back-button-page:hover { background: rgba(255, 255, 255, 0.2); }
 
 body.search-dark-mode {
-    background: var(--search-bg-color); /* Solid dark background when dark mode is active */
+    background: var(--search-bg-color);
     color: var(--search-text-color);
 }
 
 .search-header {
-    justify-content: space-between; /* Align items */
+    justify-content: space-between;
 }
 
 .theme-toggle-button {
@@ -72,22 +71,12 @@ body.search-dark-mode {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: calc(100vh - 150px); /* Adjust based on header/footer height */
+    min-height: calc(100vh - 150px);
     padding: var(--space-lg);
     width: 100%;
 }
 
 .logo { margin-bottom: var(--space-md); }
-.search-logo-svg {
-    height: 40px; /* Control height */
-    width: auto;
-}
-/* Default logo colors are set inline in the SVG */
-.search-dark-mode .search-logo-svg tspan {
-    /* Override individual colors if needed, or use a single color */
-    fill: var(--search-logo-svg-fill);
-}
-
 
 .subtext {
     color: var(--text-lighter);
@@ -99,7 +88,7 @@ body.search-dark-mode {
 
 .search-container {
     width: 100%;
-    max-width: 600px; /* Max width of search area */
+    max-width: 600px;
     padding: 0 var(--space-sm);
     display: flex;
     flex-direction: column;
@@ -114,14 +103,14 @@ body.search-dark-mode {
 
 .search-box {
     width: 100%;
-    height: 48px; /* Slightly taller */
+    height: 48px;
     border-radius: 24px;
     border: 1px solid var(--card-border);
-    padding: 0 45px; /* Padding for icons */
+    padding: 0 45px;
     font-size: var(--text-md);
     outline: none;
     box-shadow: var(--shadow-md);
-    background: rgba(255, 255, 255, 0.1); /* Match card background */
+    background: rgba(255, 255, 255, 0.1);
     color: var(--white);
     transition: all var(--transition-medium);
 }
@@ -136,7 +125,7 @@ body.search-dark-mode {
     border-color: rgba(255, 255, 255, 0.3);
 }
 .search-dark-mode .search-box:hover, .search-dark-mode .search-box:focus {
-    background: #3c3d40; /* Slightly lighter on focus */
+    background: #3c3d40;
     border-color: var(--search-border-color);
 }
 
@@ -151,7 +140,7 @@ body.search-dark-mode {
      color: var(--search-icon-color);
 }
 .search-icon { left: 18px; }
-.voice-icon { right: 18px; cursor: pointer; } /* Add pointer */
+.voice-icon { right: 18px; cursor: pointer; }
 
 
 .buttons {
@@ -178,8 +167,8 @@ body.search-dark-mode {
     justify-content: center;
     gap: var(--space-xs);
 }
-.search-dark-mode .search-btn, 
-.search-dark-mode .lucky-btn, 
+.search-dark-mode .search-btn,
+.search-dark-mode .lucky-btn,
 .search-dark-mode .settings-btn {
     background-color: var(--search-button-bg);
     border-color: var(--search-border-color);
@@ -191,8 +180,8 @@ body.search-dark-mode {
     background-color: rgba(255, 255, 255, 0.12);
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
-.search-dark-mode .search-btn:hover, 
-.search-dark-mode .lucky-btn:hover, 
+.search-dark-mode .search-btn:hover,
+.search-dark-mode .lucky-btn:hover,
 .search-dark-mode .settings-btn:hover {
     border-color: #6f7378;
     background-color: #3c3d40;
@@ -200,10 +189,10 @@ body.search-dark-mode {
 
 .settings-panel-card {
     width: 100%;
-    max-width: 560px; /* Match search box width */
+    max-width: 560px;
     margin-top: var(--space-lg);
     padding: var(--space-lg);
-    background: rgba(30, 30, 45, 0.8); /* Use card bg */
+    background: rgba(30, 30, 45, 0.8);
     border-radius: var(--card-radius);
     border: 1px solid var(--card-border);
     text-align: left;
@@ -221,7 +210,7 @@ body.search-dark-mode {
     align-items: center;
     gap: var(--space-sm);
 }
-.search-dark-mode .settings-panel-card h3, 
+.search-dark-mode .settings-panel-card h3,
 .search-dark-mode .settings-panel-card h4 {
     color: var(--search-text-color);
 }
@@ -302,7 +291,7 @@ body.search-dark-mode {
 
 /* Responsive Adjustments */
 @media (max-width: 600px) {
-    .search-logo-svg { height: 30px; }
+    /* REMOVED: .search-logo-svg { height: 30px; } */
     .search-box { height: 44px; padding: 0 40px; font-size: 0.9rem; }
     .search-icon { left: 15px; }
     .voice-icon { right: 15px; }
