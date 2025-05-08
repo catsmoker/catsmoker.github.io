@@ -1,0 +1,295 @@
+/* search.css - Page specific styles for search.html */
+
+/* Using variables defined in home.css */
+
+body.search-dark-mode {
+    --search-bg-color: #202124;
+    --search-text-color: #e8eaed;
+    --search-border-color: #5f6368;
+    --search-button-bg: #303134;
+    --search-panel-bg: #292a2d; /* Slightly different for panel */
+    --search-input-bg: #303134;
+    --search-logo-svg-fill: #e8eaed; /* Default text color for logo in dark mode */
+    --search-subtext-color: #9aa0a6;
+    --search-icon-color: #9aa0a6;
+}
+
+body {
+    /* Use the gradient from home.css by default */
+    transition: background-color 0.3s ease;
+}
+body.search-dark-mode {
+    background: var(--search-bg-color); /* Solid dark background when dark mode is active */
+    color: var(--search-text-color);
+}
+
+.search-header {
+    justify-content: space-between; /* Align items */
+}
+
+.theme-toggle-button {
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--white);
+    padding: 0.5rem 0.8rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-size: 1rem;
+}
+.search-dark-mode .theme-toggle-button {
+    color: var(--search-text-color);
+    border-color: var(--search-border-color);
+}
+.theme-toggle-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+.search-dark-mode .theme-toggle-button:hover {
+    background-color: var(--search-button-bg);
+}
+
+
+.search-page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 150px); /* Adjust based on header/footer height */
+    padding: var(--space-lg);
+    width: 100%;
+}
+
+.logo { margin-bottom: var(--space-md); }
+.search-logo-svg {
+    height: 40px; /* Control height */
+    width: auto;
+}
+/* Default logo colors are set inline in the SVG */
+.search-dark-mode .search-logo-svg tspan {
+    /* Override individual colors if needed, or use a single color */
+    fill: var(--search-logo-svg-fill);
+}
+
+
+.subtext {
+    color: var(--text-lighter);
+    font-size: var(--text-sm);
+    margin-bottom: var(--space-lg);
+    opacity: 0.8;
+}
+.search-dark-mode .subtext { color: var(--search-subtext-color); }
+
+.search-container {
+    width: 100%;
+    max-width: 600px; /* Max width of search area */
+    padding: 0 var(--space-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.search-input-wrapper {
+    position: relative;
+    width: 100%;
+    margin-bottom: var(--space-lg);
+}
+
+.search-box {
+    width: 100%;
+    height: 48px; /* Slightly taller */
+    border-radius: 24px;
+    border: 1px solid var(--card-border);
+    padding: 0 45px; /* Padding for icons */
+    font-size: var(--text-md);
+    outline: none;
+    box-shadow: var(--shadow-md);
+    background: rgba(255, 255, 255, 0.1); /* Match card background */
+    color: var(--white);
+    transition: all var(--transition-medium);
+}
+.search-dark-mode .search-box {
+    background: var(--search-input-bg);
+    border-color: var(--search-border-color);
+    color: var(--search-text-color);
+}
+
+.search-box:hover, .search-box:focus {
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+.search-dark-mode .search-box:hover, .search-dark-mode .search-box:focus {
+    background: #3c3d40; /* Slightly lighter on focus */
+    border-color: var(--search-border-color);
+}
+
+.search-icon, .voice-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-lighter);
+    opacity: 0.7;
+}
+.search-dark-mode .search-icon, .search-dark-mode .voice-icon {
+     color: var(--search-icon-color);
+}
+.search-icon { left: 18px; }
+.voice-icon { right: 18px; cursor: pointer; } /* Add pointer */
+
+
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+}
+
+.search-btn, .lucky-btn, .settings-btn {
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    color: var(--white);
+    padding: 10px 18px;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    cursor: pointer;
+    min-width: 120px;
+    transition: all var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+}
+.search-dark-mode .search-btn, 
+.search-dark-mode .lucky-btn, 
+.search-dark-mode .settings-btn {
+    background-color: var(--search-button-bg);
+    border-color: var(--search-border-color);
+    color: var(--search-text-color);
+}
+
+.search-btn:hover, .lucky-btn:hover, .settings-btn:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.search-dark-mode .search-btn:hover, 
+.search-dark-mode .lucky-btn:hover, 
+.search-dark-mode .settings-btn:hover {
+    border-color: #6f7378;
+    background-color: #3c3d40;
+}
+
+.settings-panel-card {
+    width: 100%;
+    max-width: 560px; /* Match search box width */
+    margin-top: var(--space-lg);
+    padding: var(--space-lg);
+    background: rgba(30, 30, 45, 0.8); /* Use card bg */
+    border-radius: var(--card-radius);
+    border: 1px solid var(--card-border);
+    text-align: left;
+    box-shadow: var(--shadow-lg);
+}
+.search-dark-mode .settings-panel-card {
+     background: var(--search-panel-bg);
+     border-color: var(--search-border-color);
+}
+
+.settings-panel-card h3, .settings-panel-card h4 {
+    color: var(--white);
+    margin-bottom: var(--space-md);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+.search-dark-mode .settings-panel-card h3, 
+.search-dark-mode .settings-panel-card h4 {
+    color: var(--search-text-color);
+}
+.settings-panel-card h4 { font-size: 1rem; margin-top: var(--space-lg); margin-bottom: var(--space-sm); }
+
+.setting-item { margin-bottom: var(--space-md); }
+.setting-item label { display: flex; align-items: center; gap: var(--space-sm); cursor: pointer; font-size: var(--text-sm); }
+.setting-item input[type="checkbox"] { accent-color: var(--success); }
+
+.custom-bangs .bang-inputs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+}
+.custom-bangs input[type="text"] {
+    flex: 1;
+    min-width: 150px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--card-border);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--white);
+    font-size: var(--text-sm);
+}
+.search-dark-mode .custom-bangs input[type="text"] {
+    background: var(--search-input-bg);
+    border-color: var(--search-border-color);
+    color: var(--search-text-color);
+}
+
+.add-bang-btn {
+    background: var(--success);
+    color: var(--black);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: var(--text-sm);
+    transition: background-color var(--transition-fast);
+}
+.add-bang-btn:hover { background-color: #60dff3; }
+
+#custom-bang-list {
+    margin-top: var(--space-md);
+    font-size: var(--text-sm);
+    max-height: 150px;
+    overflow-y: auto;
+    padding-right: var(--space-sm);
+}
+.custom-bang-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-xs) 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    word-break: break-all;
+}
+.search-dark-mode .custom-bang-item {
+     border-bottom-color: var(--search-border-color);
+}
+.custom-bang-item:last-child { border-bottom: none; }
+.remove-bang-btn {
+    background: none;
+    border: none;
+    color: var(--error);
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 0 var(--space-sm);
+}
+
+/* Ad section specific styles */
+.search-ad {
+    margin-top: var(--space-2xl); /* More space above ad */
+    max-width: 728px; /* Standard banner size */
+}
+
+/* Responsive Adjustments */
+@media (max-width: 600px) {
+    .search-logo-svg { height: 30px; }
+    .search-box { height: 44px; padding: 0 40px; font-size: 0.9rem; }
+    .search-icon { left: 15px; }
+    .voice-icon { right: 15px; }
+    .buttons { gap: var(--space-sm); }
+    .search-btn, .lucky-btn, .settings-btn { padding: 8px 12px; min-width: 100px; font-size: 0.85rem; }
+    .settings-panel-card { padding: var(--space-md); }
+    .custom-bangs input[type="text"] { min-width: 120px; }
+}

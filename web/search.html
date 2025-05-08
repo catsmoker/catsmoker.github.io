@@ -1,334 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Search V2</title>
-  <link rel="search" type="application/opensearchdescription+xml" href="https://catsmoker.github.io/web/search.xml" title="Search">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Georama:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg-color: #f8f9fa;
-      --text-color: #000;
-      --border-color: #dfe1e5;
-      --button-bg: #f8f9fa;
-      --panel-bg: #f8f9fa;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search V2 - CATSMOKER</title>
+    <link rel="search" type="application/opensearchdescription+xml" href="search.xml" title="Search V2"> <!-- Relative path -->
     
-    body.dark-mode {
-      --bg-color: #202124;
-      --text-color: #e8eaed;
-      --border-color: #5f6368;
-      --button-bg: #303134;
-      --panel-bg: #303134;
-    }
+    <link rel="icon" href="assets/ico/favicon.ico" type="image/x-icon">
     
-    body {
-      font-family: "Georama", sans-serif;
-      background: var(--bg-color);
-      color: var(--text-color);
-      text-align: center;
-      margin: 0;
-      padding: 20px;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      box-sizing: border-box;
-    }
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"></noscript>
     
-    .logo {
-      margin-bottom: 20px;
-    }
+    <!-- Global Base Styles -->
+    <link rel="stylesheet" href="assets/css/home.css"> 
+    <!-- Page Specific Styles -->
+    <link rel="stylesheet" href="assets/css/search.css">
+    <!-- Cursor Styles -->
+    <link rel="stylesheet" href="assets/css/cursor.css">
     
-    .logo img {
-      height: 100px;
-      max-width: 100%;
-    }
-    
-    .subtext {
-      color: #5f6368;
-      font-size: 14px;
-      margin-bottom: 20px;
-    }
-    
-    .search-container {
-      width: 100%;
-      max-width: 580px;
-      padding: 0 15px;
-      box-sizing: border-box;
-    }
-    
-    .search-box {
-      width: 100%;
-      height: 44px;
-      border-radius: 24px;
-      border: 1px solid var(--border-color);
-      padding: 0 20px;
-      font-size: 16px;
-      outline: none;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      background: var(--bg-color);
-      color: var(--text-color);
-      margin-bottom: 20px;
-    }
-    
-    .search-box:hover, .search-box:focus {
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    }
-    
-    .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    
-    .search-btn, .lucky-btn, .settings-btn {
-      background-color: var(--button-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 4px;
-      color: var(--text-color);
-      padding: 10px 16px;
-      font-size: 14px;
-      cursor: pointer;
-      min-width: 120px;
-    }
-    
-    .search-btn:hover, .lucky-btn:hover, .settings-btn:hover {
-      border: 1px solid var(--border-color);
-      box-shadow: 0 1px 1px rgba(0,0,0,0.1);
-    }
-    
-    #settings-panel {
-      display: none;
-      margin-top: 20px;
-      padding: 20px;
-      background: var(--panel-bg);
-      border-radius: 8px;
-      width: 100%;
-      max-width: 500px;
-      border: 1px solid var(--border-color);
-    }
-    
-    #settings-panel h3 {
-      margin-top: 0;
-    }
-    
-    .bang-inputs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-    
-    .bang-inputs input {
-      flex: 1;
-      min-width: 120px;
-      padding: 8px;
-      border-radius: 4px;
-      border: 1px solid var(--border-color);
-      background: var(--bg-color);
-      color: var(--text-color);
-    }
-    
-    @media (max-width: 480px) {
-      .logo img {
-        height: 80px;
-      }
-      
-      .search-box {
-        height: 40px;
-        font-size: 14px;
-      }
-      
-      .search-btn, .lucky-btn, .settings-btn {
-        padding: 8px 12px;
-        min-width: 100px;
-      }
-    }
-  </style>
+    <script src="https://kit.fontawesome.com/2538377e9f.js" crossorigin="anonymous" defer></script>
 </head>
 <body>
-  <div class="logo">
-    <img src="https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png" alt="Search">
-  </div>
-  <div class="subtext">V2 By catsmoker</div>
-  
-  <div class="search-container">
-    <input type="text" class="search-box" id="search" placeholder="Search or use !bang (e.g., !yt cats)" autofocus>
-    
-    <div class="buttons">
-      <button class="search-btn" onclick="search()">Search</button>
-      <button class="lucky-btn" onclick="imFeelingLucky()">I'm Feeling Lucky</button>
-      <button class="settings-btn" onclick="toggleSettings()">Settings</button>
-    </div>
-    
-    <!-- Settings Panel -->
-    <div id="settings-panel">
-      <h3>🔧 Settings</h3>
-      <div>
-        <label><input type="checkbox" id="dark-mode"> Dark Mode</label>
-      </div>
-      <div style="margin-top: 15px;">
-        <h4>Custom !bangs</h4>
-        <div class="bang-inputs">
-          <input type="text" id="custom-bang" placeholder="!mybang">
-          <input type="text" id="custom-url" placeholder="https://example.com/?q=%s">
+    <!-- Custom cursor elements -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-dot-outline"></div>
+
+    <!-- Back Button -->
+    <header class="page-header-nav search-header">
+        <a href="home.html" class="back-button-page" aria-label="Go back to main page">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+         <button id="theme-toggle-btn" class="theme-toggle-button" aria-label="Toggle Theme">
+            <i class="fas fa-moon"></i> <!-- Initial icon -->
+        </button>
+    </header>
+
+    <div class="search-page-container">
+        <div class="logo">
+            <!-- Using an SVG for scalability and potential theming -->
+            <svg class="search-logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 34">
+                <text x="0" y="28" font-family="Poppins, sans-serif" font-size="30" font-weight="600">
+                    <tspan fill="#4285F4">S</tspan>
+                    <tspan fill="#EA4335">e</tspan>
+                    <tspan fill="#FBBC05">a</tspan>
+                    <tspan fill="#4285F4">r</tspan>
+                    <tspan fill="#34A853">c</tspan>
+                    <tspan fill="#EA4335">h</tspan>
+                </text>
+            </svg>
         </div>
-        <button onclick="saveCustomBang()" style="padding: 8px 12px;">Add</button>
-      </div>
-      <div style="margin-top: 15px;">
-        <h4>Privacy</h4>
-        <label><input type="checkbox" id="strip-trackers"> Remove tracking parameters (utm_, fbclid, etc.)</label>
-      </div>
+        <div class="subtext">V2 Enhanced by catsmoker</div>
+        
+        <div class="search-container">
+            <div class="search-input-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" class="search-box" id="search" placeholder="Search or use !bang (e.g., !yt cats)" autofocus>
+                <i class="fas fa-microphone voice-icon" title="Voice search (not implemented)"></i> <!-- Placeholder -->
+            </div>
+            
+            <div class="buttons">
+                <button class="search-btn" onclick="performSearch()">Search</button>
+                <button class="lucky-btn" onclick="imFeelingLucky()">I'm Feeling Lucky</button>
+                <button class="settings-btn" onclick="toggleSettings()"><i class="fas fa-cog"></i> Settings</button>
+            </div>
+            
+            <!-- Settings Panel -->
+            <div id="settings-panel" class="settings-panel-card" style="display: none;">
+                <h3><i class="fas fa-wrench"></i> Settings</h3>
+                <div class="setting-item">
+                    <label>
+                        <input type="checkbox" id="dark-mode"> Dark Mode
+                    </label>
+                </div>
+                 <div class="setting-item">
+                     <label>
+                         <input type="checkbox" id="strip-trackers"> Remove tracking parameters (utm_, etc.)
+                     </label>
+                 </div>
+                <div class="setting-item custom-bangs">
+                    <h4><i class="fas fa-bolt"></i> Custom !bangs</h4>
+                    <div class="bang-inputs">
+                        <input type="text" id="custom-bang" placeholder="!mybang">
+                        <input type="text" id="custom-url" placeholder="https://example.com/?q=%s">
+                    </div>
+                    <button class="add-bang-btn" onclick="saveCustomBang()">Add Bang</button>
+                    <div id="custom-bang-list">
+                        <!-- Custom bangs will be listed here by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Ad Section -->
+        <div class="ad-section search-ad">
+            <p class="ad-message">Ads help keep tools like this free.</p>
+            <div class="ad-container">
+                 <script type="text/javascript">
+                    atOptions = { /* Your Adsterra ad options */ };
+                </script>
+                <script type="text/javascript" src="//www.highperformanceformat.com/63fa2911679096f507a57fc2ae1aa25b/invoke.js"></script>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <script>
-    // Enhanced !bang database
-    let bangs = {
-      "!g": "https://www.google.com/search?q=%s",
-      "!yt": "https://www.youtube.com/results?search_query=%s",
-      "!w": "https://en.wikipedia.org/wiki/Special:Search/%s",
-      "!gh": "https://github.com/search?q=%s",
-      "!d": "https://duckduckgo.com/?q=%s",
-      "!r": "https://www.reddit.com/search/?q=%s",
-      "!tw": "https://twitter.com/search?q=%s",
-      "!amz": "https://www.amazon.com/s?k=%s",
-      "!gm": "https://www.google.com/maps/search/%s",
-      "!t": "https://www.thesaurus.com/browse/%s",
-      "!tr": "https://translate.google.com/?sl=auto&tl=en&text=%s",
-      "!aw": "https://wiki.archlinux.org/index.php?search=%s",
-      "!so": "https://stackoverflow.com/search?q=%s",
-      "!imdb": "https://www.imdb.com/find?q=%s",
-      "!ud": "https://www.urbandictionary.com/define.php?term=%s"
-    };
+    <!-- Footer -->
+    <footer class="global-footer-enhanced">
+        <p>© 2024-2025 CATSMOKER. All rights reserved.</p>
+        <!-- Removed viewers count from search page -->
+    </footer>
 
-    // Load saved settings
-    function loadSettings() {
-      // Dark mode
-      const darkMode = localStorage.getItem('dark-mode') === 'true';
-      document.getElementById('dark-mode').checked = darkMode;
-      if (darkMode) document.body.classList.add('dark-mode');
-      
-      // Tracker stripping
-      document.getElementById('strip-trackers').checked = localStorage.getItem('strip-trackers') === 'true';
-      
-      // Load custom !bangs
-      Object.entries(localStorage).forEach(([key, val]) => {
-        if (key.startsWith('bang:')) bangs[key.slice(5)] = val;
-      });
-    }
-
-    // Toggle settings panel
-    function toggleSettings() {
-      const panel = document.getElementById('settings-panel');
-      panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-    }
-
-    // Save custom !bang
-    function saveCustomBang() {
-      const bang = document.getElementById('custom-bang').value.trim();
-      const url = document.getElementById('custom-url').value.trim();
-      if (bang && url.includes('%s')) {
-        bangs[bang] = url;
-        localStorage.setItem(`bang:${bang}`, url);
-        alert(`Added ${bang} → ${url}`);
-        document.getElementById('custom-bang').value = '';
-        document.getElementById('custom-url').value = '';
-      } else {
-        alert('Invalid !bang or URL. Format: !mytag https://site.com/?q=%s');
-      }
-    }
-
-    // Toggle dark mode
-    document.getElementById('dark-mode').addEventListener('change', (e) => {
-      localStorage.setItem('dark-mode', e.target.checked);
-      document.body.classList.toggle('dark-mode', e.target.checked);
-    });
-
-    // Improved search function
-    function search() {
-      let query = document.getElementById('search').value.trim();
-      if (!query) return;
-
-      // Strip trackers if enabled
-      if (document.getElementById('strip-trackers').checked) {
-        query = query.replace(/(\?|&)(utm_\w+|fbclid|gclid)=[^&]+/g, '$1');
-      }
-
-      const bangMatch = query.match(/^(!\w+)\s?(.*)?/);
-      if (bangMatch) {
-        const [full, bang, rest = ''] = bangMatch;
-        if (bangs[bang]) {
-          window.location.href = bangs[bang].replace('%s', encodeURIComponent(rest));
-          return;
-        }
-      }
-      
-      // Default to Google
-      window.location.href = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
-    }
-
-    // Fixed "I'm Feeling Lucky" function
-    function imFeelingLucky() {
-      let query = document.getElementById('search').value.trim();
-      if (!query) return;
-      
-      // Check for bangs first
-      const bangMatch = query.match(/^(!\w+)\s?(.*)?/);
-      if (bangMatch) {
-        const [full, bang, rest = ''] = bangMatch;
-        if (bangs[bang]) {
-          window.location.href = bangs[bang].replace('%s', encodeURIComponent(rest));
-          return;
-        }
-      }
-      
-      // Use Google's I'm Feeling Lucky
-      window.location.href = `https://www.google.com/search?q=${encodeURIComponent(query)}&btnI=I%27m+Feeling+Lucky`;
-    }
-
-    // Enter key support
-    document.getElementById('search').addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') search();
-    });
-
-    // Handle URL parameters
-    function handleUrlParams() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const query = urlParams.get('q');
-      if (query) {
-        document.getElementById('search').value = query;
-        search();
-      }
-    }
-
-    // Initialize
-    window.addEventListener('DOMContentLoaded', () => {
-      loadSettings();
-      handleUrlParams();
-      
-      // Register search provider if not coming from a search
-      if (!window.location.search.includes('q=') && window.external && 'AddSearchProvider' in window.external) {
-        window.external.AddSearchProvider('https://catsmoker.github.io/web/search.xml');
-      }
-    });
-  </script>
-<script type="text/javascript">
-	atOptions = {
-		'key' : '63fa2911679096f507a57fc2ae1aa25b',
-		'format' : 'iframe',
-		'height' : 90,
-		'width' : 728,
-		'params' : {}
-	};
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/63fa2911679096f507a57fc2ae1aa25b/invoke.js"></script>
+    <script src="assets/js/search.js" defer></script>
+    <script src="assets/js/cursor.js" defer></script>
 </body>
 </html>

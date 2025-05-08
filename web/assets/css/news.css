@@ -1,0 +1,181 @@
+/* news.css - Page specific styles for news.html */
+
+/* Use global styles from home.css for body, footer, cards */
+
+.page-header-nav {
+    padding: var(--space-sm) var(--space-lg);
+    position: sticky; /* Keep back button visible */
+    top: 0;
+    background: rgba(18, 24, 40, 0.85);
+    backdrop-filter: blur(10px);
+    z-index: 999; /* Below main nav, above content */
+}
+
+.back-button-page {
+    font-size: var(--text-sm);
+    font-weight: bold;
+    color: var(--white);
+    text-decoration: none;
+    display: inline-flex; /* Changed to inline-flex */
+    align-items: center;
+    gap: var(--space-xs);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    transition: background var(--transition-medium);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.back-button-page i { font-size: var(--text-md); }
+.back-button-page:hover { background: rgba(255, 255, 255, 0.2); }
+
+.main-container-page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+    max-width: 1100px; /* Adjust max width for content */
+    margin: 0 auto;
+}
+
+.profile-header-page {
+    text-align: center;
+    padding: var(--space-md);
+}
+
+.profile-header-page h1 {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    margin-bottom: var(--space-xs);
+}
+
+.profile-header-page p {
+    color: var(--text-lighter);
+    font-size: clamp(0.9rem, 2vw, 1rem);
+}
+
+.profile-pic-small {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-bottom: var(--space-sm);
+    border: 2px solid var(--primary);
+}
+
+.rss-feed-section h2,
+.crypto-chart-section h2 {
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
+    margin-bottom: var(--space-md);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+.rss-feed-section h2 i,
+.crypto-chart-section h2 i {
+    color: var(--success);
+}
+
+.rss-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    align-items: center;
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--card-border);
+}
+
+.rss-controls label {
+    font-weight: 500;
+}
+
+#feed-selector {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--card-border);
+    color: var(--white);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: 6px;
+    flex-grow: 1; /* Allow selector to take space */
+    min-width: 150px;
+}
+
+#refresh-btn {
+    background: var(--success);
+    color: var(--black);
+    border: none;
+    padding: var(--space-xs) var(--space-md);
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+}
+#refresh-btn:hover { background-color: #60dff3; }
+
+.rss-items {
+    max-height: 500px; /* Limit height and make scrollable */
+    overflow-y: auto;
+    padding-right: var(--space-sm); /* Space for scrollbar */
+}
+/* Custom Scrollbar for RSS feed */
+.rss-items::-webkit-scrollbar { width: 5px; }
+.rss-items::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 10px;}
+.rss-items::-webkit-scrollbar-thumb { background: var(--success); border-radius: 10px; }
+.rss-items::-webkit-scrollbar-thumb:hover { background: #60dff3; }
+
+.rss-item {
+    background: rgba(255, 255, 255, 0.05);
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+    border-radius: 8px;
+    border-left: 3px solid var(--success);
+}
+.rss-item h3 {
+    font-size: clamp(1rem, 2.5vw, 1.1rem);
+    margin-bottom: var(--space-xs);
+}
+.rss-item h3 a {
+    color: var(--white);
+    text-decoration: none;
+}
+.rss-item h3 a:hover { color: var(--success); }
+.rss-description {
+    font-size: clamp(0.8rem, 1.8vw, 0.9rem);
+    color: var(--text-lighter);
+    margin-bottom: var(--space-sm);
+    line-height: 1.5;
+}
+.rss-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--text-lighter);
+    opacity: 0.8;
+}
+.rss-read-more {
+    color: var(--success);
+    font-weight: 500;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+.rss-read-more:hover { text-decoration: underline; color: #60dff3; }
+.loading-news, .error-news {
+    text-align: center;
+    padding: var(--space-lg);
+    color: var(--text-lighter);
+}
+.error-news { color: var(--error); }
+
+/* Trading View Widget Customization */
+.tradingview-widget-container {
+    border-radius: var(--card-radius);
+    overflow: hidden; /* Ensure widget respects border radius */
+}
+.tradingview-widget-copyright { display: none; } /* Optional: hide copyright */
+.blue-text { color: var(--success) !important; } /* Style the link */
+
+/* Ad Section (Leverages global styles from home.css) */
+/* Footer (Leverages global styles from home.css) */

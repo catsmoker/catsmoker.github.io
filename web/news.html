@@ -1,211 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CATSMOKER</title>
-  
-  <link rel="icon" href="https://img.icons8.com/?size=100&id=QWmWrCxghblr&format=png&color=000000" type="image/x-icon">
-  <link rel="stylesheet" href="assets/css/cursor.css">
-  <link rel="stylesheet" href="assets/css/links.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <script src="https://kit.fontawesome.com/2538377e9f.js" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CATSMOKER - News & Updates</title>
+    
+    <link rel="icon" href="assets/ico/favicon.ico" type="image/x-icon">
+    
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"></noscript>
+    
+    <!-- Global Base Styles -->
+    <link rel="stylesheet" href="assets/css/home.css"> 
+    <!-- Page Specific Styles -->
+    <link rel="stylesheet" href="assets/css/news.css"> 
+    <!-- Cursor Styles -->
+    <link rel="stylesheet" href="assets/css/cursor.css">
+    
+    <script src="https://kit.fontawesome.com/2538377e9f.js" crossorigin="anonymous" defer></script>
 </head>
-
 <body>
-  <!-- Video Background -->
-  <video class="video-background" autoplay loop muted>
-    <source src="assets/vids/video.webm" type="video/webm">
-    Your browser does not support the video tag.
-  </video>
-	
-  <!-- Custom cursor elements -->
-  <div class="cursor-dot"></div>
-  <div class="cursor-dot-outline"></div>
-	
-  <!-- Back Button -->
-  <header class="header">
-    <a href="links.html" class="back-button" target="_self" aria-label="Go back to main page">
-      <i class="fas fa-arrow-left"></i> Back
-    </a>
-  </header>
+    <!-- Custom cursor elements -->
+    <div class="cursor-dot"></div>
+    <div class="cursor-dot-outline"></div>
 
-  <div class="container">
-    <!-- Profile Section -->
-    <div class="profile">
-      <a href="https://www.youtube.com/@CATSMOKER?sub_confirmation=1" target="_blank" aria-label="Visit CATSMOKER's YouTube channel">
-        <img src="assets/imgs/catsmokerlogo.webp" alt="CATSMOKER Logo" class="profile-pic">
-      </a>
-      <h1>Latest News</h1>
-    </div>
-    
-    <!-- RSS Feed Section -->
-    <section class="rss-feed">
-      <h2>Latest Updates</h2>
-      <div class="rss-controls">
-        <select id="feed-selector">
-          <option value="http://rss.cnn.com/rss/cnn_us.rss">US</option>
-        </select>
-        <button id="refresh-btn">Refresh</button>
-      </div>
-      <div id="rss-feed-container" class="rss-items">
-        <div class="loading">Loading news...</div>
-      </div>
-    </section>
+    <!-- Back Button -->
+    <header class="page-header-nav">
+        <a href="home.html" class="back-button-page" aria-label="Go back to main page">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </a>
+    </header>
 
-    <!-- Live Crypto Chart Section -->
-    <section class="crypto-chart">
-      <h2>Live Crypto Chart</h2>
-<!-- TradingView Widget BEGIN -->
-<div class="tradingview-widget-container">
-  <div class="tradingview-widget-container__widget"></div>
-  <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
-  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
-  {
-  "symbols": [
-    [
-      "BINANCE:BTCUSDT|1D"
-    ],
-    [
-      "BINANCE:ETHUSDT|1D"
-    ]
-  ],
-  "chartOnly": false,
-  "width": "100%",
-  "height": "100%",
-  "locale": "en",
-  "colorTheme": "dark",
-  "autosize": true,
-  "showVolume": false,
-  "showMA": false,
-  "hideDateRanges": false,
-  "hideMarketStatus": false,
-  "hideSymbolLogo": false,
-  "scalePosition": "right",
-  "scaleMode": "Normal",
-  "fontFamily": "-apple-system, BlinkMacSystemFont, Trebuchet MS, Roboto, Ubuntu, sans-serif",
-  "fontSize": "10",
-  "noTimeScale": false,
-  "valuesTracking": "1",
-  "changeMode": "price-and-percent",
-  "chartType": "candlesticks",
-  "headerFontSize": "medium",
-  "backgroundColor": "rgba(15, 15, 15, 1)",
-  "lineType": 0,
-  "dateRanges": [
-    "1d|1",
-    "1m|30",
-    "3m|60",
-    "12m|1D",
-    "60m|1W",
-    "all|1M"
-  ],
-  "dateFormat": "MM/dd/yyyy",
-  "timeHoursFormat": "12-hours",
-  "upColor": "#22ab94",
-  "downColor": "#f7525f",
-  "borderUpColor": "#22ab94",
-  "borderDownColor": "#f7525f",
-  "wickUpColor": "#22ab94",
-  "wickDownColor": "#f7525f",
-  "color": "rgba(255, 255, 255, 1)"
-}
-  </script>
-</div>
-<!-- TradingView Widget END -->
-    </section>
-	
-  <!-- Ad Section -->
-  <div class="ad-section">
-    <p class="ad-message">Support CATSMOKER by viewing a few ads. Your support helps keep the content free and the fridge full! 🍕</p>
-    <div class="ad-container">
-	    
-<script type="text/javascript">
-	atOptions = {
-		'key' : '63fa2911679096f507a57fc2ae1aa25b',
-		'format' : 'iframe',
-		'height' : 90,
-		'width' : 728,
-		'params' : {}
-	};
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/63fa2911679096f507a57fc2ae1aa25b/invoke.js"></script>
-	    
-<a href="https://beta.publishers.adsterra.com/referral/EjjBnqjx77" rel="nofollow"><img alt="banner" src="https://landings-cdn.adsterratech.com/referralBanners/png/728%20x%2090%20px.png" /></a>
-	    
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2024-2025 CATSMOKER. All rights reserved.</p>
-  </footer>
-
-
-<script>
-  // Configuration
-  const CORS_PROXY = "https://api.allorigins.win/get?url=";
-  const DEFAULT_FEED = "http://rss.cnn.com/rss/cnn_tech.rss";
-  let currentFeed = DEFAULT_FEED;
-
-  // DOM Elements
-  const container = document.getElementById('rss-feed-container');
-  const feedSelector = document.getElementById('feed-selector');
-  const refreshBtn = document.getElementById('refresh-btn');
-
-  // Fetch and display RSS feed
-  async function loadRSS(feedUrl = DEFAULT_FEED) {
-    container.innerHTML = '<div class="loading">Loading news...</div>';
-    
-    try {
-      const response = await fetch(`${CORS_PROXY}${encodeURIComponent(feedUrl)}`);
-      const data = await response.json();
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(data.contents, "text/xml");
-      
-      const items = xmlDoc.querySelectorAll("item");
-      let html = '';
-      
-      items.forEach((item, index) => {
-        if(index >= 10) return; // Limit to 10 items
-        const title = item.querySelector("title").textContent;
-        const link = item.querySelector("link").textContent;
-        const description = item.querySelector("description").textContent;
-        const pubDate = new Date(item.querySelector("pubDate").textContent);
+    <div class="main-container-page"> <!-- Use a general container for pages -->
+        <!-- Profile Section (Optional, can reuse from home.html if desired) -->
+        <section class="profile-header-page container-card">
+            <img src="assets/imgs/logo.webp" alt="CATSMOKER Logo" class="profile-pic-small">
+            <h1>Latest News & Market Overview</h1>
+            <p>Stay updated with tech news and live crypto charts.</p>
+        </section>
         
-        html += `
-          <div class="rss-item">
-            <h3><a href="${link}" target="_blank" rel="noopener">${title}</a></h3>
-            <div class="description">${description}</div>
-            <div class="meta">
-              <span class="date">${pubDate.toLocaleDateString()}</span>
-              <a href="${link}" target="_blank" rel="noopener" class="read-more">Read more →</a>
+        <!-- RSS Feed Section -->
+        <section class="rss-feed-section container-card">
+            <h2><i class="fas fa-newspaper"></i> Latest Tech Updates</h2>
+            <div class="rss-controls">
+                <label for="feed-selector">Feed:</label>
+                <select id="feed-selector">
+                    <!-- Add other relevant RSS feeds if desired -->
+                    <option value="http://rss.cnn.com/rss/cnn_tech.rss" selected>CNN Tech</option>
+                    <option value="http://rss.cnn.com/rss/cnn_us.rss">CNN US</option>
+                    <option value="https://feeds.wired.com/wired/index">Wired</option>
+                    <option value="https://www.theverge.com/rss/index.xml">The Verge</option>
+                </select>
+                <button id="refresh-btn"><i class="fas fa-sync-alt"></i> Refresh</button>
             </div>
-          </div>
-        `;
-      });
-      
-      container.innerHTML = html || '<div class="error">No articles found</div>';
-    } catch (err) {
-      console.error("RSS Error:", err);
-      container.innerHTML = '<div class="error">Failed to load news feed</div>';
-    }
-  }
+            <div id="rss-feed-container" class="rss-items">
+                <div class="loading-news"><i class="fas fa-spinner fa-spin"></i> Loading news...</div>
+            </div>
+        </section>
 
-  // Event Listeners
-  feedSelector.addEventListener('change', (e) => {
-    currentFeed = e.target.value;
-    loadRSS(currentFeed);
-  });
+        <!-- Live Crypto Chart Section -->
+        <section class="crypto-chart-section container-card">
+            <h2><i class="fas fa-chart-line"></i> Live Crypto Chart</h2>
+            <!-- TradingView Widget BEGIN -->
+            <div class="tradingview-widget-container">
+                <div class="tradingview-widget-container__widget"></div>
+                <div class="tradingview-widget-copyright">
+                    <a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a>
+                </div>
+                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-overview.js" async>
+                {
+                    "symbols": [
+                        ["BINANCE:BTCUSDT|1D"],
+                        ["BINANCE:ETHUSDT|1D"]
+                    ],
+                    "chartOnly": false,
+                    "width": "100%",
+                    "height": 500, /* Adjust height as needed */
+                    "locale": "en",
+                    "colorTheme": "dark",
+                    "autosize": true,
+                    "showVolume": false,
+                    "showMA": false,
+                    "hideDateRanges": false,
+                    "hideMarketStatus": false,
+                    "hideSymbolLogo": false,
+                    "scalePosition": "right",
+                    "scaleMode": "Normal",
+                    "fontFamily": "Poppins, sans-serif", /* Match page font */
+                    "fontSize": "12", /* Slightly larger */
+                    "noTimeScale": false,
+                    "valuesTracking": "1",
+                    "changeMode": "price-and-percent",
+                    "chartType": "candlesticks",
+                    "backgroundColor": "rgba(30, 30, 45, 0.1)", /* Match card bg */
+                    "widgetFontColor": "var(--text-light, #e3e3e3)", /* Use CSS variable */
+                    "lineType": 0,
+                    "upColor": "#22ab94",
+                    "downColor": "#f7525f",
+                    "borderUpColor": "#22ab94",
+                    "borderDownColor": "#f7525f",
+                    "wickUpColor": "#22ab94",
+                    "wickDownColor": "#f7525f"
+                }
+                </script>
+            </div>
+            <!-- TradingView Widget END -->
+        </section>
+        
+        <!-- Ad Section -->
+        <div class="ad-section">
+            <p class="ad-message">Support CATSMOKER by viewing ads. Your support helps keep content free!</p>
+            <div class="ad-container">
+                <script type="text/javascript">
+                    atOptions = { /* Adsterra ad options */ };
+                </script>
+                <script type="text/javascript" src="//www.highperformanceformat.com/63fa2911679096f507a57fc2ae1aa25b/invoke.js"></script>
+                <a href="https://beta.publishers.adsterra.com/referral/EjjBnqjx77" rel="nofollow noopener">
+                    <img alt="banner" src="https://landings-cdn.adsterratech.com/referralBanners/png/728%20x%2090%20px.png" width="728" height="90" loading="lazy" />
+                </a>
+            </div>
+        </div>
+    </div>
 
-  refreshBtn.addEventListener('click', () => {
-    loadRSS(currentFeed);
-  });
+    <!-- Footer -->
+    <footer class="global-footer-enhanced">
+        <p>© 2024-2025 CATSMOKER. All rights reserved.</p>
+        <div class="footer-viewers">
+            <span>Webpage Viewers:</span>
+            <img src="https://profile-counter.glitch.me/catsmoker/count.svg" alt="Profile views count" />
+        </div>
+        <p><a href="mailto:catsmoker.lab@gmail.com">catsmoker.lab@gmail.com</a></p>
+    </footer>
 
-  // Initial load
-  document.addEventListener('DOMContentLoaded', () => loadRSS());
-</script>
-
-<script src="assets/js/cursor.js" defer></script>
+    <script src="assets/js/news.js" defer></script>
+    <script src="assets/js/cursor.js" defer></script>
 </body>
 </html>
