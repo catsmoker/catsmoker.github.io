@@ -4,30 +4,32 @@
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+<!-- created with Free Online Sitemap Generator www.xml-sitemaps.com -->
+
 
 <url>
   <loc>https://catsmoker.github.io/</loc>
-  <lastmod>2025-04-28T01:30:51+00:00</lastmod>
+  <lastmod>2025-05-08T17:14:26+00:00</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
   <loc>https://catsmoker.github.io/web/home.html</loc>
-  <lastmod>2025-04-28T01:30:51+00:00</lastmod>
+  <lastmod>2025-05-08T17:14:26+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://catsmoker.github.io/web/news.html</loc>
-  <lastmod>2025-04-28T01:30:51+00:00</lastmod>
+  <lastmod>2025-05-08T17:14:26+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://catsmoker.github.io/web/search.html</loc>
-  <lastmod>2025-04-28T01:30:51+00:00</lastmod>
+  <lastmod>2025-05-08T17:14:26+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://catsmoker.github.io/web/aiwriter.html</loc>
-  <lastmod>2025-04-28T01:30:51+00:00</lastmod>
+  <lastmod>2025-05-08T17:14:26+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 
