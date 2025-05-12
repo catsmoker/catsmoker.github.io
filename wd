@@ -1,36 +1,53 @@
-#Requires -RunAsAdministrator
+# ==========================================================
+# == CS Script v2.2 by catsmoker ==
+# ==========================================================
+# == WARNING: Running scripts directly from the internet ==
+# ==              is potentially DANGEROUS.              ==
+# ==     ALWAYS review the code before executing it.     ==
+# ==========================================================
 
-#region Initial Checks (Admin, OS) - Unchanged from previous refined version
-# --- Admin Check ---
+# --- Configuration ---
+$scriptUrl = "https://catsmoker.github.io/wd"
+
+#region Initial Checks (Admin, OS)
+
+# --- Admin Check & Relaunch Handling for iex ---
 Write-Host "Checking if running as administrator..."
 $currentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent()
 $windowsPrincipal = New-Object System.Security.Principal.WindowsPrincipal($currentUser)
 $adminRole = [System.Security.Principal.WindowsBuiltInRole]::Administrator
 
 if (-not $windowsPrincipal.IsInRole($adminRole)) {
-    $separator = "=" * 60
-    $adminMessage = "Administrator Privileges Required!"
-    Write-Host $separator -ForegroundColor Yellow
-    Write-Host ""
-    Write-Host $adminMessage -ForegroundColor Red -BackgroundColor Black -NoNewline; Write-Host " (Detected)" -ForegroundColor Yellow
-    Write-Host ""
-    Write-Host "This script needs administrator privileges to perform its tasks effectively." -ForegroundColor Magenta
-    Write-Host "Attempting to restart with elevated rights..." -ForegroundColor Green
-    Write-Host ""
-    Write-Host $separator -ForegroundColor Yellow
+    Write-Host "Admin privileges required. Attempting to relaunch..." -ForegroundColor Yellow
     try {
-        $scriptPath = $PSCommandPath
-        if ([string]::IsNullOrWhiteSpace($scriptPath)) { $scriptPath = $MyInvocation.MyCommand.Path }
-        if ([string]::IsNullOrWhiteSpace($scriptPath)) { throw "Could not determine the script path to restart." }
-        Start-Process powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$scriptPath`"" -Verb RunAs -ErrorAction Stop
+        # Download the script content again to ensure we have it locally
+        Write-Host "Downloading script for elevation..."
+        $scriptContent = Invoke-RestMethod -Uri $scriptUrl -UseBasicParsing -ErrorAction Stop
+
+        # Save to a temporary file
+        $tempScriptPath = Join-Path $env:TEMP ([System.Guid]::NewGuid().ToString() + ".ps1")
+        Set-Content -Path $tempScriptPath -Value $scriptContent -Encoding UTF8 -ErrorAction Stop
+        Write-Host "Script saved to $tempScriptPath"
+
+        # Arguments for the elevated process
+        $arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$tempScriptPath`""
+
+        # Start the elevated process
+        Start-Process powershell.exe -ArgumentList $arguments -Verb RunAs -ErrorAction Stop
+        Write-Host "Elevated process started. Exiting current process."
+
     } catch {
-        Write-Warning "Failed to restart script with administrator privileges: $($_.Exception.Message)"
-        Write-Host "Please right-click the script file and select 'Run as administrator'." -ForegroundColor Yellow
+        Write-Error "Failed to restart script with administrator privileges: $($_.Exception.Message)"
+        Write-Warning "Please download the script and run it manually as administrator."
         Read-Host "Press Enter to exit..."
     }
+    # Exit the current non-admin instance immediately
     exit
 } else {
     Write-Host "Script is running with administrator privileges." -ForegroundColor Green
+    # Clean up temporary script file if it exists from a previous relaunch attempt
+    # Note: This check is basic; a more robust cleanup might be needed in complex scenarios.
+    Get-ChildItem -Path $env:TEMP -Filter "*.ps1" | Where-Object { $_.Name -match '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}\.ps1$' -and $_.CreationTime -lt (Get-Date).AddMinutes(-5) } | Remove-Item -Force -ErrorAction SilentlyContinue
 }
 
 # --- OS Check ---
@@ -40,10 +57,7 @@ try {
     $osVersion = [Version]$osInfo.Version
     $minVersion = [Version]"10.0"
     if ($osVersion -lt $minVersion) {
-        Write-Host "------------------------------------------------------------" -ForegroundColor Red
-        Write-Host "Unsupported OS: This script requires Windows 10 or newer." -ForegroundColor Red
-        Write-Host "Your current OS: $($osInfo.Caption) (Version $($osInfo.Version))" -ForegroundColor Red
-        Write-Host "------------------------------------------------------------" -ForegroundColor Red
+        Write-Error "Unsupported OS: This script requires Windows 10 or newer. Your version: $($osInfo.Caption) ($($osInfo.Version))"
         Read-Host "Press Enter to exit..."
         exit
     } else {
@@ -54,27 +68,24 @@ try {
 }
 #endregion Initial Checks
 
-#region Shortcut Creation - Unchanged from previous refined version
+#region Shortcut Creation (Modified for irm | iex)
 # --- Shortcut Creation ---
 Write-Host "Checking/Creating Desktop Shortcut..."
 $shortcutName = "CS_Script_Utility.lnk"
 $shortcutPath = [System.IO.Path]::Combine([System.Environment]::GetFolderPath('Desktop'), $shortcutName)
-$targetScriptPath = $PSCommandPath
-if ([string]::IsNullOrWhiteSpace($targetScriptPath)) { $targetScriptPath = $MyInvocation.MyCommand.Path } # Fallback
 $targetExecutable = "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
-$arguments = "-NoProfile -ExecutionPolicy Bypass -Command `"Start-Process powershell.exe -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File `\`"$($targetScriptPath.Replace("'", "''"))`\`"' -Verb RunAs`""
-$iconUrl = "https://catsmoker.github.io/web/assets/ico/favicon.ico"
+# Arguments to run the script via irm | iex using the configured URL
+# Use -WindowStyle Hidden ? Maybe not, user should see the console temporarily.
+$shortcutArguments = "-NoProfile -ExecutionPolicy Bypass -Command `"irm '$($scriptUrl -replace "'", "''")' | iex`"" # Escape single quotes in URL for command string
+
+$iconUrl = "https://catsmoker.github.io/web/assets/ico/favicon.ico" # Keep original icon URL
 $localIconPath = [System.IO.Path]::Combine($env:TEMP, "CS_Script_Icon.ico")
 
+# Download icon (same logic as before)
 if (-not (Test-Path $localIconPath)) {
     Write-Host "Downloading shortcut icon..."
-    try {
-        Invoke-WebRequest -Uri $iconUrl -OutFile $localIconPath -UseBasicParsing -ErrorAction Stop
-        Write-Host "Icon downloaded to $localIconPath" -ForegroundColor Green
-    } catch {
-        Write-Warning "Failed to download icon: $($_.Exception.Message). Shortcut will use default icon."
-        $localIconPath = $null
-    }
+    try { Invoke-WebRequest -Uri $iconUrl -OutFile $localIconPath -UseBasicParsing -ErrorAction Stop; Write-Host "Icon downloaded." -ForegroundColor Green }
+    catch { Write-Warning "Failed to download icon: $($_.Exception.Message)"; $localIconPath = $null }
 }
 
 $wshShell = $null
@@ -83,13 +94,14 @@ try {
     $shortcut = $wshShell.CreateShortcut($shortcutPath)
     $needsUpdate = $false
     if ($shortcut.TargetPath -ne $targetExecutable) { $shortcut.TargetPath = $targetExecutable; $needsUpdate = $true }
-    if ($shortcut.Arguments -ne $arguments) { $shortcut.Arguments = $arguments; $needsUpdate = $true }
+    # Compare arguments carefully
+    if ($shortcut.Arguments -ne $shortcutArguments) { $shortcut.Arguments = $shortcutArguments; $needsUpdate = $true }
     if ($shortcut.WorkingDirectory -ne ([System.IO.Path]::GetDirectoryName($targetExecutable))) { $shortcut.WorkingDirectory = [System.IO.Path]::GetDirectoryName($targetExecutable); $needsUpdate = $true }
     if ($localIconPath -and (Test-Path $localIconPath) -and $shortcut.IconLocation -ne "$localIconPath,0") { $shortcut.IconLocation = "$localIconPath,0"; $needsUpdate = $true }
     elseif (-not $localIconPath -and -not [string]::IsNullOrEmpty($shortcut.IconLocation)) { $shortcut.IconLocation = ""; $needsUpdate = $true }
 
     if ($needsUpdate -or -not (Test-Path $shortcutPath)) {
-        Write-Host "Creating/Updating shortcut: $shortcutPath"
+        Write-Host "Creating/Updating shortcut to run from URL: $shortcutPath"
         $shortcut.Save()
         Write-Host "Shortcut processed successfully." -ForegroundColor Green
     } else {
@@ -98,59 +110,36 @@ try {
 } catch {
     Write-Warning "Failed to create/update shortcut: $($_.Exception.Message)"
 } finally {
-    if ($wshShell -ne $null) { [System.Runtime.InteropServices.Marshal]::ReleaseComObject($wshShell) | Out-Null; Remove-Variable wshShell }
+    if ($wshShell -ne $null) { [System.Runtime.InteropServices.Marshal]::ReleaseComObject($wshShell) | Out-Null; Remove-Variable wshShell -ErrorAction SilentlyContinue }
 }
 #endregion Shortcut Creation
 
-#region GUI Setup
+#region GUI Setup (Mostly Unchanged)
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
-# --- Global Script Variables for GUI elements and state ---
+# --- Global Script Variables for GUI elements ---
 $script:mainForm = $null
 $script:statusLabel = $null
 $script:progressBar = $null
-$script:jobCheckTimer = $null
-$script:currentJob = $null
-$script:actionButtons = @() # Array to hold buttons to disable/enable
+# No job timer needed
 
 # --- Main Form ---
 $script:mainForm = New-Object System.Windows.Forms.Form
-$script:mainForm.Text = "CS Script v2.1 by catsmoker (GUI Improved)"
-$script:mainForm.Size = New-Object System.Drawing.Size(800, 650) # Adjusted height for re-added button
+$script:mainForm.Text = "CS Script v2.2 by catsmoker (Web)"
+$script:mainForm.Size = New-Object System.Drawing.Size(800, 650)
 $script:mainForm.StartPosition = "CenterScreen"
 $script:mainForm.BackColor = [System.Drawing.Color]::FromArgb(30, 30, 30)
 $script:mainForm.ForeColor = [System.Drawing.Color]::White
 $script:mainForm.FormBorderStyle = 'FixedDialog'
 $script:mainForm.MaximizeBox = $false
-# Ensure job is stopped and timer disposed if form is closed prematurely
 $script:mainForm.Add_FormClosing({
-    param($sender, $e)
-    Stop-CurrentJob # Attempt to stop job if running
-    if ($script:jobCheckTimer -ne $null) {
-        $script:jobCheckTimer.Stop()
-        $script:jobCheckTimer.Dispose()
-        $script:jobCheckTimer = $null
-        Write-Host "Job check timer stopped and disposed."
-    }
+    Write-Host "GUI Closed."
 })
 
 # --- Title Labels ---
-$titleLabel = New-Object System.Windows.Forms.Label
-$titleLabel.Text = "CS Script v2.1"
-$titleLabel.Font = New-Object System.Drawing.Font("Segoe UI", 18, [System.Drawing.FontStyle]::Bold)
-$titleLabel.Size = New-Object System.Drawing.Size(400, 40)
-$titleLabel.Location = New-Object System.Drawing.Point(200, 20)
-$titleLabel.TextAlign = 'MiddleCenter'
-$script:mainForm.Controls.Add($titleLabel)
-
-$subtitleLabel = New-Object System.Windows.Forms.Label
-$subtitleLabel.Text = "by catsmoker | https://catsmoker.github.io"
-$subtitleLabel.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Italic)
-$subtitleLabel.Size = New-Object System.Drawing.Size(400, 20)
-$subtitleLabel.Location = New-Object System.Drawing.Point(200, 60)
-$subtitleLabel.TextAlign = 'MiddleCenter'
-$script:mainForm.Controls.Add($subtitleLabel)
+$titleLabel = New-Object System.Windows.Forms.Label; $titleLabel.Text = "CS Script v2.2"; $titleLabel.Font = New-Object System.Drawing.Font("Segoe UI", 18, [System.Drawing.FontStyle]::Bold); $titleLabel.Size = New-Object System.Drawing.Size(400, 40); $titleLabel.Location = New-Object System.Drawing.Point(200, 20); $titleLabel.TextAlign = 'MiddleCenter'; $script:mainForm.Controls.Add($titleLabel)
+$subtitleLabel = New-Object System.Windows.Forms.Label; $subtitleLabel.Text = "by catsmoker | Running from URL"; $subtitleLabel.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Italic); $subtitleLabel.Size = New-Object System.Drawing.Size(400, 20); $subtitleLabel.Location = New-Object System.Drawing.Point(200, 60); $subtitleLabel.TextAlign = 'MiddleCenter'; $script:mainForm.Controls.Add($subtitleLabel)
 
 # --- ToolTip Control ---
 $toolTip = New-Object System.Windows.Forms.ToolTip
@@ -158,594 +147,255 @@ $toolTip = New-Object System.Windows.Forms.ToolTip
 # --- Common Button Styling ---
 $buttonFont = New-Object System.Drawing.Font("Segoe UI", 12)
 $buttonSize = New-Object System.Drawing.Size(200, 40)
-$buttonBackColor = [System.Drawing.Color]::FromArgb(70, 130, 180) # SteelBlue
+$buttonBackColor = [System.Drawing.Color]::FromArgb(70, 130, 180)
 $buttonForeColor = [System.Drawing.Color]::White
 $buttonFlatStyle = [System.Windows.Forms.FlatStyle]::Flat
 
-# Function to create styled buttons AND add to actionButtons array
-Function New-StyledButton {
-    param(
-        [string]$Text,
-        [System.Drawing.Point]$Location,
-        [scriptblock]$OnClickAction,
-        [string]$ToolTipText = $null
-    )
-    $button = New-Object System.Windows.Forms.Button
-    $button.Text = $Text
-    $button.Size = $buttonSize
-    $button.Location = $Location
-    $button.Font = $buttonFont
-    $button.BackColor = $buttonBackColor
-    $button.ForeColor = $buttonForeColor
-    $button.FlatStyle = $buttonFlatStyle
-    $button.FlatAppearance.BorderSize = 0
+# Function to create styled buttons (No actionButtons array needed now)
+Function New-StyledButton { param([string]$Text, [System.Drawing.Point]$Location, [scriptblock]$OnClickAction, [string]$ToolTipText = $null)
+    $button = New-Object System.Windows.Forms.Button; $button.Text = $Text; $button.Size = $buttonSize; $button.Location = $Location; $button.Font = $buttonFont; $button.BackColor = $buttonBackColor; $button.ForeColor = $buttonForeColor; $button.FlatStyle = $buttonFlatStyle; $button.FlatAppearance.BorderSize = 0
     $button.Add_Click($OnClickAction)
-    if (-not [string]::IsNullOrEmpty($ToolTipText)) {
-        $toolTip.SetToolTip($button, $ToolTipText)
-    }
-    $script:actionButtons += $button # Add to the list of buttons to manage state
+    if (-not [string]::IsNullOrEmpty($ToolTipText)) { $toolTip.SetToolTip($button, $ToolTipText) }
     return $button
 }
 
 # --- Menu Buttons ---
-$buttonYStart = 100 # Adjusted starting position
-$buttonYIncrement = 55 # Adjusted spacing
-$buttonX = 50
+$buttonYStart = 100; $buttonYIncrement = 55; $buttonX = 50
+$script:mainForm.Controls.Add((New-StyledButton -Text "Clean Windows" -Location (New-Object System.Drawing.Point($buttonX, $buttonYStart)) -OnClickAction { Clean-Windows } -ToolTipText "Cleans temp files, Recycle Bin (prompt), DNS cache. GUI WILL FREEZE during task."))
+$script:mainForm.Controls.Add((New-StyledButton -Text "Scan and Fix Windows" -Location (New-Object System.Drawing.Point($buttonX, $buttonYStart + $buttonYIncrement)) -OnClickAction { Fix-Windows } -ToolTipText "Runs chkdsk, sfc, DISM. GUI WILL FREEZE during task."))
+$script:mainForm.Controls.Add((New-StyledButton -Text "Apps / Upgrades" -Location (New-Object System.Drawing.Point($buttonX, $buttonYStart + 2 * $buttonYIncrement)) -OnClickAction { Download-Apps } -ToolTipText "Install/upgrade apps via winget. GUI WILL FREEZE during installation."))
+$script:mainForm.Controls.Add((New-StyledButton -Text "Activate Windows" -Location (New-Object System.Drawing.Point($buttonX, $buttonYStart + 3 * $buttonYIncrement)) -OnClickAction { Activate-Windows } -ToolTipText "[RISKY] Attempts Windows activation. Requires confirmation. GUI WILL FREEZE during task."))
+$script:mainForm.Controls.Add((New-StyledButton -Text "Windows Update" -Location (New-Object System.Drawing.Point($buttonX, $buttonYStart + 4 * $buttonYIncrement)) -OnClickAction { Run-WindowsUpdate } -ToolTipText "Installs Windows Updates via PSWindowsUpdate. GUI WILL FREEZE during task."))
+$script:mainForm.Controls.Add((New-StyledButton -Text "CTT Windows Utility" -Location (New-Object System.Drawing.Point($buttonX, $buttonYStart + 5 * $buttonYIncrement)) -OnClickAction { Run-CTT } -ToolTipText "Launches CTT Utility script (irm|iex). Runs in new window."))
+$script:mainForm.Controls.Add((New-StyledButton -Text "Virus Scan (MRT)" -Location (New-Object System.Drawing.Point($buttonX, $buttonYStart + 6 * $buttonYIncrement)) -OnClickAction { Scan-WithMRT } -ToolTipText "Runs MRT.exe full scan (interactive). GUI WILL FREEZE while MRT runs."))
 
-$script:mainForm.Controls.Add((New-StyledButton -Text "Clean Windows" -Location (New-Object System.Drawing.Point($buttonX, $buttonYStart)) -OnClickAction { Start-Action -Name "Clean Windows" -ScriptBlock ${function:Clean-Windows_Job} } -ToolTipText "Cleans temporary files, empties Recycle Bin (with prompt), and flushes DNS cache."))
-$script:mainForm.Controls.Add((New-StyledButton -Text "Scan and Fix Windows" -Location (New-Object System.Drawing.Point($buttonX, $buttonYStart + $buttonYIncrement)) -OnClickAction { Start-Action -Name "Scan and Fix Windows" -ScriptBlock ${function:Fix-Windows_Job} } -ToolTipText "Runs Check Disk (scan), System File Checker (sfc /scannow), and DISM RestoreHealth."))
-$script:mainForm.Controls.Add((New-StyledButton -Text "Apps / Upgrades" -Location (New-Object System.Drawing.Point($buttonX, $buttonYStart + 2 * $buttonYIncrement)) -OnClickAction { Show-DownloadAppsDialog } -ToolTipText "Install or upgrade applications using winget.")) # Different handler needed
-$script:mainForm.Controls.Add((New-StyledButton -Text "Activate Windows" -Location (New-Object System.Drawing.Point($buttonX, $buttonYStart + 3 * $buttonYIncrement)) -OnClickAction { Start-Action -Name "Activate Windows" -ScriptBlock ${function:Activate-Windows_Job} -Confirm:$true -ConfirmMessage "WARNING:`n`nRunning activation scripts from unknown sources (like 'irm | iex') can be extremely risky and may install malware or violate software licenses.`n`nThis function attempts to use the 'massgravel/Microsoft-Activation-Scripts'. Proceed ONLY if you understand and accept the risks.`n`nDo you want to continue?" } -ToolTipText "[RISKY] Attempts to activate Windows using an online script. Use with extreme caution!")) # Re-added with confirmation
-$script:mainForm.Controls.Add((New-StyledButton -Text "Windows Update" -Location (New-Object System.Drawing.Point($buttonX, $buttonYStart + 4 * $buttonYIncrement)) -OnClickAction { Start-Action -Name "Windows Update" -ScriptBlock ${function:Run-WindowsUpdate_Job} } -ToolTipText "Checks for, downloads, and installs Windows Updates using the PSWindowsUpdate module."))
-$script:mainForm.Controls.Add((New-StyledButton -Text "CTT Windows Utility" -Location (New-Object System.Drawing.Point($buttonX, $buttonYStart + 5 * $buttonYIncrement)) -OnClickAction { Start-Action -Name "CTT Windows Utility" -ScriptBlock ${function:Run-CTT_Job} } -ToolTipText "Launches the Chris Titus Tech Windows Utility script in a new window (runs 'irm | iex')."))
-$script:mainForm.Controls.Add((New-StyledButton -Text "Virus Scan (MRT)" -Location (New-Object System.Drawing.Point($buttonX, $buttonYStart + 6 * $buttonYIncrement)) -OnClickAction { Start-Action -Name "Virus Scan (MRT)" -ScriptBlock ${function:Scan-WithMRT_Job} } -ToolTipText "Runs the Windows Malicious Software Removal Tool (MRT.exe) with a full scan (interactive)."))
-
-# Exit Button (Not added to $actionButtons as it shouldn't be disabled)
-$buttonExit = New-Object System.Windows.Forms.Button
-$buttonExit.Text = "Exit"
-$buttonExit.Size = $buttonSize
-$buttonExit.Location = New-Object System.Drawing.Point($buttonX, $buttonYStart + 7 * $buttonYIncrement)
-$buttonExit.Font = $buttonFont
-$buttonExit.BackColor = [System.Drawing.Color]::FromArgb(180, 70, 70) # Reddish color for exit
-$buttonExit.ForeColor = $buttonForeColor
-$buttonExit.FlatStyle = $buttonFlatStyle
-$buttonExit.FlatAppearance.BorderSize = 0
-$toolTip.SetToolTip($buttonExit, "Closes this application.")
-$buttonExit.Add_Click({ $script:mainForm.Close() })
-$script:mainForm.Controls.Add($buttonExit)
+# Exit Button
+$buttonExit = New-Object System.Windows.Forms.Button; $buttonExit.Text = "Exit"; $buttonExit.Size = $buttonSize; $buttonExit.Location = New-Object System.Drawing.Point($buttonX, $buttonYStart + 7 * $buttonYIncrement); $buttonExit.Font = $buttonFont; $buttonExit.BackColor = [System.Drawing.Color]::FromArgb(180, 70, 70); $buttonExit.ForeColor = $buttonForeColor; $buttonExit.FlatStyle = $buttonFlatStyle; $buttonExit.FlatAppearance.BorderSize = 0; $toolTip.SetToolTip($buttonExit, "Closes this application."); $buttonExit.Add_Click({ $script:mainForm.Close() }); $script:mainForm.Controls.Add($buttonExit)
 
 # --- Progress Bar & Status Label ---
-$script:progressBar = New-Object System.Windows.Forms.ProgressBar
-$script:progressBar.Size = New-Object System.Drawing.Size(700, 15) # Slightly smaller height
-$script:progressBar.Location = New-Object System.Drawing.Point($buttonX, $script:mainForm.ClientSize.Height - 60)
-$script:progressBar.Style = 'Marquee' # Use Marquee style when job is running, Continuous otherwise
-$script:progressBar.MarqueeAnimationSpeed = 0 # Set to 0 when not running
-$script:mainForm.Controls.Add($script:progressBar)
-
-$script:statusLabel = New-Object System.Windows.Forms.Label
-$script:statusLabel.Text = "Ready"
-$script:statusLabel.Size = New-Object System.Drawing.Size(700, 20)
-$script:statusLabel.Location = New-Object System.Drawing.Point($buttonX, $script:mainForm.ClientSize.Height - 40)
-$script:statusLabel.Font = New-Object System.Drawing.Font("Segoe UI", 10)
-$script:mainForm.Controls.Add($script:statusLabel)
-
-# --- Job Check Timer ---
-$script:jobCheckTimer = New-Object System.Windows.Forms.Timer
-$script:jobCheckTimer.Interval = 500 # Check job status every 500ms
-$script:jobCheckTimer.Add_Tick({ Check-JobStatus }) # Event handler defined later
+$script:progressBar = New-Object System.Windows.Forms.ProgressBar; $script:progressBar.Size = New-Object System.Drawing.Size(700, 15); $script:progressBar.Location = New-Object System.Drawing.Point($buttonX, $script:mainForm.ClientSize.Height - 60); $script:progressBar.Style = 'Continuous'; $script:mainForm.Controls.Add($script:progressBar)
+$script:statusLabel = New-Object System.Windows.Forms.Label; $script:statusLabel.Text = "Ready"; $script:statusLabel.Size = New-Object System.Drawing.Size(700, 20); $script:statusLabel.Location = New-Object System.Drawing.Point($buttonX, $script:mainForm.ClientSize.Height - 40); $script:statusLabel.Font = New-Object System.Drawing.Font("Segoe UI", 10); $script:mainForm.Controls.Add($script:statusLabel)
 
 #endregion GUI Setup
 
-#region Helper Functions (GUI Update, Job Management)
+#region Helper Functions (GUI Update - Simplified)
 
-# Helper to safely update GUI controls from any thread
-Function Update-GuiControl {
-    param(
-        [System.Windows.Forms.Control]$Control,
-        [scriptblock]$UpdateAction
-    )
-    if ($Control.InvokeRequired) {
-        $Control.Invoke($UpdateAction)
-    } else {
-        Invoke-Command $UpdateAction
-    }
+Function Update-GuiControl { param([System.Windows.Forms.Control]$Control, [scriptblock]$UpdateAction)
+    if ($Control.InvokeRequired) { $Control.Invoke($UpdateAction) } else { Invoke-Command $UpdateAction }
 }
 
-# Helper to update Status Label and Progress Bar
-Function Update-Status {
-    param(
-        [string]$Message,
-        [int]$Progress = -1, # Not used with Marquee progress, but kept for potential future use
-        [bool]$IsRunning = $false
-    )
-    Update-GuiControl -Control $script:statusLabel -UpdateAction {
-        $script:statusLabel.Text = $Message
-    }
+# Simplified Status Update for Synchronous Tasks
+Function Update-Status { param([string]$Message, [int]$Progress = 0) # Default progress 0
+    Update-GuiControl -Control $script:statusLabel -UpdateAction { $script:statusLabel.Text = $Message }
     Update-GuiControl -Control $script:progressBar -UpdateAction {
-        if ($IsRunning) {
-            $script:progressBar.Style = 'Marquee'
-            $script:progressBar.MarqueeAnimationSpeed = 30 # Start animation
-        } else {
-            $script:progressBar.MarqueeAnimationSpeed = 0 # Stop animation
-            $script:progressBar.Style = 'Continuous' # Switch back to allow setting Value
-            $script:progressBar.Value = ($Progress -eq 100) ? 100 : 0 # Show 100% on completion, 0 otherwise
-        }
+        $script:progressBar.Style = 'Continuous'
+        # Ensure progress is within bounds
+        $clampedProgress = [Math]::Max(0, [Math]::Min(100, $Progress))
+        $script:progressBar.Value = $clampedProgress
     }
+    # Force GUI update (might help slightly with perceived responsiveness between steps)
+    [System.Windows.Forms.Application]::DoEvents()
 }
 
-# Helper to enable/disable action buttons
-Function Set-ActionButtonsState {
-    param([bool]$Enabled)
-    foreach ($button in $script:actionButtons) {
-        Update-GuiControl -Control $button -UpdateAction {
-            $button.Enabled = $Enabled
-        }
-    }
-}
-
-# Function to stop the current job if it exists
-Function Stop-CurrentJob {
-    if ($script:currentJob -ne $null -and $script:currentJob.JobStateInfo.State -eq [System.Management.Automation.JobState]::Running) {
-        try {
-            Write-Host "Attempting to stop running job $($script:currentJob.Name)..."
-            Stop-Job -Job $script:currentJob -ErrorAction SilentlyContinue
-            # Give it a moment to stop
-            Start-Sleep -Milliseconds 200
-        } catch {
-            Write-Warning "Error trying to stop job $($script:currentJob.Name): $($_.Exception.Message)"
-        }
-    }
-    if ($script:currentJob -ne $null) {
-        Remove-Job -Job $script:currentJob -Force -ErrorAction SilentlyContinue
-        $script:currentJob = $null
-    }
-}
-
-# Function to start an action in a background job
-Function Start-Action {
+# Function to run actions synchronously with status updates & error handling
+Function Run-SynchronousAction {
     param(
         [string]$Name,
-        [scriptblock]$ScriptBlock,
+        [scriptblock]$Action,
         [switch]$Confirm,
-        [string]$ConfirmMessage = "Are you sure you want to proceed?"
+        [string]$ConfirmMessage = "Are you sure?"
     )
-
-    if ($script:currentJob -ne $null) {
-        [System.Windows.Forms.MessageBox]::Show("Another task is already running. Please wait for it to complete.", "Task in Progress", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Warning)
-        return
-    }
-
     if ($Confirm) {
         $dialogResult = [System.Windows.Forms.MessageBox]::Show($ConfirmMessage, "Confirmation Required", [System.Windows.Forms.MessageBoxButtons]::YesNo, [System.Windows.Forms.MessageBoxIcon]::Warning)
         if ($dialogResult -ne [System.Windows.Forms.DialogResult]::Yes) {
-            Update-Status "Action '$Name' cancelled by user."
+            Update-Status "Action '$Name' cancelled by user." 0
             return
         }
     }
 
-    Write-Host "--- Starting Action: $Name ---"
-    Set-ActionButtonsState -Enabled $false
+    Write-Host "--- Starting Action (Sync): $Name ---"
+    Update-Status "Starting: $Name..." 5 # Small progress indication
     $script:mainForm.Cursor = [System.Windows.Forms.Cursors]::WaitCursor
-    Update-Status "Starting: $Name..." -IsRunning $true
-
+    $success = $false
     try {
-        # Pass necessary variables or functions if needed by the job
-        # Note: Functions defined in the main script are generally available in the job's scriptblock
-        $script:currentJob = Start-Job -Name $Name -ScriptBlock $ScriptBlock -ErrorAction Stop
-        $script:jobCheckTimer.Start()
+        Invoke-Command $Action # Execute the scriptblock directly
+        Update-Status "Action '$Name' completed." 100
+        Write-Host "--- Action Finished (Sync): $Name ---"
+        $success = $true
     } catch {
-        $errMsg = "Failed to start job '$Name': $($_.Exception.Message)"
+        $errMsg = "Error during action '$Name': $($_.Exception.Message)"
         Write-Error $errMsg
-        Update-Status "Error starting job: $Name" -IsRunning $false
-        [System.Windows.Forms.MessageBox]::Show($errMsg, "Job Start Error", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
-        Set-ActionButtonsState -Enabled $true
+        Update-Status $errMsg 0
+        [System.Windows.Forms.MessageBox]::Show($errMsg, "Action Error", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
+    } finally {
         $script:mainForm.Cursor = [System.Windows.Forms.Cursors]::Default
-        $script:currentJob = $null # Ensure it's null
-    }
-}
-
-# Timer event handler to check job status
-Function Check-JobStatus {
-    if ($script:currentJob -eq $null) {
-        $script:jobCheckTimer.Stop()
-        Return
-    }
-
-    $jobState = $script:currentJob.JobStateInfo.State
-    $jobName = $script:currentJob.Name
-
-    if ($jobState -in ([System.Management.Automation.JobState]::Completed, [System.Management.Automation.JobState]::Failed, [System.Management.Automation.JobState]::Stopped)) {
-        $script:jobCheckTimer.Stop()
-        Write-Host "Job '$jobName' finished with state: $jobState"
-        $finalMessage = ""
-        $messageBoxIcon = [System.Windows.Forms.MessageBoxIcon]::Information
-        $messageBoxTitle = "Task Complete"
-
-        # Receive job output/errors
-        $jobOutput = Receive-Job -Job $script:currentJob -Keep # Use -Keep to allow receiving multiple times if needed, though usually not here.
-        # Process output if needed (e.g., Write-Host it)
-        if ($jobOutput) {
-            Write-Host "--- Job '$jobName' Output ---"
-            $jobOutput | ForEach-Object { Write-Host $_ }
-            Write-Host "--- End Job Output ---"
-        }
-
-
-        if ($jobState -eq [System.Management.Automation.JobState]::Failed) {
-            $errorMessage = "Error: Task '$jobName' failed."
-            # Check for specific errors in the job's error stream
-            if ($script:currentJob.Error) {
-                 $detailedError = ($script:currentJob.Error | Select-Object -First 1).Exception.Message
-                 $errorMessage += "`n`nDetails: $detailedError"
-                 Write-Error "Job '$jobName' Error: $detailedError"
-            }
-            $finalMessage = $errorMessage
-            $messageBoxIcon = [System.Windows.Forms.MessageBoxIcon]::Error
-            $messageBoxTitle = "Task Error"
-            Update-Status $finalMessage -IsRunning $false
-            [System.Windows.Forms.MessageBox]::Show($finalMessage, $messageBoxTitle, [System.Windows.Forms.MessageBoxButtons]::OK, $messageBoxIcon)
-
-        } elseif ($jobState -eq [System.Management.Automation.JobState]::Stopped) {
-            $finalMessage = "Task '$jobName' was stopped."
-             Update-Status $finalMessage -IsRunning $false
-             [System.Windows.Forms.MessageBox]::Show($finalMessage, "Task Stopped", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Warning)
-        } else { # Completed
-            $finalMessage = "Task '$jobName' completed successfully."
-            Update-Status $finalMessage -Progress 100 -IsRunning $false
-            # Optionally show a success message box, or just rely on status label
-            # [System.Windows.Forms.MessageBox]::Show($finalMessage, $messageBoxTitle, [System.Windows.Forms.MessageBoxButtons]::OK, $messageBoxIcon)
-        }
-
-        # Cleanup
-        Remove-Job -Job $script:currentJob -Force -ErrorAction SilentlyContinue
-        $script:currentJob = $null
-        Set-ActionButtonsState -Enabled $true
-        $script:mainForm.Cursor = [System.Windows.Forms.Cursors]::Default
-        Write-Host "--- Action Finished: $jobName ---"
-    } else {
-        # Job still running, maybe update status with generic message or progress if implemented
-         Update-Status "Running: $jobName..." -IsRunning $true
-         # If the job uses Write-Progress, you could potentially receive and parse it here,
-         # but for simplicity, we are just showing "Running...".
+        # Optionally show success message box
+        # if ($success) { [System.Windows.Forms.MessageBox]::Show("Action '$Name' completed successfully.", "Success", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information) }
     }
 }
 
 #endregion Helper Functions
 
-#region Action Functions (Defined as ScriptBlocks for Jobs)
+#region Action Functions (Synchronous Execution)
 
-# IMPORTANT: Functions intended to be run inside Start-Job must be defined
-#            using the `function:` scope explicitly when passed as ScriptBlock,
-#            OR defined directly inside the Start-Job -ScriptBlock parameter.
-#            Using ${function:FunctionName} ensures the *current* definition is passed.
-#            Alternatively, define the core logic within the Start-Job call itself.
+# NOTE: These functions now run directly when buttons are clicked.
+# The GUI WILL FREEZE while they execute.
 
-Function Clean-Windows_Job {
-    # This code runs in the background job's process
-    Write-Host "Job: Cleaning Windows..."
-    $ErrorActionPreference = 'Stop' # Optional: Stop on errors within the job
+Function Clean-Windows {
+    Run-SynchronousAction -Name "Clean Windows" -Action {
+        $ErrorActionPreference = 'SilentlyContinue' # Continue on remove errors
+        Update-Status "Cleaning: User Temp..." 20
+        Get-ChildItem -Path $env:TEMP -Recurse -Force | Remove-Item -Recurse -Force
+        Update-Status "Cleaning: Windows Temp..." 40
+        Get-ChildItem -Path "$env:windir\Temp" -Recurse -Force | Remove-Item -Recurse -Force
 
-    try {
-        # Clean User Temp Folder
-        $userTempPath = $env:TEMP
-        Write-Host "Job: Clearing user temp folder: $userTempPath"
-        Get-ChildItem -Path $userTempPath -Recurse -Force -ErrorAction SilentlyContinue | ForEach-Object {
-            try { Remove-Item -Path $_.FullName -Recurse -Force } catch { Write-Warning "Job: Could not remove '$($_.FullName)': $($_.Exception.Message)" }
-        }
-        Write-Host "Job: User temp folder cleared."
+        Update-Status "Checking Recycle Bin..." 60
+        $RecycleBin = New-Object -ComObject Shell.Application
+        $BinItems = $RecycleBin.NameSpace(0xA).Items()
+        if ($BinItems.Count -gt 0) {
+             # Confirmation MUST happen before the synchronous action starts ideally,
+             # but we'll do it here for simplicity in this structure.
+             $confirm = [System.Windows.Forms.MessageBox]::Show("Empty the Recycle Bin?", "Confirm", [System.Windows.Forms.MessageBoxButtons]::YesNo, [System.Windows.Forms.MessageBoxIcon]::Warning)
+             if ($confirm -eq [System.Windows.Forms.DialogResult]::Yes) {
+                 Update-Status "Cleaning: Emptying Recycle Bin..." 70
+                 $BinItems | ForEach-Object { $_.InvokeVerb("delete") } # May still have issues depending on UAC/Permissions
+                 # Alternative/More Robust: Clear-RecycleBin -Force (Requires PS 5+)
+             } else { Write-Host "Recycle Bin skipped by user."}
+        } else { Write-Host "Recycle Bin is empty." }
 
-        # Clean Windows Temp Folder
-        $windowsTempPath = Join-Path -Path $env:windir -ChildPath "Temp"
-        Write-Host "Job: Clearing Windows temp folder: $windowsTempPath"
-        Get-ChildItem -Path $windowsTempPath -Recurse -Force -ErrorAction SilentlyContinue | ForEach-Object {
-            try { Remove-Item -Path $_.FullName -Recurse -Force } catch { Write-Warning "Job: Could not remove '$($_.FullName)': $($_.Exception.Message)" }
-        }
-         Write-Host "Job: Windows temp folder cleared."
-
-        # Clean Recycle Bin (Requires interaction - cannot be fully backgrounded without external tools/complex methods)
-        # We will skip the interactive part in the background job.
-        # Consider adding a separate button or changing this function if interactive delete is essential.
-        Write-Host "Job: Skipping interactive Recycle Bin clear in background job."
-        # If you MUST clear it silently: Clear-RecycleBin -Force (PowerShell 5+) - Use with caution!
-        # try { Clear-RecycleBin -Force -ErrorAction Stop } catch { Write-Warning "Job: Failed to clear Recycle Bin silently: $($_.Exception.Message)"}
-
-        # Flush DNS Cache
-        Write-Host "Job: Flushing DNS Cache..."
-        try {
-            Start-Process -FilePath "ipconfig.exe" -ArgumentList "/flushdns" -NoNewWindow -Wait
-        } catch {
-            Write-Warning "Job: Failed to flush DNS cache: $($_.Exception.Message)"
-        }
-
-        Write-Host "Job: Cleanup task completed."
-        return "Cleanup completed." # Optional: Return a success message
-
-    } catch {
-        Write-Error "Job Error during cleanup: $($_.Exception.Message)"
-        throw "Error during cleanup: $($_.Exception.Message)" # Re-throw to make the job fail
+        Update-Status "Cleaning: Flushing DNS..." 90
+        ipconfig /flushdns | Out-Null
+        $ErrorActionPreference = 'Stop' # Reset error preference
     }
 }
 
-Function Fix-Windows_Job {
-    Write-Host "Job: Scanning and fixing Windows..."
-    $ErrorActionPreference = 'Stop'
-    try {
-        Write-Host "Job: Running chkdsk /scan..."
+Function Fix-Windows {
+    Run-SynchronousAction -Name "Scan and Fix Windows" -Action {
+        $ErrorActionPreference = 'Stop'
+        Update-Status "Fixing: Running chkdsk /scan..." 10
         Start-Process -FilePath "chkdsk.exe" -ArgumentList "/scan /perf" -NoNewWindow -Wait
-        Write-Host "Job: Check Disk (Scan) completed."
-
-        Write-Host "Job: Running sfc /scannow..."
+        Update-Status "Fixing: Running sfc /scannow..." 40
         Start-Process -FilePath "sfc.exe" -ArgumentList "/scannow" -NoNewWindow -Wait
-        Write-Host "Job: System File Checker completed."
-
-        Write-Host "Job: Running DISM /Online /Cleanup-Image /RestoreHealth..."
+        Update-Status "Fixing: Running DISM..." 70
         Start-Process -FilePath "DISM.exe" -ArgumentList "/Online /Cleanup-Image /RestoreHealth" -NoNewWindow -Wait
-        Write-Host "Job: DISM completed."
-
-        Write-Host "Job: Windows Fix sequence completed."
-        return "Windows Fix sequence completed."
-    } catch {
-        Write-Error "Job Error during Fix sequence: $($_.Exception.Message)"
-        throw "Error during Fix sequence: $($_.Exception.Message)"
     }
 }
 
-# Special handler for Download-Apps as it needs a modal dialog first
-Function Show-DownloadAppsDialog {
-     if ($script:currentJob -ne $null) {
-        [System.Windows.Forms.MessageBox]::Show("Another task is already running. Please wait for it to complete.", "Task in Progress", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Warning)
-        return
-    }
-
-    # Original Download-Apps GUI code (slightly modified)
-    $wingetChecked = $false
-    $wingetAvailable = $false
-
-    # --- Function to Check/Install Winget (Runs synchronously before showing dialog) ---
-    Function Ensure-Winget {
-        Write-Host "Checking for winget..."
-        if (Get-Command winget -ErrorAction SilentlyContinue) {
-            Write-Host "winget found."
-            return $true
-        }
-        Write-Host "winget not found. Attempting installation..."
-        Update-Status "Installing winget..." -IsRunning $true # Update main GUI status
+Function Download-Apps {
+    # Step 1: Show the Modal Dialog (GUI does not freeze here)
+    $packageList = $null
+    try {
+        # Check/Install Winget Synchronously first
+        Write-Host "Checking/Installing winget..."
+        Update-Status "Checking winget..." 0
         $script:mainForm.Cursor = [System.Windows.Forms.Cursors]::WaitCursor
-        Set-ActionButtonsState -Enabled $false
-
-        $installerUrl = "https://aka.ms/getwinget"
-        $installerPath = Join-Path $env:TEMP "Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
-        try {
-            Invoke-WebRequest -Uri $installerUrl -OutFile $installerPath -UseBasicParsing -ErrorAction Stop
-            Add-AppxPackage -Path $installerPath -ErrorAction Stop
-            if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
-                throw "Winget installation failed or path not updated."
-            }
-            Write-Host "Winget installed successfully."
-            return $true
-        } catch {
-            $errMsg = "Failed to automatically install winget: $($_.Exception.Message)"
-            Write-Error $errMsg
-            [System.Windows.Forms.MessageBox]::Show("$errMsg`nPlease install winget manually (e.g., from Microsoft Store - search 'App Installer').", "Winget Installation Failed", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
-            return $false
-        } finally {
-            if (Test-Path $installerPath) { Remove-Item $installerPath -ErrorAction SilentlyContinue }
-            # Reset main GUI state regardless of success/failure here, dialog handles its own state
-            Update-Status "Ready" -IsRunning $false
-            $script:mainForm.Cursor = [System.Windows.Forms.Cursors]::Default
-             Set-ActionButtonsState -Enabled $true
+        if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+            Write-Host "Attempting winget installation..."
+            Update-Status "Installing winget..." 0
+            $installerUrl = "https://aka.ms/getwinget"; $installerPath = Join-Path $env:TEMP "winget.msixbundle"
+            try { Invoke-WebRequest -Uri $installerUrl -OutFile $installerPath -UseBasicParsing; Add-AppxPackage -Path $installerPath; Remove-Item $installerPath -ErrorAction SilentlyContinue }
+            catch { Write-Error "Winget install failed: $($_.Exception.Message)"; [System.Windows.Forms.MessageBox]::Show("Winget install failed. Install 'App Installer' from MS Store.", "Error"); return }
+            if (-not (Get-Command winget -ErrorAction SilentlyContinue)) { Write-Error "Winget still not found after install."; [System.Windows.Forms.MessageBox]::Show("Winget install failed.", "Error"); return }
         }
-    }
-    # --- End Ensure-Winget ---
+        Update-Status "Winget OK. Opening app selection..." 0
+        $script:mainForm.Cursor = [System.Windows.Forms.Cursors]::Default
 
-    # Check for Winget before showing the dialog
-    $wingetAvailable = Ensure-Winget
-    if (-not $wingetAvailable) {
-        Update-Status "Cannot proceed without winget."
-        return # Stop if winget isn't available/installable
-    }
+        # Create and show the app selection form (Code is the same as previous version's Show-DownloadAppsDialog)
+        $appForm = New-Object System.Windows.Forms.Form; $appForm.Text = "Install Software"; $appForm.Size = New-Object System.Drawing.Size(450, 600); $appForm.StartPosition = "CenterScreen"; $appForm.BackColor = [System.Drawing.Color]::FromArgb(50, 50, 50); $appForm.FormBorderStyle = 'FixedDialog'; $appForm.MaximizeBox = $false
+        $appLabel = New-Object System.Windows.Forms.Label; $appLabel.Location = New-Object System.Drawing.Size(20, 20); $appLabel.Size = New-Object System.Drawing.Size(400, 30); $appLabel.Text = "Select software:"; $appLabel.Font = New-Object System.Drawing.Font("Segoe UI", 12, [System.Drawing.FontStyle]::Bold); $appLabel.ForeColor = [System.Drawing.Color]::White; $appForm.Controls.Add($appLabel)
+        $appPanel = New-Object System.Windows.Forms.Panel; $appPanel.Location = New-Object System.Drawing.Size(20, 60); $appPanel.Size = New-Object System.Drawing.Size(400, 400); $appPanel.AutoScroll = $true; $appPanel.BorderStyle = 'FixedSingle'; $appPanel.BackColor = [System.Drawing.Color]::FromArgb(35, 35, 35); $appForm.Controls.Add($appPanel)
+        $softwareItems = @{ "Ungoogled Chromium" = "eloston.ungoogled-chromium"; "Mozilla Firefox" = "Mozilla.Firefox"; "Waterfox" = "Waterfox.Waterfox"; "Brave Browser" = "Brave.Brave"; "Google Chrome" = "Google.Chrome"; "LibreWolf" = "LibreWolf.LibreWolf"; "Tor Browser" = "TorProject.TorBrowser"; "Discord" = "Discord.Discord"; "Steam" = "Valve.Steam"; "Playnite" = "Playnite.Playnite"; "Heroic Games Launcher" = "HeroicGamesLauncher.HeroicGamesLauncher"; "Everything Search" = "voidtools.Everything"; "Mozilla Thunderbird" = "Mozilla.Thunderbird"; "foobar2000" = "PeterPawlowski.foobar2000"; "IrfanView" = "IrfanSkiljan.IrfanView"; "Git" = "Git.Git"; "VLC Media Player" = "VideoLAN.VLC"; "PuTTY" = "PuTTY.PuTTY"; "Ditto Clipboard" = "Ditto.Ditto"; "7-Zip" = "7zip.7zip"; "TeamSpeak Client" = "TeamSpeakSystems.TeamSpeakClient"; "Spotify" = "Spotify.Spotify"; "OBS Studio" = "OBSProject.OBSStudio"; "MSI Afterburner" = "Guru3D.Afterburner"; "CPU-Z" = "CPUID.CPU-Z"; "GPU-Z" = "TechPowerUp.GPU-Z"; "Notepad++" = "Notepad++.Notepad++"; "Visual Studio Code" = "Microsoft.VisualStudioCode"; "VSCodium" = "VSCodium.VSCodium"; "Bulk Crap Uninstaller" = "Klocman.BulkCrapUninstaller"; "HWiNFO" = "REALiX.HWiNFO"; "Lightshot" = "Skillbrains.Lightshot"; "ShareX" = "ShareX.ShareX"; "Windows Snipping Tool (Store)" = "9MZ95KL8MR0L"; "ExplorerPatcher" = "valinet.ExplorerPatcher"; "MemReduct" = "Henry++.MemReduct" }
+        $y = 10; foreach ($name in $softwareItems.Keys | Sort-Object) { $checkbox = New-Object System.Windows.Forms.CheckBox; $checkbox.Location = New-Object System.Drawing.Size(10, $y); $checkbox.Size = New-Object System.Drawing.Size(360, 25); $checkbox.Text = $name; $checkbox.Name = $softwareItems[$name]; $checkbox.ForeColor = [System.Drawing.Color]::White; $checkbox.BackColor = $appPanel.BackColor; $checkbox.Font = New-Object System.Drawing.Font("Segoe UI", 10); $appPanel.Controls.Add($checkbox); $y += 30 }
+        $appInstallButton = New-Object System.Windows.Forms.Button; $appInstallButton.Location = New-Object System.Drawing.Size(165, 480); $appInstallButton.Size = New-Object System.Drawing.Size(120, 40); $appInstallButton.Text = "Install Selected"; $appInstallButton.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold); $appInstallButton.BackColor = $buttonBackColor; $appInstallButton.ForeColor = $buttonForeColor; $appInstallButton.FlatStyle = $buttonFlatStyle; $appInstallButton.FlatAppearance.BorderSize = 0; $appInstallButton.DialogResult = [System.Windows.Forms.DialogResult]::OK; $appForm.AcceptButton = $appInstallButton; $appForm.Controls.Add($appInstallButton)
 
-    # --- Create and Show App Selection Form ---
-    $appForm = New-Object System.Windows.Forms.Form
-    # ... (Form creation code largely unchanged from previous version)
-    $appForm.Text = "Install Software | CS Script v2.1"
-    $appForm.Size = New-Object System.Drawing.Size(450, 600)
-    $appForm.StartPosition = "CenterScreen"
-    $appForm.BackColor = [System.Drawing.Color]::FromArgb(50, 50, 50)
-    $appForm.FormBorderStyle = 'FixedDialog'
-    $appForm.MaximizeBox = $false
+        $appForm.TopMost = $true
+        $result = $appForm.ShowDialog($script:mainForm)
 
-    $appLabel = New-Object System.Windows.Forms.Label
-    $appLabel.Location = New-Object System.Drawing.Size(20, 20)
-    $appLabel.Size = New-Object System.Drawing.Size(400, 30)
-    $appLabel.Text = "Select software to install/upgrade:"
-    $appLabel.Font = New-Object System.Drawing.Font("Segoe UI", 12, [System.Drawing.FontStyle]::Bold)
-    $appLabel.ForeColor = [System.Drawing.Color]::White
-    $appForm.Controls.Add($appLabel)
-
-    $appPanel = New-Object System.Windows.Forms.Panel
-    $appPanel.Location = New-Object System.Drawing.Size(20, 60)
-    $appPanel.Size = New-Object System.Drawing.Size(400, 400)
-    $appPanel.AutoScroll = $true
-    $appPanel.BorderStyle = 'FixedSingle'
-    $appPanel.BackColor = [System.Drawing.Color]::FromArgb(35, 35, 35)
-    $appForm.Controls.Add($appPanel)
-
-    # Software List (Same as before)
-    $softwareItems = @{
-        "Ungoogled Chromium" = "eloston.ungoogled-chromium"; "Mozilla Firefox" = "Mozilla.Firefox"; "Waterfox" = "Waterfox.Waterfox"; "Brave Browser" = "Brave.Brave"; "Google Chrome" = "Google.Chrome"; "LibreWolf" = "LibreWolf.LibreWolf"; "Tor Browser" = "TorProject.TorBrowser"; "Discord" = "Discord.Discord"; "Steam" = "Valve.Steam"; "Playnite" = "Playnite.Playnite"; "Heroic Games Launcher" = "HeroicGamesLauncher.HeroicGamesLauncher"; "Everything Search" = "voidtools.Everything"; "Mozilla Thunderbird" = "Mozilla.Thunderbird"; "foobar2000" = "PeterPawlowski.foobar2000"; "IrfanView" = "IrfanSkiljan.IrfanView"; "Git" = "Git.Git"; "VLC Media Player" = "VideoLAN.VLC"; "PuTTY" = "PuTTY.PuTTY"; "Ditto Clipboard" = "Ditto.Ditto"; "7-Zip" = "7zip.7zip"; "TeamSpeak Client" = "TeamSpeakSystems.TeamSpeakClient"; "Spotify" = "Spotify.Spotify"; "OBS Studio" = "OBSProject.OBSStudio"; "MSI Afterburner" = "Guru3D.Afterburner"; "CPU-Z" = "CPUID.CPU-Z"; "GPU-Z" = "TechPowerUp.GPU-Z"; "Notepad++" = "Notepad++.Notepad++"; "Visual Studio Code" = "Microsoft.VisualStudioCode"; "VSCodium" = "VSCodium.VSCodium"; "Bulk Crap Uninstaller" = "Klocman.BulkCrapUninstaller"; "HWiNFO" = "REALiX.HWiNFO"; "Lightshot" = "Skillbrains.Lightshot"; "ShareX" = "ShareX.ShareX"; "Windows Snipping Tool (Store)" = "9MZ95KL8MR0L"; "ExplorerPatcher" = "valinet.ExplorerPatcher"; "MemReduct" = "Henry++.MemReduct"
-    }
-
-    $y = 10
-    foreach ($name in $softwareItems.Keys | Sort-Object) {
-        $checkbox = New-Object System.Windows.Forms.CheckBox
-        $checkbox.Location = New-Object System.Drawing.Size(10, $y); $checkbox.Size = New-Object System.Drawing.Size(360, 25)
-        $checkbox.Text = $name; $checkbox.Name = $softwareItems[$name]
-        $checkbox.ForeColor = [System.Drawing.Color]::White; $checkbox.BackColor = $appPanel.BackColor
-        $checkbox.Font = New-Object System.Drawing.Font("Segoe UI", 10)
-        $appPanel.Controls.Add($checkbox); $y += 30
-    }
-
-    $appInstallButton = New-Object System.Windows.Forms.Button
-    $appInstallButton.Location = New-Object System.Drawing.Size(165, 480)
-    $appInstallButton.Size = New-Object System.Drawing.Size(120, 40)
-    $appInstallButton.Text = "Install Selected"
-    $appInstallButton.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
-    $appInstallButton.BackColor = $buttonBackColor; $appInstallButton.ForeColor = $buttonForeColor
-    $appInstallButton.FlatStyle = $buttonFlatStyle; $appInstallButton.FlatAppearance.BorderSize = 0
-    $appInstallButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
-    $appForm.AcceptButton = $appInstallButton
-    $appForm.Controls.Add($appInstallButton)
-
-    $appForm.TopMost = $true # Keep app dialog on top
-    $result = $appForm.ShowDialog($script:mainForm) # Show modally relative to main form
-    $appForm.Dispose() # Dispose the dialog immediately after closing
-
-    # --- Process results after dialog closes ---
-    if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-        $checkedBoxes = $appPanel.Controls | Where-Object { $_ -is [System.Windows.Forms.CheckBox] -and $_.Checked }
-        if ($checkedBoxes.Count -eq 0) {
-            Update-Status "No software selected for installation."
-        } else {
-            $packageList = $checkedBoxes | ForEach-Object { @{ Name = $_.Text; ID = $_.Name } }
-
-            # Define the installation scriptblock
-            $installScriptBlock = {
-                param($PackagesToInstall) # Receive the list of packages
-
-                Write-Host "Job: Starting App Installation Process..."
-                $ErrorActionPreference = 'Continue' # Continue even if one app fails
-
-                # Run Upgrade All First
-                Write-Host "Job: Running 'winget upgrade --all'..."
-                try {
-                    Start-Process "winget" -ArgumentList "upgrade --all --silent --accept-package-agreements --accept-source-agreements --disable-interactivity --include-unknown" -Wait -NoNewWindow -ErrorAction Stop
-                    Write-Host "Job: 'winget upgrade --all' completed."
-                } catch {
-                    Write-Warning "Job: Error during 'winget upgrade --all': $($_.Exception.Message)"
-                }
-
-                # Install Selected Packages
-                Write-Host "Job: Installing selected packages..."
-                $total = $PackagesToInstall.Count
-                $current = 0
-                foreach ($packageInfo in $PackagesToInstall) {
-                    $current++
-                    $packageName = $packageInfo.Name
-                    $packageId = $packageInfo.ID
-                    Write-Host "Job: Installing '$packageName' (ID: $packageId) ($current/$total)..."
-                    # Write-Progress can be used here, but won't show on GUI directly
-                    # Write-Progress -Activity "Installing Apps" -Status "Installing $packageName ($current/$total)" -PercentComplete (($current / $total) * 100)
-
-                    try {
-                        Start-Process "winget" -ArgumentList "install -e --id `"$packageId`" --silent --accept-package-agreements --accept-source-agreements --disable-interactivity --force" -Wait -NoNewWindow -ErrorAction Stop
-                        Write-Host "Job: '$packageName' installation command completed."
-                    } catch {
-                         Write-Warning "Job: Failed to install '$packageName': $($_.Exception.Message)"
-                    }
-                }
-                Write-Host "Job: App installation process finished."
-                return "App installation process finished."
+        if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+            $checkedBoxes = $appPanel.Controls | Where-Object { $_ -is [System.Windows.Forms.CheckBox] -and $_.Checked }
+            if ($checkedBoxes.Count -gt 0) {
+                $packageList = $checkedBoxes | ForEach-Object { @{ Name = $_.Text; ID = $_.Name } }
             }
-
-            # Start the installation job
-            Start-Action -Name "Install Apps" -ScriptBlock $installScriptBlock -ArgumentList (,$packageList) # Pass package list as argument array
         }
-    } else {
-        Update-Status "App installation cancelled."
-    }
-}
-
-Function Activate-Windows_Job {
-    # Added back as requested, runs in background after confirmation
-    Write-Host "Job: Attempting Windows activation using online script..."
-    $ErrorActionPreference = 'Stop'
-    try {
-        # IMPORTANT: This command executes remote code directly.
-        Invoke-Expression (Invoke-RestMethod 'https://get.activated.win')
-        Write-Host "Job: Activation script execution attempted."
-        # Note: Success/failure depends entirely on the external script. We can't easily verify it here.
-        return "Activation script execution attempted. Check script output/system status for results."
     } catch {
-        Write-Error "Job Error during activation attempt: $($_.Exception.Message)"
-        throw "Error during activation attempt: $($_.Exception.Message)"
+         Write-Error "Error preparing app install dialog: $($_.Exception.Message)"
+    } finally {
+        if ($appForm -ne $null -and -not $appForm.IsDisposed) { $appForm.Dispose() }
+         $script:mainForm.Cursor = [System.Windows.Forms.Cursors]::Default # Ensure cursor resets
+    }
+
+    # Step 2: Run Installation Synchronously if packages selected (GUI WILL FREEZE HERE)
+    if ($packageList) {
+        Run-SynchronousAction -Name "Install Apps" -Action {
+            $ErrorActionPreference = 'Continue' # Continue past individual app errors
+            Update-Status "Installing Apps: Upgrading all..." 10
+            Write-Host "Running winget upgrade --all..."
+            try { Start-Process "winget" -ArgumentList "upgrade --all --silent --accept-package-agreements --accept-source-agreements --include-unknown" -Wait -NoNewWindow }
+            catch { Write-Warning "Winget upgrade failed: $($_.Exception.Message)"}
+
+            $total = $packageList.Count
+            $current = 0
+            foreach ($packageInfo in $packageList) {
+                $current++
+                $progress = 10 + (($current / $total) * 90) # Progress from 10% to 100%
+                Update-Status "Installing $($packageInfo.Name) ($current/$total)..." $progress
+                Write-Host "Installing $($packageInfo.Name) (ID: $($packageInfo.ID))..."
+                try {
+                    Start-Process "winget" -ArgumentList "install -e --id `"$($packageInfo.ID)`" --silent --accept-package-agreements --accept-source-agreements --force" -Wait -NoNewWindow -ErrorAction Stop
+                } catch {
+                    Write-Warning "Failed to install $($packageInfo.Name): $($_.Exception.Message)"
+                }
+            }
+            $ErrorActionPreference = 'Stop' # Reset
+        }
+    } elseif ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+        Update-Status "No apps selected for installation." 0
+    } else {
+        Update-Status "App installation cancelled." 0
     }
 }
 
+Function Activate-Windows {
+    Run-SynchronousAction -Name "Activate Windows" -Action {
+        Invoke-Expression (Invoke-RestMethod 'https://get.activated.win' -UseBasicParsing) # Execute directly
+        # Success/Failure is determined by the external script. No easy check here.
+    } -Confirm -ConfirmMessage "WARNING:`n`nRunning activation scripts (irm|iex) is RISKY and may violate licenses or install malware.`nProceed ONLY if you understand and accept the risks.`n`nDo you want to continue?"
+}
 
-Function Run-WindowsUpdate_Job {
-    Write-Host "Job: Checking for Windows Updates..."
-    $ErrorActionPreference = 'Stop'
-    $moduleName = "PSWindowsUpdate"
-    $logFileName = "$($env:computername)-$(Get-Date -f yyyy-MM-dd)-MSUpdates.log"
-    $logFilePath = Join-Path $env:TEMP $logFileName
-
-    try {
-        # Check/Install Module
+Function Run-WindowsUpdate {
+     Run-SynchronousAction -Name "Windows Update" -Action {
+        $ErrorActionPreference = 'Stop'
+        $moduleName = "PSWindowsUpdate"; $logFileName = "$($env:computername)-$(Get-Date -f yyyy-MM-dd)-MSUpdates.log"; $logFilePath = Join-Path $env:TEMP $logFileName
+        Update-Status "Updating: Checking/Installing PSWindowsUpdate..." 10
         if (-not (Get-Module -ListAvailable -Name $moduleName)) {
-            Write-Host "Job: Installing PSWindowsUpdate module..."
-            if (-not (Get-PackageProvider -Name NuGet -ErrorAction SilentlyContinue)) {
-                Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Confirm:$false
-            }
+            Write-Host "Installing PSWindowsUpdate module..."
+            if (-not (Get-PackageProvider -Name NuGet -ErrorAction SilentlyContinue)) { Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Confirm:$false }
             Install-Module $moduleName -Force -AcceptLicense -Scope CurrentUser -Confirm:$false
-             Write-Host "Job: PSWindowsUpdate module installed."
-        } else {
-             Write-Host "Job: PSWindowsUpdate module already installed."
         }
         Import-Module $moduleName -Force
-
-        # Add MS Update Service
-        Write-Host "Job: Registering Microsoft Update service..."
+        Update-Status "Updating: Registering MS Update Service..." 30
         Add-WUServiceManager -ServiceID "7971f918-a847-4430-9279-4a52d1efe18d" -Confirm:$false -ErrorAction SilentlyContinue
-
-        # Install Updates
-        Write-Host "Job: Checking for and installing updates (logging to $logFilePath)..."
-        # Consider removing -AutoReboot for safety unless explicitly desired.
-        # Add -IgnoreReboot to prevent reboot but signal one might be needed.
+        Update-Status "Updating: Installing updates (logging to $logFilePath)..." 50
         Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -IgnoreReboot -Verbose | Out-File $logFilePath -Append
-
-        Write-Host "Job: Windows Update check and installation process completed."
-        return "Windows Update process completed. Check log: $logFilePath" # Return log path
-    } catch {
-         Write-Error "Job Error during Windows Update: $($_.Exception.Message)"
-         throw "Error during Windows Update: $($_.Exception.Message)"
+        Update-Status "Windows Update completed. Log: $logFilePath" 100 # Show log path
     }
 }
 
-Function Run-CTT_Job {
-    Write-Host "Job: Launching CTT Windows Utility..."
-    $ErrorActionPreference = 'Stop'
-    try {
-        # This still launches a separate, interactive process.
-        # The background job simply starts it and then completes.
+Function Run-CTT {
+     Run-SynchronousAction -Name "CTT Windows Utility" -Action {
+        # This action launches a separate window, so the GUI freeze is minimal.
         $command = "iwr -useb https://christitus.com/win | iex"
         Start-Process "powershell.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command `"$command`""
-        Write-Host "Job: CTT Utility launch command executed."
-        # We can't wait for the external process here easily in a job.
-        return "CTT Windows Utility launch initiated."
-    } catch {
-        Write-Error "Job Error launching CTT Utility: $($_.Exception.Message)"
-        throw "Error launching CTT Utility: $($_.Exception.Message)"
+        Update-Status "CTT Utility launch command executed." 50 # Set progress mid-way as it hands off
     }
 }
 
-Function Scan-WithMRT_Job {
-     Write-Host "Job: Preparing Windows Malicious Software Removal Tool (MRT)..."
-     $ErrorActionPreference = 'Stop'
-    try {
+Function Scan-WithMRT {
+    Run-SynchronousAction -Name "Virus Scan (MRT)" -Action {
         $mrtPath = Join-Path -Path $env:SystemRoot -ChildPath "System32\MRT.exe"
-        if (-not (Test-Path $mrtPath)) {
-            throw "MRT.exe not found at expected location: $mrtPath"
-        }
-        Write-Host "Job: Launching MRT.exe /F (Full Scan)..."
-        # MRT is interactive, so the job just launches it. User interacts directly.
-        Start-Process -FilePath $mrtPath -ArgumentList "/F" -Wait
-        # The -Wait here will make the *job* wait until MRT closes.
-        Write-Host "Job: MRT Scan window closed."
-        return "MRT Scan window closed."
-    } catch {
-        Write-Error "Job Error running MRT Scan: $($_.Exception.Message)"
-        throw "Error running MRT Scan: $($_.Exception.Message)"
+        if (-not (Test-Path $mrtPath)) { throw "MRT.exe not found at $mrtPath" }
+        Update-Status "Scanning: Launching MRT.exe /F..." 50
+        Start-Process -FilePath $mrtPath -ArgumentList "/F" -Wait # GUI freezes until MRT closes
     }
 }
 #endregion Action Functions
@@ -754,20 +404,24 @@ Function Scan-WithMRT_Job {
 # Show the main form and start message loop
 try {
     Write-Host "Displaying main application window..."
-    Update-Status "Ready" # Initial status
+    Write-Host "NOTE: The console window running this script may become unresponsive while the GUI is open." -ForegroundColor Yellow
+    Write-Host "NOTE: The GUI WILL FREEZE during long-running tasks." -ForegroundColor Yellow
+    Update-Status "Ready" 0 # Initial status
+    # .ShowDialog() blocks the current thread (the one running iex)
     $script:mainForm.ShowDialog() | Out-Null
     Write-Host "Application window closed."
 } catch {
     Write-Error "An unexpected error occurred with the GUI: $($_.Exception.Message)"
     [System.Windows.Forms.MessageBox]::Show("An unexpected GUI error occurred: $($_.Exception.Message)", "GUI Error", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
 } finally {
-    # Final cleanup (redundant if FormClosing event works, but safe)
-    Stop-CurrentJob
-    if ($script:jobCheckTimer -ne $null -and $script:jobCheckTimer.Enabled) { $script:jobCheckTimer.Stop() }
-    if ($script:jobCheckTimer -ne $null) { $script:jobCheckTimer.Dispose(); $script:jobCheckTimer = $null }
-    if ($script:mainForm -ne $null -and -not $script:mainForm.IsDisposed) { $script:mainForm.Dispose(); $script:mainForm = $null }
-    Write-Host "GUI resources released."
+    # Final cleanup
+    if ($script:mainForm -ne $null -and -not $script:mainForm.IsDisposed) {
+        $script:mainForm.Dispose()
+        $script:mainForm = $null
+        Write-Host "GUI resources released."
+    }
 }
 #endregion Display GUI
 
 Write-Host "Script execution finished."
+# End of Script
