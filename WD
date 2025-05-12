@@ -1,0 +1,717 @@
+#Requires -RunAsAdministrator
+
+#region Admin Check
+# Although #Requires handles the check, this provides a friendlier relaunch mechanism.
+Write-Host "Checking if running as administrator..."
+$currentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+$windowsPrincipal = New-Object System.Security.Principal.WindowsPrincipal($currentUser)
+$adminRole = [System.Security.Principal.WindowsBuiltInRole]::Administrator
+
+if (-not $windowsPrincipal.IsInRole($adminRole)) {
+    $separator = "=" * 60
+    $adminMessage = "Administrator Privileges Required!"
+    Write-Host $separator -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host $adminMessage -ForegroundColor Red -BackgroundColor Black -NoNewline; Write-Host " (Detected)" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "This script needs administrator privileges to perform its tasks effectively." -ForegroundColor Magenta
+    Write-Host "Attempting to restart with elevated rights..." -ForegroundColor Green
+    Write-Host ""
+    Write-Host $separator -ForegroundColor Yellow
+
+    # Restart the script with administrative privileges
+    try {
+        $scriptPath = $PSCommandPath
+        if ([string]::IsNullOrWhiteSpace($scriptPath)) {
+             # Fallback if $PSCommandPath is empty (e.g., running selection in ISE)
+             $scriptPath = $MyInvocation.MyCommand.Path
+        }
+        if ([string]::IsNullOrWhiteSpace($scriptPath)) {
+            throw "Could not determine the script path to restart."
+        }
+        Start-Process powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$scriptPath`"" -Verb RunAs -ErrorAction Stop
+    } catch {
+        Write-Warning "Failed to restart script with administrator privileges: $($_.Exception.Message)"
+        Write-Host "Please right-click the script file and select 'Run as administrator'." -ForegroundColor Yellow
+        Read-Host "Press Enter to exit..."
+    }
+    exit # Exit the current non-admin instance
+} else {
+    Write-Host "Script is running with administrator privileges." -ForegroundColor Green
+}
+#endregion Admin Check
+
+#region OS Check
+Write-Host "Checking Operating System version..."
+try {
+    $osInfo = Get-CimInstance -ClassName Win32_OperatingSystem -ErrorAction Stop
+    $osVersion = [Version]$osInfo.Version
+    $minVersion = [Version]"10.0"
+
+    if ($osVersion -lt $minVersion) {
+        Write-Host "------------------------------------------------------------" -ForegroundColor Red
+        Write-Host "Unsupported OS: This script requires Windows 10 or newer." -ForegroundColor Red
+        Write-Host "Your current OS: $($osInfo.Caption) (Version $($osInfo.Version))" -ForegroundColor Red
+        Write-Host "------------------------------------------------------------" -ForegroundColor Red
+        Read-Host "Press Enter to exit..."
+        exit
+    } else {
+        Write-Host "Operating System is supported: $($osInfo.Caption) (Version $($osInfo.Version))" -ForegroundColor Green
+    }
+} catch {
+    Write-Warning "Could not determine OS version: $($_.Exception.Message)"
+    # Optionally proceed with caution or exit
+    # Read-Host "Could not verify OS version. Press Enter to attempt to continue anyway, or Ctrl+C to exit..."
+}
+#endregion OS Check
+
+#region Shortcut Creation
+Write-Host "Checking/Creating Desktop Shortcut..."
+$shortcutName = "CS_Script_Utility.lnk" # Changed name slightly
+$shortcutPath = [System.IO.Path]::Combine([System.Environment]::GetFolderPath('Desktop'), $shortcutName)
+$targetScriptPath = $PSCommandPath # Shortcut will run this script
+$targetExecutable = "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
+# Arguments to run the current script elevated via the shortcut
+$arguments = "-NoProfile -ExecutionPolicy Bypass -Command `"Start-Process powershell.exe -ArgumentList '-NoProfile -ExecutionPolicy Bypass -File `\`"$($targetScriptPath.Replace("'", "''"))`\`"' -Verb RunAs`""
+
+# Define the URL for the icon and the path to save it locally in TEMP
+$iconUrl = "https://catsmoker.github.io/web/assets/ico/favicon.ico"
+$localIconPath = [System.IO.Path]::Combine($env:TEMP, "CS_Script_Icon.ico")
+
+# Download the icon (only if it doesn't exist or is outdated - simple check here)
+if (-not (Test-Path $localIconPath)) {
+    Write-Host "Downloading shortcut icon..."
+    try {
+        Invoke-WebRequest -Uri $iconUrl -OutFile $localIconPath -UseBasicParsing -ErrorAction Stop
+        Write-Host "Icon downloaded to $localIconPath" -ForegroundColor Green
+    } catch {
+        Write-Warning "Failed to download icon: $($_.Exception.Message). Shortcut will use default icon."
+        $localIconPath = $null # Ensure we don't try to use a non-existent path
+    }
+}
+
+# Create or update the shortcut
+$wshShell = $null
+try {
+    $wshShell = New-Object -ComObject WScript.Shell
+    $shortcut = $wshShell.CreateShortcut($shortcutPath)
+
+    # Check if properties need updating
+    $needsUpdate = $false
+    if ($shortcut.TargetPath -ne $targetExecutable) { $shortcut.TargetPath = $targetExecutable; $needsUpdate = $true }
+    if ($shortcut.Arguments -ne $arguments) { $shortcut.Arguments = $arguments; $needsUpdate = $true }
+    if ($shortcut.WorkingDirectory -ne ([System.IO.Path]::GetDirectoryName($targetExecutable))) { $shortcut.WorkingDirectory = [System.IO.Path]::GetDirectoryName($targetExecutable); $needsUpdate = $true }
+    if ($localIconPath -and (Test-Path $localIconPath) -and $shortcut.IconLocation -ne "$localIconPath,0") {
+        $shortcut.IconLocation = "$localIconPath,0" # Add ,0 for index if needed
+        $needsUpdate = $true
+    } elseif (-not $localIconPath -and -not [string]::IsNullOrEmpty($shortcut.IconLocation)) {
+         # If icon download failed, remove any old icon setting
+         $shortcut.IconLocation = ""
+         $needsUpdate = $true
+    }
+
+    if ($needsUpdate -or -not (Test-Path $shortcutPath)) {
+        Write-Host "Creating/Updating shortcut: $shortcutPath"
+        $shortcut.Save()
+        Write-Host "Shortcut processed successfully." -ForegroundColor Green
+    } else {
+        Write-Host "Desktop shortcut is already up to date."
+    }
+} catch {
+    Write-Warning "Failed to create/update shortcut: $($_.Exception.Message)"
+} finally {
+    # Release COM object
+    if ($wshShell -ne $null) {
+        [System.Runtime.InteropServices.Marshal]::ReleaseComObject($wshShell) | Out-Null
+        Remove-Variable wshShell # Clean up variable
+    }
+}
+#endregion Shortcut Creation
+
+#region GUI Setup
+Add-Type -AssemblyName System.Windows.Forms
+Add-Type -AssemblyName System.Drawing
+
+# Main Form
+$script:mainForm = New-Object System.Windows.Forms.Form
+$script:mainForm.Text = "CS Script v2.0 by catsmoker" # Updated Version
+$script:mainForm.Size = New-Object System.Drawing.Size(800, 600) # Adjusted height after removing button
+$script:mainForm.StartPosition = "CenterScreen"
+$script:mainForm.BackColor = [System.Drawing.Color]::FromArgb(30, 30, 30)
+$script:mainForm.ForeColor = [System.Drawing.Color]::White
+$script:mainForm.FormBorderStyle = 'FixedDialog'
+$script:mainForm.MaximizeBox = $false
+
+# Title Label
+$script:titleLabel = New-Object System.Windows.Forms.Label
+$script:titleLabel.Text = "CS Script v2.0" # Updated Version
+$script:titleLabel.Font = New-Object System.Drawing.Font("Segoe UI", 18, [System.Drawing.FontStyle]::Bold)
+$script:titleLabel.Size = New-Object System.Drawing.Size(400, 40)
+$script:titleLabel.Location = New-Object System.Drawing.Point(200, 20)
+$script:titleLabel.TextAlign = 'MiddleCenter' #[System.Drawing.ContentAlignment]::MiddleCenter
+$script:mainForm.Controls.Add($script:titleLabel)
+
+# Subtitle Label
+$script:subtitleLabel = New-Object System.Windows.Forms.Label
+$script:subtitleLabel.Text = "by catsmoker | https://catsmoker.github.io"
+$script:subtitleLabel.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Italic)
+$script:subtitleLabel.Size = New-Object System.Drawing.Size(400, 20)
+$script:subtitleLabel.Location = New-Object System.Drawing.Point(200, 60)
+$script:subtitleLabel.TextAlign = 'MiddleCenter' #[System.Drawing.ContentAlignment]::MiddleCenter
+$script:mainForm.Controls.Add($script:subtitleLabel)
+
+# --- Common Button Styling ---
+$buttonFont = New-Object System.Drawing.Font("Segoe UI", 12)
+$buttonSize = New-Object System.Drawing.Size(200, 40)
+$buttonBackColor = [System.Drawing.Color]::FromArgb(70, 130, 180) # SteelBlue
+$buttonForeColor = [System.Drawing.Color]::White
+$buttonFlatStyle = [System.Windows.Forms.FlatStyle]::Flat
+
+# Function to create styled buttons
+Function New-StyledButton {
+    param(
+        [string]$Text,
+        [System.Drawing.Point]$Location,
+        [scriptblock]$OnClickAction
+    )
+    $button = New-Object System.Windows.Forms.Button
+    $button.Text = $Text
+    $button.Size = $buttonSize
+    $button.Location = $Location
+    $button.Font = $buttonFont
+    $button.BackColor = $buttonBackColor
+    $button.ForeColor = $buttonForeColor
+    $button.FlatStyle = $buttonFlatStyle
+    $button.FlatAppearance.BorderSize = 0
+    $button.Add_Click($OnClickAction)
+    return $button
+}
+
+# --- Menu Buttons ---
+$buttonYStart = 120
+$buttonYIncrement = 60
+$buttonX = 50
+
+$script:buttonClean = New-StyledButton -Text "Clean Windows" -Location (New-Object System.Drawing.Point($buttonX, $buttonYStart)) -OnClickAction { Clean-Windows }
+$script:mainForm.Controls.Add($script:buttonClean)
+
+$script:buttonFix = New-StyledButton -Text "Scan and Fix Windows" -Location (New-Object System.Drawing.Point($buttonX, $buttonYStart + $buttonYIncrement)) -OnClickAction { Fix-Windows }
+$script:mainForm.Controls.Add($script:buttonFix)
+
+$script:buttonApps = New-StyledButton -Text "Apps / Upgrades" -Location (New-Object System.Drawing.Point($buttonX, $buttonYStart + 2 * $buttonYIncrement)) -OnClickAction { Download-Apps }
+$script:mainForm.Controls.Add($script:buttonApps)
+
+$script:buttonAtlas = New-StyledButton -Text "Windows Update" -Location (New-Object System.Drawing.Point($buttonX, $buttonYStart + 3 * $buttonYIncrement)) -OnClickAction { Run-WindowsUpdate } # Renamed function
+$script:mainForm.Controls.Add($script:buttonAtlas)
+
+$script:buttonCTT = New-StyledButton -Text "CTT Windows Utility" -Location (New-Object System.Drawing.Point($buttonX, $buttonYStart + 4 * $buttonYIncrement)) -OnClickAction { Run-CTT } # Renamed function
+$script:mainForm.Controls.Add($script:buttonCTT)
+
+$script:buttonMRT = New-StyledButton -Text "Virus Scan (MRT)" -Location (New-Object System.Drawing.Point($buttonX, $buttonYStart + 5 * $buttonYIncrement)) -OnClickAction { Scan-WithMRT }
+$script:mainForm.Controls.Add($script:buttonMRT)
+
+$script:buttonExit = New-StyledButton -Text "Exit" -Location (New-Object System.Drawing.Point($buttonX, $buttonYStart + 6 * $buttonYIncrement)) -OnClickAction { Exit-Script }
+$script:mainForm.Controls.Add($script:buttonExit)
+
+# Progress Bar
+$script:progressBar = New-Object System.Windows.Forms.ProgressBar
+$script:progressBar.Size = New-Object System.Drawing.Size(700, 20) # Wider
+$script:progressBar.Location = New-Object System.Drawing.Point($buttonX, $script:mainForm.ClientSize.Height - 70) # Position relative to bottom
+$script:progressBar.Style = 'Continuous'
+$script:mainForm.Controls.Add($script:progressBar)
+
+# Status Label
+$script:statusLabel = New-Object System.Windows.Forms.Label
+$script:statusLabel.Text = "Ready"
+$script:statusLabel.Size = New-Object System.Drawing.Size(700, 20) # Wider
+$script:statusLabel.Location = New-Object System.Drawing.Point($buttonX, $script:mainForm.ClientSize.Height - 45) # Position relative to bottom
+$script:statusLabel.Font = New-Object System.Drawing.Font("Segoe UI", 10)
+$script:mainForm.Controls.Add($script:statusLabel)
+
+# Helper function to update status and progress
+Function Update-Status {
+    param(
+        [string]$Message,
+        [int]$Progress = -1 # -1 means don't change progress
+    )
+    if ($script:mainForm.InvokeRequired) {
+        $script:mainForm.Invoke([Action[string,int]]$UpdateStatus, $Message, $Progress)
+    } else {
+        $script:statusLabel.Text = $Message
+        if ($Progress -ge 0 -and $Progress -le 100) {
+            $script:progressBar.Value = $Progress
+        }
+        $script:statusLabel.Refresh() # Force update
+        $script:progressBar.Refresh() # Force update
+    }
+}
+
+#endregion GUI Setup
+
+#region Functions
+
+Function Clean-Windows {
+    Update-Status "Cleaning Windows..." 0
+    $script:mainForm.Cursor = [System.Windows.Forms.Cursors]::WaitCursor
+
+    try {
+        # Clean User Temp Folder
+        $userTempPath = $env:TEMP
+        Update-Status "Clearing user temp folder: $userTempPath" 10
+        Write-Host "Clearing user temp folder: $userTempPath"
+        Get-ChildItem -Path $userTempPath -Recurse -Force -ErrorAction SilentlyContinue | ForEach-Object {
+            try {
+                Remove-Item -Path $_.FullName -Recurse -Force -ErrorAction Stop
+            } catch {
+                Write-Warning "Could not remove '$($_.FullName)': $($_.Exception.Message)"
+            }
+        }
+        Update-Status "User temp folder cleared." 30
+
+        # Clean Windows Temp Folder
+        $windowsTempPath = Join-Path -Path $env:windir -ChildPath "Temp"
+        Update-Status "Clearing Windows temp folder: $windowsTempPath" 40
+        Write-Host "Clearing Windows temp folder: $windowsTempPath"
+        Get-ChildItem -Path $windowsTempPath -Recurse -Force -ErrorAction SilentlyContinue | ForEach-Object {
+            try {
+                Remove-Item -Path $_.FullName -Recurse -Force -ErrorAction Stop
+            } catch {
+                Write-Warning "Could not remove '$($_.FullName)': $($_.Exception.Message)"
+            }
+        }
+        Update-Status "Windows temp folder cleared." 60
+
+        # Clean Recycle Bin with Confirmation
+        Update-Status "Checking Recycle Bin..." 70
+        $RecycleBin = (New-Object -ComObject Shell.Application).NameSpace(0xA)
+        if ($RecycleBin.Items().Count -gt 0) {
+            $confirm = [System.Windows.Forms.MessageBox]::Show("Do you want to permanently empty the Recycle Bin?", "Confirm Delete", [System.Windows.Forms.MessageBoxButtons]::YesNo, [System.Windows.Forms.MessageBoxIcon]::Warning)
+            if ($confirm -eq [System.Windows.Forms.DialogResult]::Yes) {
+                Update-Status "Emptying Recycle Bin..." 80
+                Write-Host "Emptying Recycle Bin..."
+                try {
+                    $RecycleBin.Items() | ForEach-Object { $_.InvokeVerb("delete") } # Needs testing if silent delete works directly
+                    # Fallback / alternative: Clear-RecycleBin cmdlet (requires PowerShell 5+)
+                    # Clear-RecycleBin -Force -ErrorAction SilentlyContinue
+                    Update-Status "Recycle Bin emptied." 90
+                } catch {
+                     Write-Warning "Failed to empty Recycle Bin: $($_.Exception.Message)"
+                     Update-Status "Failed to empty Recycle Bin." 90
+                }
+            } else {
+                Update-Status "Recycle Bin unchanged." 90
+            }
+        } else {
+             Update-Status "Recycle Bin is already empty." 90
+        }
+
+
+        # Flush DNS Cache
+        Update-Status "Flushing DNS Cache..." 95
+        Write-Host "Flushing DNS Cache..."
+        try {
+            Start-Process -FilePath "ipconfig.exe" -ArgumentList "/flushdns" -NoNewWindow -Wait -ErrorAction Stop
+        } catch {
+            Write-Warning "Failed to flush DNS cache: $($_.Exception.Message)"
+        }
+
+        Update-Status "Cleanup completed!" 100
+    } catch {
+        Update-Status "Error during cleanup: $($_.Exception.Message)" 100
+        Write-Error "Error during cleanup: $($_.Exception.Message)"
+    } finally {
+        $script:mainForm.Cursor = [System.Windows.Forms.Cursors]::Default
+    }
+}
+
+Function Fix-Windows {
+    Update-Status "Scanning and fixing Windows..." 0
+    $script:mainForm.Cursor = [System.Windows.Forms.Cursors]::WaitCursor
+    Write-Host "--- Starting Windows Fix sequence ---"
+
+    try {
+        # Run chkdsk (Scan only, needs reboot for fixes)
+        Update-Status "Running Check Disk (Scan)..." 10
+        Write-Host "Running chkdsk /scan..."
+        # Note: chkdsk /f requires a reboot and cannot be easily waited on here. /scan is safer.
+        Start-Process -FilePath "chkdsk.exe" -ArgumentList "/scan /perf" -NoNewWindow -Wait -ErrorAction Stop
+        Update-Status "Check Disk (Scan) completed." 30
+
+        # Run sfc /scannow
+        Update-Status "Running System File Checker (SFC)..." 40
+        Write-Host "Running sfc /scannow..."
+        Start-Process -FilePath "sfc.exe" -ArgumentList "/scannow" -NoNewWindow -Wait -ErrorAction Stop
+        Update-Status "System File Checker completed." 60
+
+        # Run DISM
+        Update-Status "Running Deployment Imaging Service and Management Tool (DISM)..." 70
+        Write-Host "Running DISM /Online /Cleanup-Image /RestoreHealth..."
+        Start-Process -FilePath "DISM.exe" -ArgumentList "/Online /Cleanup-Image /RestoreHealth" -NoNewWindow -Wait -ErrorAction Stop
+        Update-Status "DISM completed." 90
+
+        Update-Status "Windows Fix sequence completed!" 100
+        Write-Host "--- Windows Fix sequence finished ---"
+        [System.Windows.Forms.MessageBox]::Show("Windows Fix sequence completed. Check the console output for details. A restart may be required for some fixes.", "Fix Complete", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
+
+    } catch {
+        Update-Status "Error during Fix sequence: $($_.Exception.Message)" 100
+        Write-Error "Error during Fix sequence: $($_.Exception.Message)"
+        [System.Windows.Forms.MessageBox]::Show("An error occurred during the Fix sequence. Check console output for details.", "Error", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
+    } finally {
+        $script:mainForm.Cursor = [System.Windows.Forms.Cursors]::Default
+    }
+}
+
+Function Download-Apps {
+    Update-Status "Opening Apps/Upgrades menu..." 0
+    $script:mainForm.Cursor = [System.Windows.Forms.Cursors]::WaitCursor
+
+    try {
+        # Check if winget is installed
+        Write-Host "Checking for winget..."
+        $wingetPath = Get-Command winget -ErrorAction SilentlyContinue
+        if (-not $wingetPath) {
+            Update-Status "winget not found. Attempting installation..." 10
+            Write-Host "winget is not installed. Attempting to install via App Installer..."
+
+            # Download the latest version of the App Installer (contains winget)
+            $installerUrl = "https://aka.ms/getwinget" # Official link
+            $installerPath = Join-Path $env:TEMP "Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
+
+            try {
+                Write-Host "Downloading App Installer package..."
+                Invoke-WebRequest -Uri $installerUrl -OutFile $installerPath -UseBasicParsing -ErrorAction Stop
+                Write-Host "Download complete. Installing..."
+                Update-Status "Installing winget..." 30
+
+                # Install the downloaded package
+                Add-AppxPackage -Path $installerPath -ErrorAction Stop
+                Write-Host "winget installation potentially successful. Verifying..."
+                Update-Status "Verifying winget..." 50
+
+                # Verify installation
+                $wingetPath = Get-Command winget -ErrorAction SilentlyContinue
+                if (-not $wingetPath) {
+                    throw "Winget installation failed or path not updated immediately. Please try restarting the script or install winget manually."
+                }
+                Write-Host "Winget installed successfully at $($wingetPath.Source)" -ForegroundColor Green
+            } catch {
+                Update-Status "Failed to install winget: $($_.Exception.Message)" 0
+                Write-Error "Failed to download or install winget: $($_.Exception.Message)"
+                [System.Windows.Forms.MessageBox]::Show("Failed to automatically install winget. You may need to install it manually from the Microsoft Store (search for 'App Installer') or GitHub.", "Winget Installation Failed", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
+                return # Stop the function
+            } finally {
+                 # Clean up installer file
+                 if (Test-Path $installerPath) { Remove-Item $installerPath -ErrorAction SilentlyContinue }
+            }
+        } else {
+            Write-Host "winget is already installed at $($wingetPath.Source)" -ForegroundColor Green
+            Update-Status "winget found. Preparing app list..." 50
+        }
+
+        # Proceed with App Selection GUI
+        Add-Type -AssemblyName System.Windows.Forms
+        Add-Type -AssemblyName System.Drawing
+
+        $Form = New-Object System.Windows.Forms.Form
+        $Form.Text = "Install Software | CS Script v2.0 by catsmoker"
+        $Form.Size = New-Object System.Drawing.Size(450, 600)
+        $Form.StartPosition = "CenterScreen"
+        $Form.BackColor = [System.Drawing.Color]::FromArgb(50, 50, 50)
+        $Form.FormBorderStyle = 'FixedDialog'
+        $Form.MaximizeBox = $false
+
+        $Label = New-Object System.Windows.Forms.Label
+        $Label.Location = New-Object System.Drawing.Size(20, 20)
+        $Label.Size = New-Object System.Drawing.Size(400, 30)
+        $Label.Text = "Select software to install/upgrade:"
+        $Label.Font = New-Object System.Drawing.Font("Segoe UI", 12, [System.Drawing.FontStyle]::Bold)
+        $Label.ForeColor = [System.Drawing.Color]::White
+        $Form.Controls.Add($Label)
+
+        $Panel = New-Object System.Windows.Forms.Panel
+        $Panel.Location = New-Object System.Drawing.Size(20, 60)
+        $Panel.Size = New-Object System.Drawing.Size(400, 400)
+        $Panel.AutoScroll = $true
+        $Panel.BorderStyle = 'FixedSingle'
+        $Panel.BackColor = [System.Drawing.Color]::FromArgb(35, 35, 35)
+        $Form.Controls.Add($Panel)
+
+        # Software List (Consider moving to external file for easier updates)
+        $softwareItems = @{
+            "Ungoogled Chromium" = "eloston.ungoogled-chromium"
+            "Mozilla Firefox" = "Mozilla.Firefox"
+            "Waterfox" = "Waterfox.Waterfox"
+            "Brave Browser" = "Brave.Brave"
+            "Google Chrome" = "Google.Chrome"
+            "LibreWolf" = "LibreWolf.LibreWolf"
+            "Tor Browser" = "TorProject.TorBrowser"
+            "Discord" = "Discord.Discord"
+            "Steam" = "Valve.Steam"
+            "Playnite" = "Playnite.Playnite"
+            "Heroic Games Launcher" = "HeroicGamesLauncher.HeroicGamesLauncher" # Fixed name
+            "Everything Search" = "voidtools.Everything" # Fixed name
+            "Mozilla Thunderbird" = "Mozilla.Thunderbird"
+            "foobar2000" = "PeterPawlowski.foobar2000"
+            "IrfanView" = "IrfanSkiljan.IrfanView"
+            "Git" = "Git.Git"
+            "VLC Media Player" = "VideoLAN.VLC" # Fixed name
+            "PuTTY" = "PuTTY.PuTTY"
+            "Ditto Clipboard" = "Ditto.Ditto" # Fixed name
+            "7-Zip" = "7zip.7zip"
+            "TeamSpeak Client" = "TeamSpeakSystems.TeamSpeakClient" # Fixed name
+            "Spotify" = "Spotify.Spotify"
+            "OBS Studio" = "OBSProject.OBSStudio"
+            "MSI Afterburner" = "Guru3D.Afterburner" # Note: Requires manual interaction often
+            "CPU-Z" = "CPUID.CPU-Z"
+            "GPU-Z" = "TechPowerUp.GPU-Z"
+            "Notepad++" = "Notepad++.Notepad++"
+            "Visual Studio Code" = "Microsoft.VisualStudioCode" # Fixed name
+            "VSCodium" = "VSCodium.VSCodium"
+            "Bulk Crap Uninstaller" = "Klocman.BulkCrapUninstaller" # Fixed name
+            "HWiNFO" = "REALiX.HWiNFO"
+            "Lightshot" = "Skillbrains.Lightshot"
+            "ShareX" = "ShareX.ShareX"
+            "Windows Snipping Tool (Store)" = "9MZ95KL8MR0L" # Fixed name
+            "ExplorerPatcher" = "valinet.ExplorerPatcher"
+            "MemReduct" = "Henry++.MemReduct"
+        }
+
+        $y = 10
+        foreach ($name in $softwareItems.Keys | Sort-Object) { # Sort alphabetically
+            $checkbox = New-Object System.Windows.Forms.CheckBox
+            $checkbox.Location = New-Object System.Drawing.Size(10, $y)
+            $checkbox.Size = New-Object System.Drawing.Size(360, 25)
+            $checkbox.Text = $name
+            $checkbox.Name = $softwareItems[$name] # Store winget ID in Name property
+            $checkbox.ForeColor = [System.Drawing.Color]::White
+            $checkbox.BackColor = $Panel.BackColor # Match panel background
+            $checkbox.Font = New-Object System.Drawing.Font("Segoe UI", 10)
+            $Panel.Controls.Add($checkbox)
+            $y += 30
+        }
+
+        $InstallButton = New-Object System.Windows.Forms.Button
+        $InstallButton.Location = New-Object System.Drawing.Size(165, 480) # Centered
+        $InstallButton.Size = New-Object System.Drawing.Size(120, 40) # Slightly wider
+        $InstallButton.Text = "Install Selected"
+        $InstallButton.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
+        $InstallButton.BackColor = $buttonBackColor
+        $InstallButton.ForeColor = $buttonForeColor
+        $InstallButton.FlatStyle = $buttonFlatStyle
+        $InstallButton.FlatAppearance.BorderSize = 0
+        $InstallButton.DialogResult = [System.Windows.Forms.DialogResult]::OK # Set DialogResult
+        $InstallButton.Add_Click({
+            # Action now happens after form closes if DialogResult is OK
+        })
+        $Form.Controls.Add($InstallButton)
+        $Form.AcceptButton = $InstallButton # Allow pressing Enter
+
+        # Show the form modally
+        Update-Status "Ready for app selection." 100
+        $result = $Form.ShowDialog() # Waits here until form is closed
+
+        if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+            $checkedBoxes = $Panel.Controls | Where-Object { $_ -is [System.Windows.Forms.CheckBox] -and $_.Checked }
+            if ($checkedBoxes.Count -eq 0) {
+                [System.Windows.Forms.MessageBox]::Show("No software packages were selected.", "Nothing to Install", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
+                Update-Status "Ready" 0
+            } else {
+                # Perform Upgrade All First
+                Update-Status "Running 'winget upgrade --all'..." 0
+                Write-Host "--- Starting winget upgrade --all ---"
+                Write-Host "This may take a while..."
+                try {
+                    # Add --include-unknown for broader upgrade check
+                    Start-Process "winget" -ArgumentList "upgrade --all --silent --accept-package-agreements --accept-source-agreements --disable-interactivity --include-unknown" -Wait -NoNewWindow -ErrorAction Stop
+                    Update-Status "'winget upgrade --all' completed. Starting installations..." 20
+                    Write-Host "--- Winget upgrade process finished ---"
+                } catch {
+                    Update-Status "Error during 'winget upgrade --all'. Continuing with installations..." 20
+                    Write-Warning "Error during 'winget upgrade --all': $($_.Exception.Message)"
+                }
+
+                # Run the installation commands sequentially
+                $installPackages = $checkedBoxes | ForEach-Object { @{ Name = $_.Text; ID = $_.Name } }
+                $totalPackages = $installPackages.Count
+                $completedPackages = 0
+
+                Write-Host "--- Starting installation of selected packages ---"
+                foreach ($packageInfo in $installPackages) {
+                    $packageName = $packageInfo.Name
+                    $packageId = $packageInfo.ID
+                    $progress = 20 + (($completedPackages / $totalPackages) * 80) # Scale progress from 20% to 100%
+                    Update-Status "Installing $($packageName) ($($completedPackages + 1)/$totalPackages)..." $progress
+                    Write-Host "Installing '$packageName' (ID: $packageId)..."
+                    try {
+                        # Using --force allows reinstall/upgrade over existing versions if needed
+                        Start-Process "winget" -ArgumentList "install -e --id `"$packageId`" --silent --accept-package-agreements --accept-source-agreements --disable-interactivity --force" -Wait -NoNewWindow -ErrorAction Stop
+                        Write-Host "'$packageName' installation command completed." -ForegroundColor Green
+                    } catch {
+                         Write-Warning "Failed to install '$packageName': $($_.Exception.Message)"
+                         # Optionally show a message box per failure or collect errors
+                    }
+                    $completedPackages++
+                }
+
+                Update-Status "Selected software installation process finished." 100
+                Write-Host "--- Installation process finished ---"
+                [System.Windows.Forms.MessageBox]::Show("Installation process for selected packages has finished. Check the console output for details on individual successes or failures.", "Installation Finished", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
+            }
+        } else {
+             Update-Status "App selection cancelled." 0
+        }
+
+    } catch {
+        Update-Status "Error in Apps/Upgrades: $($_.Exception.Message)" 0
+        Write-Error "Error in Apps/Upgrades function: $($_.Exception.Message)"
+        [System.Windows.Forms.MessageBox]::Show("An unexpected error occurred: $($_.Exception.Message)", "Error", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
+    } finally {
+        $script:mainForm.Cursor = [System.Windows.Forms.Cursors]::Default
+        # Dispose the app selection form if it was created
+        if ($Form -ne $null) { $Form.Dispose() }
+    }
+}
+
+# Renamed from windows-ps
+Function Run-WindowsUpdate {
+    Update-Status "Checking for Windows Updates..." 0
+    $script:mainForm.Cursor = [System.Windows.Forms.Cursors]::WaitCursor
+    Write-Host "--- Starting Windows Update process ---"
+
+    try {
+        # Check if PSWindowsUpdate module is installed
+        $moduleName = "PSWindowsUpdate"
+        $logFileName = "$($env:computername)-$(Get-Date -f yyyy-MM-dd)-MSUpdates.log"
+        $logFilePath = Join-Path $env:TEMP $logFileName
+
+        if (-not (Get-Module -ListAvailable -Name $moduleName)) {
+            Update-Status "PSWindowsUpdate module not found. Installing..." 10
+            Write-Host "Installing PSWindowsUpdate module..."
+            # Ensure NuGet provider is available
+            if (-not (Get-PackageProvider -Name NuGet -ErrorAction SilentlyContinue)) {
+                Write-Host "Installing NuGet package provider..."
+                Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -ErrorAction Stop
+            }
+            Install-Module $moduleName -Force -AcceptLicense -Scope CurrentUser -ErrorAction Stop # Install for current user (admin)
+            Update-Status "PSWindowsUpdate module installed." 20
+        } else {
+             Write-Host "PSWindowsUpdate module already installed."
+             Update-Status "PSWindowsUpdate module found." 20
+        }
+
+        # Import the module if not already imported
+        Import-Module $moduleName -ErrorAction Stop
+
+        # Add Microsoft Update service if not already registered
+        Update-Status "Registering Microsoft Update service (if needed)..." 30
+        Write-Host "Registering Microsoft Update service..."
+        Add-WUServiceManager -ServiceID "7971f918-a847-4430-9279-4a52d1efe18d" -Confirm:$false -ErrorAction SilentlyContinue # Service ID for Microsoft Update
+
+        # Check for, download, and install updates
+        Update-Status "Checking for updates..." 40
+        Write-Host "Checking for updates (logging to $logFilePath)..."
+        # Get-WindowsUpdate will list available updates
+        # Install-WindowsUpdate will download and install them
+        # Using -MicrosoftUpdate ensures updates for other MS products are included
+        # -AcceptAll accepts all updates
+        # -AutoReboot allows automatic reboot if necessary (Use with caution!) Consider removing or adding confirmation.
+        # For safer execution, remove -AutoReboot and inform the user.
+        Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -Verbose | Out-File $logFilePath -Append
+        # Consider adding: -IgnoreReboot (to prevent auto-reboot but flag that one is needed)
+
+        Update-Status "Windows Update check and installation process completed." 100
+        Write-Host "--- Windows Update process finished ---"
+        [System.Windows.Forms.MessageBox]::Show("Windows Update process finished. A reboot may be required. Check the log file for details:`n$logFilePath", "Updates Complete", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
+
+    } catch {
+        Update-Status "Error during Windows Update: $($_.Exception.Message)" 100
+        Write-Error "Error during Windows Update: $($_.Exception.Message)"
+        [System.Windows.Forms.MessageBox]::Show("An error occurred during the Windows Update process. Check console output for details.", "Update Error", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
+    } finally {
+        $script:mainForm.Cursor = [System.Windows.Forms.Cursors]::Default
+    }
+}
+
+# Renamed from CTT
+Function Run-CTT {
+    Update-Status "Launching Chris Titus Tech Windows Utility..." 0
+    $script:mainForm.Cursor = [System.Windows.Forms.Cursors]::WaitCursor
+    Write-Host "--- Launching CTT Windows Utility ---"
+    Write-Host "NOTE: This runs a script directly from the internet (christitus.com)." -ForegroundColor Yellow
+
+    try {
+        # The command launches a new PowerShell window running the remote script
+        $command = "iwr -useb https://christitus.com/win | iex"
+        Start-Process "powershell.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command `"$command`"" -ErrorAction Stop
+        # We don't wait for this process, as it runs its own GUI/interface.
+        Update-Status "CTT Windows Utility launched in a new window." 100
+        Write-Host "--- CTT Utility launched ---"
+
+    } catch {
+        Update-Status "Error launching CTT Utility: $($_.Exception.Message)" 100
+        Write-Error "Error launching CTT Utility: $($_.Exception.Message)"
+        [System.Windows.Forms.MessageBox]::Show("An error occurred while trying to launch the CTT Utility.", "Launch Error", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
+    } finally {
+        $script:mainForm.Cursor = [System.Windows.Forms.Cursors]::Default
+    }
+}
+
+Function Scan-WithMRT {
+    Update-Status "Preparing Windows Malicious Software Removal Tool (MRT)..." 0
+    $script:mainForm.Cursor = [System.Windows.Forms.Cursors]::WaitCursor
+    Write-Host "--- Starting MRT Scan ---"
+
+    try {
+        $mrtPath = Join-Path -Path $env:SystemRoot -ChildPath "System32\MRT.exe"
+
+        if (-not (Test-Path $mrtPath)) {
+            throw "MRT.exe not found at expected location: $mrtPath"
+        }
+
+        Update-Status "Launching MRT Scan (Full Scan)..." 50
+        Write-Host "Launching MRT.exe with /F (Full Scan) argument. Please follow the prompts in the MRT window."
+
+        # Run MRT interactively with Full Scan argument (/F)
+        # /Q = Quiet (no UI), /Q /N = Quiet Detect Only, /F = Full Scan (interactive), /F:Y = Full Scan + Auto Clean
+        Start-Process -FilePath $mrtPath -ArgumentList "/F" -Wait -ErrorAction Stop
+        # -Wait ensures this script pauses until MRT is closed.
+
+        Update-Status "MRT Scan window closed." 100
+        Write-Host "--- MRT Scan process finished ---"
+        [System.Windows.Forms.MessageBox]::Show("The Windows Malicious Software Removal Tool has finished or was closed.", "MRT Scan Finished", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
+
+    } catch {
+        Update-Status "Error running MRT Scan: $($_.Exception.Message)" 100
+        Write-Error "Error running MRT Scan: $($_.Exception.Message)"
+        [System.Windows.Forms.MessageBox]::Show("An error occurred while trying to run the MRT Scan: $($_.Exception.Message)", "MRT Error", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
+    } finally {
+        $script:mainForm.Cursor = [System.Windows.Forms.Cursors]::Default
+    }
+}
+
+Function Exit-Script {
+    Write-Host "Exiting script."
+    $script:mainForm.Close()
+}
+
+#endregion Functions
+
+#region Display GUI
+# Show the main form
+try {
+    Write-Host "Displaying main application window..."
+    $script:mainForm.ShowDialog() | Out-Null # ShowDialog waits until the form is closed
+    Write-Host "Application window closed."
+} catch {
+    Write-Error "An error occurred with the GUI: $($_.Exception.Message)"
+} finally {
+    # Dispose of the form and controls when done
+    if ($script:mainForm -ne $null) {
+        $script:mainForm.Dispose()
+        Write-Host "GUI resources released."
+    }
+}
+#endregion Display GUI
+
+Write-Host "Script execution finished."
