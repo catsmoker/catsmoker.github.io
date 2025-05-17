@@ -14,7 +14,7 @@
   .cursor-dot {
     width: 8px;
     height: 8px;
-    background-color: #000000;
+    background-color: #E6E6FA; /* Lavender */
     border-radius: 50%;
     transition: transform 0s linear;
   }
@@ -22,7 +22,7 @@
   .cursor-dot-outline {
     width: 40px;
     height: 40px;
-    background: #00000033;
+    background: #E6E6FA33; /* Transparent lavender */
     border-radius: 50%;
     transition: width 0.3s ease-in-out, height 0.3s ease-in-out, opacity 0.3s ease-in-out, transform 0.3s ease-out;
   }
@@ -31,7 +31,7 @@
     width: 60px;
     height: 60px;
     opacity: 0.6;
-    background: #00000033;
-    border: 2px solid #000000;
+    background: #E6E6FA33; /* Transparent lavender */
+    border: 2px solid #E6E6FA;
   }
 }
