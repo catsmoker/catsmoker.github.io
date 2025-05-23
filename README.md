@@ -35,7 +35,7 @@ My website (`catsmoker.github.io`) is your digital hub for:
     *   **Client Reviews:** Highlighting a track record of over 100 satisfied clients and 400M+ views generated.
 *   🛠️ **Tools & Projects:**
     *   **AI Content Generator:** Create articles powered by the Gemini AI API.
-    *   **Custom Search V2:** An enhanced search interface for the web.
+    *   **Custom Search V2:** An enhanced web search interface. Set it as your default search engine using this URL: https://catsmoker.github.io/web/search.html?q=%s
     *   **CATSMOKER App:** An Android application (App Store & Play Store versions coming soon!).
     *   **cs\_script:** A useful PowerShell script for Windows automation.
     *   **MAXFPS4ALL:** A Magisk module to enhance gaming performance.
