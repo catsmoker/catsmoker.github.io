@@ -1,3 +1,17 @@
+#==================================================================================================
+#
+# WARNING: DO NOT modify this file!
+#
+#==================================================================================================
+<#
+.NOTES
+    Author         : catsmoker
+    Email          : catsmoker.lab@gmail.com
+    Website        : https://catsmoker.github.io
+    GitHub         : https://github.com/catsmoker/cs_script
+    Version        : 1.9
+#>
+
 # Check if the script is running as administrator
 Write-Host "Checking if running as administrator..."
 $adminCheck = [System.Security.Principal.WindowsPrincipal] [System.Security.Principal.WindowsIdentity]::GetCurrent()
@@ -62,147 +76,108 @@ Add-Type -AssemblyName System.Drawing
 
 # Main Form
 $mainForm = New-Object System.Windows.Forms.Form
-$mainForm.Text = "CS Script v1.8 by catsmoker"
-$mainForm.Size = New-Object System.Drawing.Size(800, 650)  # Increased height to fit new button
+$mainForm.Text = "CS Script v1.9 by catsmoker"
+$mainForm.Size = New-Object System.Drawing.Size(900, 600)
 $mainForm.StartPosition = "CenterScreen"
-$mainForm.BackColor = [System.Drawing.Color]::FromArgb(30, 30, 30)
+$mainForm.BackColor = [System.Drawing.Color]::FromArgb(18, 18, 22) # Darker modern background
 $mainForm.ForeColor = [System.Drawing.Color]::White
 $mainForm.FormBorderStyle = 'FixedDialog'
 $mainForm.MaximizeBox = $false
+$mainForm.Font = New-Object System.Drawing.Font("Segoe UI", 10)
 
 # Title Label
 $titleLabel = New-Object System.Windows.Forms.Label
-$titleLabel.Text = "CS Script v1.8"
-$titleLabel.Font = New-Object System.Drawing.Font("Segoe UI", 18, [System.Drawing.FontStyle]::Bold)
-$titleLabel.Size = New-Object System.Drawing.Size(400, 40)
-$titleLabel.Location = New-Object System.Drawing.Point(200, 20)
+$titleLabel.Text = "CS Script v1.9"
+$titleLabel.Font = New-Object System.Drawing.Font("Segoe UI", 20, [System.Drawing.FontStyle]::Bold)
+$titleLabel.Size = New-Object System.Drawing.Size(850, 40)
+$titleLabel.Location = New-Object System.Drawing.Point(25, 20)
 $titleLabel.TextAlign = [System.Windows.Forms.HorizontalAlignment]::Center
+$titleLabel.ForeColor = [System.Drawing.Color]::FromArgb(200, 200, 200)
 $mainForm.Controls.Add($titleLabel)
 
 # Subtitle Label
 $subtitleLabel = New-Object System.Windows.Forms.Label
 $subtitleLabel.Text = "by catsmoker | https://catsmoker.github.io"
-$subtitleLabel.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Italic)
-$subtitleLabel.Size = New-Object System.Drawing.Size(400, 20)
-$subtitleLabel.Location = New-Object System.Drawing.Point(200, 60)
+$subtitleLabel.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Regular)
+$subtitleLabel.Size = New-Object System.Drawing.Size(850, 20)
+$subtitleLabel.Location = New-Object System.Drawing.Point(25, 60)
 $subtitleLabel.TextAlign = [System.Windows.Forms.HorizontalAlignment]::Center
+$subtitleLabel.ForeColor = [System.Drawing.Color]::FromArgb(150, 150, 150)
 $mainForm.Controls.Add($subtitleLabel)
 
-# Menu Buttons
-$buttonClean = New-Object System.Windows.Forms.Button
-$buttonClean.Text = "Clean Windows"
-$buttonClean.Size = New-Object System.Drawing.Size(200, 40)
-$buttonClean.Location = New-Object System.Drawing.Point(50, 120)
-$buttonClean.Font = New-Object System.Drawing.Font("Segoe UI", 12)
-$buttonClean.BackColor = [System.Drawing.Color]::FromArgb(70, 130, 180)
-$buttonClean.ForeColor = [System.Drawing.Color]::White
-$buttonClean.FlatStyle = 'Flat'
-$buttonClean.FlatAppearance.BorderSize = 0
-$buttonClean.Add_Click({ Clean-Windows })
+# Helper function to create styled buttons
+Function Create-Button {
+    param($Text, $X, $Y, $ClickAction, $TooltipText)
+    $button = New-Object System.Windows.Forms.Button
+    $button.Text = $Text
+    $button.Size = New-Object System.Drawing.Size(260, 50)
+    $button.Location = New-Object System.Drawing.Point($X, $Y)
+    $button.Font = New-Object System.Drawing.Font("Segoe UI", 11, [System.Drawing.FontStyle]::Regular)
+    $button.BackColor = [System.Drawing.Color]::FromArgb(40, 40, 50)
+    $button.ForeColor = [System.Drawing.Color]::White
+    $button.FlatStyle = 'Flat'
+    $button.FlatAppearance.BorderSize = 1
+    $button.FlatAppearance.BorderColor = [System.Drawing.Color]::FromArgb(60, 60, 70)
+    $button.FlatAppearance.MouseOverBackColor = [System.Drawing.Color]::FromArgb(60, 60, 80)
+    $button.FlatAppearance.MouseDownBackColor = [System.Drawing.Color]::FromArgb(80, 80, 100)
+    $button.Add_Click($ClickAction)
+    
+    # Add tooltip
+    $tooltip = New-Object System.Windows.Forms.ToolTip
+    $tooltip.SetToolTip($button, $TooltipText)
+    
+    return $button
+}
+
+# Menu Buttons (arranged in a grid)
+$buttonClean = Create-Button -Text "Clean Windows" -X 50 -Y 120 -ClickAction { CleanWindows } -TooltipText "Cleans temporary files, Recycle Bin, and DNS cache."
 $mainForm.Controls.Add($buttonClean)
 
-$buttonFix = New-Object System.Windows.Forms.Button
-$buttonFix.Text = "Scan and Fix Windows"
-$buttonFix.Size = New-Object System.Drawing.Size(200, 40)
-$buttonFix.Location = New-Object System.Drawing.Point(50, 180)
-$buttonFix.Font = New-Object System.Drawing.Font("Segoe UI", 12)
-$buttonFix.BackColor = [System.Drawing.Color]::FromArgb(70, 130, 180)
-$buttonFix.ForeColor = [System.Drawing.Color]::White
-$buttonFix.FlatStyle = 'Flat'
-$buttonFix.FlatAppearance.BorderSize = 0
-$buttonFix.Add_Click({ Fix-Windows })
+$buttonFix = Create-Button -Text "Scan and Fix Windows" -X 330 -Y 120 -ClickAction { FixWindows } -TooltipText "Runs chkdsk, sfc, and DISM to repair Windows."
 $mainForm.Controls.Add($buttonFix)
 
-$buttonApps = New-Object System.Windows.Forms.Button
-$buttonApps.Text = "Apps/upgrades"
-$buttonApps.Size = New-Object System.Drawing.Size(200, 40)
-$buttonApps.Location = New-Object System.Drawing.Point(50, 240)
-$buttonApps.Font = New-Object System.Drawing.Font("Segoe UI", 12)
-$buttonApps.BackColor = [System.Drawing.Color]::FromArgb(70, 130, 180)
-$buttonApps.ForeColor = [System.Drawing.Color]::White
-$buttonApps.FlatStyle = 'Flat'
-$buttonApps.FlatAppearance.BorderSize = 0
-$buttonApps.Add_Click({ Download-Apps })
+$buttonApps = Create-Button -Text "Apps/Upgrades" -X 610 -Y 120 -ClickAction { DownloadApps } -TooltipText "Install or upgrade software using winget."
 $mainForm.Controls.Add($buttonApps)
 
-$buttonActivate = New-Object System.Windows.Forms.Button
-$buttonActivate.Text = "Activate Windows"
-$buttonActivate.Size = New-Object System.Drawing.Size(200, 40)
-$buttonActivate.Location = New-Object System.Drawing.Point(50, 300)
-$buttonActivate.Font = New-Object System.Drawing.Font("Segoe UI", 12)
-$buttonActivate.BackColor = [System.Drawing.Color]::FromArgb(70, 130, 180)
-$buttonActivate.ForeColor = [System.Drawing.Color]::White
-$buttonActivate.FlatStyle = 'Flat'
-$buttonActivate.FlatAppearance.BorderSize = 0
-$buttonActivate.Add_Click({ Activate-Windows })
-$mainForm.Controls.Add($buttonActivate)
+$buttonActivateIDM = Create-Button -Text "Activate IDM" -X 50 -Y 190 -ClickAction { ActivateIDM } -TooltipText "Activates Internet Download Manager."
+$mainForm.Controls.Add($buttonActivateIDM)
 
-$buttonAtlas = New-Object System.Windows.Forms.Button
-$buttonAtlas.Text = "windows-Update"
-$buttonAtlas.Size = New-Object System.Drawing.Size(200, 40)
-$buttonAtlas.Location = New-Object System.Drawing.Point(50, 360)
-$buttonAtlas.Font = New-Object System.Drawing.Font("Segoe UI", 12)
-$buttonAtlas.BackColor = [System.Drawing.Color]::FromArgb(70, 130, 180)
-$buttonAtlas.ForeColor = [System.Drawing.Color]::White
-$buttonAtlas.FlatStyle = 'Flat'
-$buttonAtlas.FlatAppearance.BorderSize = 0
-$buttonAtlas.Add_Click({ windows-ps })
+$buttonActivateWindows = Create-Button -Text "Activate Windows/office" -X 330 -Y 190 -ClickAction { ActivateWindows } -TooltipText "Activates Windows using an external script."
+$mainForm.Controls.Add($buttonActivateWindows)
+
+$buttonAtlas = Create-Button -Text "Windows Update" -X 610 -Y 190 -ClickAction { windowsps } -TooltipText "Installs Windows updates via PSWindowsUpdate."
 $mainForm.Controls.Add($buttonAtlas)
 
-$buttonCTT = New-Object System.Windows.Forms.Button
-$buttonCTT.Text = "CTT Windows Utility"
-$buttonCTT.Size = New-Object System.Drawing.Size(200, 40)
-$buttonCTT.Location = New-Object System.Drawing.Point(50, 420)
-$buttonCTT.Font = New-Object System.Drawing.Font("Segoe UI", 12)
-$buttonCTT.BackColor = [System.Drawing.Color]::FromArgb(70, 130, 180)
-$buttonCTT.ForeColor = [System.Drawing.Color]::White
-$buttonCTT.FlatStyle = 'Flat'
-$buttonCTT.FlatAppearance.BorderSize = 0
-$buttonCTT.Add_Click({ CTT })
+$buttonCTT = Create-Button -Text "CTT Windows Utility" -X 50 -Y 260 -ClickAction { CTT } -TooltipText "Runs Chris Titus Tech's Windows Utility."
 $mainForm.Controls.Add($buttonCTT)
 
-# MRT Scan Button
-$buttonMRT = New-Object System.Windows.Forms.Button
-$buttonMRT.Text = "Virus Scan"
-$buttonMRT.Size = New-Object System.Drawing.Size(200, 40)
-$buttonMRT.Location = New-Object System.Drawing.Point(50, 480)
-$buttonMRT.Font = New-Object System.Drawing.Font("Segoe UI", 12)
-$buttonMRT.BackColor = [System.Drawing.Color]::FromArgb(70, 130, 180)
-$buttonMRT.ForeColor = [System.Drawing.Color]::White
-$buttonMRT.FlatStyle = 'Flat'
-$buttonMRT.FlatAppearance.BorderSize = 0
-$buttonMRT.Add_Click({ Scan-WithMRT })
+$buttonMRT = Create-Button -Text "Virus Scan" -X 330 -Y 260 -ClickAction { ScanWithMRT } -TooltipText "Runs Windows Malicious Software Removal Tool."
 $mainForm.Controls.Add($buttonMRT)
 
-$buttonExit = New-Object System.Windows.Forms.Button
-$buttonExit.Text = "Exit"
-$buttonExit.Size = New-Object System.Drawing.Size(200, 40)
-$buttonExit.Location = New-Object System.Drawing.Point(50, 540)  # Adjusted position
-$buttonExit.Font = New-Object System.Drawing.Font("Segoe UI", 12)
-$buttonExit.BackColor = [System.Drawing.Color]::FromArgb(70, 130, 180)
-$buttonExit.ForeColor = [System.Drawing.Color]::White
-$buttonExit.FlatStyle = 'Flat'
-$buttonExit.FlatAppearance.BorderSize = 0
-$buttonExit.Add_Click({ Exit-Script })
+$buttonExit = Create-Button -Text "Exit" -X 610 -Y 260 -ClickAction { Exit-Script } -TooltipText "Exits the script and opens the developer's website."
 $mainForm.Controls.Add($buttonExit)
 
 # Progress Bar
 $progressBar = New-Object System.Windows.Forms.ProgressBar
-$progressBar.Size = New-Object System.Drawing.Size(500, 20)
-$progressBar.Location = New-Object System.Drawing.Point(50, 590)  # Adjusted position
+$progressBar.Size = New-Object System.Drawing.Size(800, 20)
+$progressBar.Location = New-Object System.Drawing.Point(50, 450)
 $progressBar.Style = 'Continuous'
+$progressBar.ForeColor = [System.Drawing.Color]::FromArgb(100, 200, 100)
+$progressBar.BackColor = [System.Drawing.Color]::FromArgb(30, 30, 40)
 $mainForm.Controls.Add($progressBar)
 
 # Status Label
 $statusLabel = New-Object System.Windows.Forms.Label
 $statusLabel.Text = "Ready"
-$statusLabel.Size = New-Object System.Drawing.Size(500, 20)
-$statusLabel.Location = New-Object System.Drawing.Point(50, 620)  # Adjusted position
+$statusLabel.Size = New-Object System.Drawing.Size(800, 20)
+$statusLabel.Location = New-Object System.Drawing.Point(50, 480)
 $statusLabel.Font = New-Object System.Drawing.Font("Segoe UI", 10)
+$statusLabel.ForeColor = [System.Drawing.Color]::FromArgb(150, 150, 150)
 $mainForm.Controls.Add($statusLabel)
 
-# Functions
-Function Clean-Windows {
+# Functions (unchanged)
+Function CleanWindows {
+    Clear-Host
     $statusLabel.Text = "Cleaning Windows..."
     $progressBar.Value = 0
 
@@ -228,6 +203,11 @@ Function Clean-Windows {
         Remove-Item -Path $file.FullName -Recurse -Force -ErrorAction SilentlyContinue
     }
 
+    # Delete temp files
+    Remove-Item -Path "C:\Windows\Temp\*" -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item -Path "C:\Windows\Prefetch\*" -Recurse -Force -ErrorAction SilentlyContinue
+    Remove-Item -Path "$env:TEMP\*" -Recurse -Force -ErrorAction SilentlyContinue
+
     # Clean Recycle Bin
     Write-Host "Emptying Recycle Bin..."
     $null = (New-Object -ComObject Shell.Application).NameSpace(0xA).Items() | ForEach-Object { $_.InvokeVerb("delete") }
@@ -236,11 +216,18 @@ Function Clean-Windows {
     Write-Host "Flushing DNS Cache..."
     ipconfig /flushdns
 
+    # Clear all event logs
+    Get-WinEvent -ListLog * | ForEach-Object {
+    Write-Output "Clearing $($_.LogName)"
+    wevtutil cl "$($_.LogName)"
+    }
+
     $progressBar.Value = 100
     $statusLabel.Text = "Cleanup completed!"
 }
 
-Function Fix-Windows {
+Function FixWindows {
+    Clear-Host
     $statusLabel.Text = "Scanning and fixing Windows..."
     $progressBar.Value = 0
 
@@ -260,7 +247,8 @@ Function Fix-Windows {
     $statusLabel.Text = "Fix completed!"
 }
 
-Function Download-Apps {
+Function DownloadApps {
+    Clear-Host
     $statusLabel.Text = "Opening Apps/Drivers menu..."
     # Check if winget is installed
     if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
@@ -290,35 +278,32 @@ Function Download-Apps {
         Write-Host "winget is already installed."
     }
 
-    # Load necessary assemblies for GUI
-    Add-Type -AssemblyName System.Windows.Forms
-    Add-Type -AssemblyName System.Drawing
-
-    # Create the main form
+    # Create the main form for apps
     $Form = New-Object System.Windows.Forms.Form
     $Form.Text = "Install Software | cs_script by catsmoker"
-    $Form.Size = New-Object System.Drawing.Size(450, 600)
+    $Form.Size = New-Object System.Drawing.Size(500, 650)
     $Form.StartPosition = "CenterScreen"
-    $Form.BackColor = [System.Drawing.Color]::FromArgb(50, 50, 50)  # Dark background
+    $Form.BackColor = [System.Drawing.Color]::FromArgb(18, 18, 22)
     $Form.FormBorderStyle = 'FixedDialog'
     $Form.MaximizeBox = $false
+    $Form.Font = New-Object System.Drawing.Font("Segoe UI", 10)
 
     # Create a label
     $Label = New-Object System.Windows.Forms.Label
     $Label.Location = New-Object System.Drawing.Size(20, 20)
-    $Label.Size = New-Object System.Drawing.Size(400, 30)
+    $Label.Size = New-Object System.Drawing.Size(460, 30)
     $Label.Text = "Select software to install:"
     $Label.Font = New-Object System.Drawing.Font("Segoe UI", 12, [System.Drawing.FontStyle]::Bold)
-    $Label.ForeColor = [System.Drawing.Color]::White
+    $Label.ForeColor = [System.Drawing.Color]::FromArgb(200, 200, 200)
     $Form.Controls.Add($Label)
 
     # Create a Panel to hold the checkboxes
     $Panel = New-Object System.Windows.Forms.Panel
     $Panel.Location = New-Object System.Drawing.Size(20, 60)
-    $Panel.Size = New-Object System.Drawing.Size(400, 400)  # Adjust height for 15 items with room for scrolling
-    $Panel.AutoScroll = $true  # Enable scrolling
+    $Panel.Size = New-Object System.Drawing.Size(460, 450)
+    $Panel.AutoScroll = $true
     $Panel.BorderStyle = 'FixedSingle'
-    $Panel.BackColor = [System.Drawing.Color]::FromArgb(35, 35, 35)  # Slightly darker panel background
+    $Panel.BackColor = [System.Drawing.Color]::FromArgb(30, 30, 40)
     $Form.Controls.Add($Panel)
 
     # Create a list of software items
@@ -363,31 +348,22 @@ Function Download-Apps {
     }
 
     # Add checkboxes for each software item
-    $y = 0
+    $y = 10
     foreach ($name in $softwareItems.Keys) {
         $checkbox = New-Object System.Windows.Forms.CheckBox
         $checkbox.Location = New-Object System.Drawing.Size(10, $y)
-        $checkbox.Size = New-Object System.Drawing.Size(360, 25)
+        $checkbox.Size = New-Object System.Drawing.Size(440, 25)
         $checkbox.Text = $name
         $checkbox.Name = $softwareItems[$name]
         $checkbox.ForeColor = [System.Drawing.Color]::White
-        $checkbox.BackColor = [System.Drawing.Color]::FromArgb(35, 35, 35)
+        $checkbox.BackColor = [System.Drawing.Color]::FromArgb(30, 30, 40)
         $checkbox.Font = New-Object System.Drawing.Font("Segoe UI", 10)
         $Panel.Controls.Add($checkbox)
         $y += 30
     }
 
     # Create Install button
-    $InstallButton = New-Object System.Windows.Forms.Button
-    $InstallButton.Location = New-Object System.Drawing.Size(185, 480)
-    $InstallButton.Size = New-Object System.Drawing.Size(100, 40)
-    $InstallButton.Text = "Install"
-    $InstallButton.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Bold)
-    $InstallButton.BackColor = [System.Drawing.Color]::FromArgb(70, 130, 180)  # SteelBlue color
-    $InstallButton.ForeColor = [System.Drawing.Color]::White
-    $InstallButton.FlatStyle = 'Flat'
-    $InstallButton.FlatAppearance.BorderSize = 0
-    $InstallButton.Add_Click({
+    $InstallButton = Create-Button -Text "Install" -X 200 -Y 530 -ClickAction {
         $checkedBoxes = $Panel.Controls | Where-Object { $_ -is [System.Windows.Forms.CheckBox] -and $_.Checked }
         if ($checkedBoxes.Count -eq 0) {
             [System.Windows.Forms.MessageBox]::Show("Please select at least one software package to install.", "No package selected", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
@@ -404,7 +380,7 @@ Function Download-Apps {
 
             [System.Windows.Forms.MessageBox]::Show("Installation started. Please wait for the processes to complete.", "Installation Started", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
         }
-    })
+    } -TooltipText "Install selected software packages."
     $Form.Controls.Add($InstallButton)
 
     # Show the form
@@ -412,7 +388,8 @@ Function Download-Apps {
     $statusLabel.Text = "Ready"
 }
 
-Function Activate-Windows {
+Function ActivateWindows {
+    Clear-Host
     $statusLabel.Text = "Activating Windows..."
     $progressBar.Value = 0
     Start-Process "powershell" -ArgumentList "irm https://get.activated.win | iex"
@@ -420,17 +397,28 @@ Function Activate-Windows {
     $statusLabel.Text = "Windows activated!"
 }
 
-Function windows-ps {
-    $statusLabel.Text = "windows-ps..."
+Function ActivateIDM {
+    Clear-Host
+    $statusLabel.Text = "Activating IDM..."
+    $progressBar.Value = 0
+    Start-Process "powershell" -ArgumentList "irm https://coporton.com/ias | iex"
+    $progressBar.Value = 100
+    $statusLabel.Text = "IDM activated!"
+}
+
+Function windowsps {
+    Clear-Host
+    $statusLabel.Text = "Windows Update..."
     $progressBar.Value = 0
     Install-Module PSWindowsUpdate -Force
     Add-WUServiceManager -MicrosoftUpdate
     Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -AutoReboot | Out-File "C:\($env.computername-Get-Date -f yyyy-MM-dd)-MSUpdates.log" -Force
     $progressBar.Value = 100
-    $statusLabel.Text = "windows-ps completed!"
+    $statusLabel.Text = "Windows Update completed!"
 }
 
 Function CTT {
+    Clear-Host
     $statusLabel.Text = "CTT Windows Utility..."
     $progressBar.Value = 0
     Start-Process "powershell" -ArgumentList "iwr -useb https://christitus.com/win | iex"
@@ -438,7 +426,8 @@ Function CTT {
     $statusLabel.Text = "CTT completed!"
 }
 
-Function Scan-WithMRT {
+Function ScanWithMRT {
+    Clear-Host
     $statusLabel.Text = "Scanning with Windows Malicious Software Removal Tool..."
     $progressBar.Value = 0
 
@@ -447,7 +436,6 @@ Function Scan-WithMRT {
     
     if (Test-Path $mrtPath) {
         Write-Host "Starting MRT scan..."
-        # Run MRT in quiet mode with quick scan (/Q for quiet, no UI)
         Start-Process -FilePath $mrtPath -Wait
         $progressBar.Value = 100
         $statusLabel.Text = "MRT scan completed!"
@@ -463,7 +451,6 @@ Function Scan-WithMRT {
 
             # Download MRT
             Write-Host "Downloading MRT from Microsoft..."
-            # Using Invoke-WebRequest to get the direct download link from the confirmation page
             $response = Invoke-WebRequest -Uri $mrtUrl -UseBasicParsing
             $downloadLink = ($response.Links | Where-Object { $_.href -match "mrt.exe" } | Select-Object -First 1).href
             
@@ -475,7 +462,6 @@ Function Scan-WithMRT {
                 Move-Item -Path $tempPath -Destination $mrtPath -Force -ErrorAction SilentlyContinue
                 if (Test-Path $mrtPath) {
                     Write-Host "MRT moved to $mrtPath"
-                    # Run the newly downloaded MRT
                     Start-Process -FilePath $mrtPath -ArgumentList "/Q" -NoNewWindow -Wait
                     $progressBar.Value = 100
                     $statusLabel.Text = "MRT downloaded and scan completed!"
@@ -499,7 +485,8 @@ Function Scan-WithMRT {
 }
 
 Function Exit-Script {
-	start "https://catsmoker.github.io/"
+    Clear-Host
+    Start-Process "https://catsmoker.github.io"
     $mainForm.Close()
 }
 
