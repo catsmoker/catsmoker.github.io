@@ -48,27 +48,39 @@ if ($osVersion.Major -lt 10 -or ($osVersion.Major -eq 10 -and $osVersion.Minor -
 # Define the path to the shortcut and the target PowerShell command
 $shortcutPath = [System.IO.Path]::Combine([System.Environment]::GetFolderPath('Desktop'), 'CS_script.lnk')
 $targetPath = "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
-$arguments = "-NoProfile -ExecutionPolicy Bypass -Command `"powershell.exe -NoProfile -ExecutionPolicy Bypass -Command 'irm https://catsmoker.github.io/w | iex'`""
+$arguments = '-NoProfile -ExecutionPolicy Bypass -Command "irm https://catsmoker.github.io/w | iex"'
 
 # Define the URL for the icon and the path to save it locally
 $iconUrl = "https://catsmoker.github.io/web/assets/ico/favicon.ico"
-$localIconPath = "C:\favicon.ico"
+$localIconPath = "$env:TEMP\favicon.ico"
 
-# Download the icon and save it locally
-Invoke-WebRequest -Uri $iconUrl -OutFile $localIconPath
+# Download the icon
+Invoke-WebRequest -Uri $iconUrl -OutFile $localIconPath -UseBasicParsing
 
-# Create a WScript.Shell COM object to create the shortcut
+# Create the shortcut
 $wshShell = New-Object -ComObject WScript.Shell
 $shortcut = $wshShell.CreateShortcut($shortcutPath)
-
-# Set the properties of the shortcut
 $shortcut.TargetPath = $targetPath
 $shortcut.Arguments = $arguments
 $shortcut.WorkingDirectory = [System.IO.Path]::GetDirectoryName($targetPath)
 $shortcut.IconLocation = $localIconPath
-
-# Save the shortcut
 $shortcut.Save()
+
+# Open the shortcut properties and try to trigger 'Run as administrator'
+$shell = New-Object -ComObject Shell.Application
+$folder = $shell.Namespace([System.IO.Path]::GetDirectoryName($shortcutPath))
+$item = $folder.ParseName([System.IO.Path]::GetFileName($shortcutPath))
+
+# Launch Properties dialog and send keys
+$item.InvokeVerb("Properties")
+Start-Sleep -Milliseconds 1500
+[System.Windows.Forms.SendKeys]::SendWait("%d")         # ALT+D: open Advanced
+Start-Sleep -Milliseconds 500
+[System.Windows.Forms.SendKeys]::SendWait(" ")          # SPACE: check the box
+Start-Sleep -Milliseconds 200
+[System.Windows.Forms.SendKeys]::SendWait("{ENTER}")    # ENTER: close Advanced
+Start-Sleep -Milliseconds 200
+[System.Windows.Forms.SendKeys]::SendWait("{ENTER}")    # ENTER: close Properties
 
 # Load necessary assemblies for UI
 Add-Type -AssemblyName System.Windows.Forms
