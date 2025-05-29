@@ -153,7 +153,7 @@ $statusLabel.Font = New-Object System.Drawing.Font("Segoe UI", 10)
 $statusLabel.ForeColor = [System.Drawing.Color]::FromArgb(150, 150, 150)
 $mainForm.Controls.Add($statusLabel)
 
-# Functions (unchanged)
+# Functions
 Function CleanWindows {
     Clear-Host
     $statusLabel.Text = "Cleaning Windows..."
@@ -205,6 +205,23 @@ Function CleanWindows {
 }
 
 Function AddShortcut {
+$fileName = "CS_script.lnk"
+$desktopPath = [Environment]::GetFolderPath("Desktop")
+$filePath = Join-Path -Path $desktopPath -ChildPath $fileName
+
+if (Test-Path -Path $filePath -PathType Leaf) {
+# Message
+    Add-Type -AssemblyName System.Windows.Forms
+[System.Windows.Forms.MessageBox]::Show(
+    "Shortcut already installed $shortcutPath", 
+    "Installation Complete", 
+    [System.Windows.Forms.MessageBoxButtons]::OK, 
+    [System.Windows.Forms.MessageBoxIcon]::Information
+)
+Write-Host "Shortcut already installed $shortcutPath" -ForegroundColor Green
+
+} else {
+    Write-Host "File not found on desktop."
 # Define the path to the shortcut and the target PowerShell command
 $shortcutPath = [System.IO.Path]::Combine([System.Environment]::GetFolderPath('Desktop'), 'CS_script.lnk')
 $targetPath = "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
@@ -241,6 +258,16 @@ Start-Sleep -Milliseconds 200
 [System.Windows.Forms.SendKeys]::SendWait("{ENTER}")    # ENTER: close Advanced
 Start-Sleep -Milliseconds 200
 [System.Windows.Forms.SendKeys]::SendWait("{ENTER}")    # ENTER: close Properties
+# Message
+Add-Type -AssemblyName System.Windows.Forms
+[System.Windows.Forms.MessageBox]::Show(
+    "Shortcut created successfully $shortcutPath", 
+    "Installation Complete", 
+    [System.Windows.Forms.MessageBoxButtons]::OK, 
+    [System.Windows.Forms.MessageBoxIcon]::Information
+)
+Write-Host "Shortcut created successfully $shortcutPath" -ForegroundColor Green
+}
 }
 
 Function FixWindows {
