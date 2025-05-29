@@ -163,11 +163,16 @@ body {
   display: inline-flex; align-items: center; gap: var(--space-xs);
   transition: transform var(--transition-medium), box-shadow var(--transition-medium), background-color var(--transition-medium);
   will-change: transform;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid var(--card-border); 
 }
 .link i { font-size: clamp(0.85rem, 2vw, 1rem); }
-.link:hover { transform: translateY(-3px) scale(1.03); box-shadow: var(--shadow-lg); opacity: 0.95; }
+.link:hover { 
+  transform: translateY(-3px) scale(1.03); 
+  box-shadow: var(--shadow-lg); 
+  background: rgba(255,255,255,0.2);
+}
 
-/* Removed .primary-actions specific styles as section is removed */
 .social-media-links { margin-top: var(--space-lg); }
 .section-subtitle { font-size: clamp(1rem, 2.5vw, 1.1rem); font-weight: 500; color: var(--text-lighter); margin-bottom: var(--space-md); text-align: center; }
 
@@ -240,22 +245,21 @@ body {
 .rating-container {
   width: 100%;
   display: flex;
-  justify-content: center; /* Center the rating div */
-  margin-bottom: var(--space-md); /* Add some space below */
+  justify-content: center;
+  margin-bottom: var(--space-md);
 }
 .rating { 
-    display: inline-flex; /* Use inline-flex to allow centering */
-    flex-direction: row-reverse; /* Keep stars right-to-left for CSS trick */
+    display: inline-flex;
+    flex-direction: row-reverse;
     align-items: center;
     justify-content: center;
 }
 .rating:not(:checked) > input { position: absolute; appearance: none; }
 .rating:not(:checked) > label { 
-    /* float: right; /* REMOVE FLOAT */
     cursor: pointer; 
     font-size: clamp(1.4rem, 3vw, 1.8rem); 
     color: #666; 
-    padding: 0 0.1em; /* Add slight padding between stars */
+    padding: 0 0.1em;
 }
 .rating:not(:checked) > label:before { content: '★'; }
 .rating > input:checked + label:hover, 
@@ -323,13 +327,11 @@ body {
 .logos-slide img { 
     height: 35px; 
     margin: 0 var(--space-md); 
-    /* filter: grayscale(30%) opacity(0.8); /* REMOVED filter */
-    opacity: 1; /* Ensure full opacity */
-    transition: transform 0.3s ease; /* Keep hover effect */
+    opacity: 1;
+    transition: transform 0.3s ease;
 }
 .logos-slide img:hover { 
-    /* filter: grayscale(0%) opacity(1); /* REMOVED filter */
-    transform: scale(1.1); /* Add slight scale on hover instead */
+    transform: scale(1.1);
 }
 @keyframes slide { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
 
@@ -439,7 +441,7 @@ body {
     .video-grid { grid-template-columns: 1fr; }
     .short-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 100px)); }
     .thumbnails-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 160px)); }
-    .reviews-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 200px)); } /* Adjust reviews grid for mobile too */
+    .reviews-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 200px)); }
 
 
     .app-section { padding: var(--space-md); }
@@ -472,7 +474,6 @@ body {
     
     .short-grid { grid-template-columns: repeat(auto-fill, minmax(80px, 90px)); }
     .thumbnails-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 140px)); }
-    .reviews-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 180px)); } /* Further adjust reviews grid */
-    .phone-mockup { width: 130px; height: 260px; } 
-
+    .reviews-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 180px)); }
+    .phone-mockup { width: 130px; height: 260px; }
 }

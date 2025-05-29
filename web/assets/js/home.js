@@ -170,75 +170,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // --- Smooth Anchor Link Scroll ---
     document.querySelectorAll('.top-navigation a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
-                const navbarHeight = document.querySelector('.top-navigation')?.offsetHeight || 60;
-                const offset = targetElement.getBoundingClientRect().top + window.pageYOffset - navbarHeight - 20;
-                smoothScroll(offset, 1500); // Slower anchor scroll
-                if (navLinksContainer?.classList.contains('active')) {
-                    navLinksContainer.classList.remove('active');
-                }
+            if (navLinksContainer?.classList.contains('active')) {
+                navLinksContainer.classList.remove('active');
             }
         });
     });
-
-    // --- Smooth Manual Mouse Wheel Scroll ---
-    (function enableSmoothMouseScroll() {
-        let isScrolling = false;
-        let targetScroll = window.scrollY;
-        let currentScroll = window.scrollY;
-
-        function easeOutQuart(t) {
-            return 1 - Math.pow(1 - t, 4);
-        }
-
-        function animateScroll() {
-            if (!isScrolling) return;
-            currentScroll += (targetScroll - currentScroll) * 0.1;
-            if (Math.abs(targetScroll - currentScroll) < 0.5) {
-                currentScroll = targetScroll;
-                isScrolling = false;
-            }
-            window.scrollTo(0, currentScroll);
-            if (isScrolling) requestAnimationFrame(animateScroll);
-        }
-
-        window.addEventListener('wheel', function (e) {
-            e.preventDefault();
-            const delta = e.deltaY;
-            targetScroll += delta;
-            targetScroll = Math.max(0, Math.min(targetScroll, document.body.scrollHeight - window.innerHeight));
-            if (!isScrolling) {
-                isScrolling = true;
-                animateScroll();
-            }
-        }, { passive: false });
-    })();
-
-    // --- Shared Smooth Scroll Function ---
-    function smoothScroll(targetY, duration) {
-        const startY = window.pageYOffset;
-        const diffY = targetY - startY;
-        const startTime = performance.now();
-
-        function easeOutQuart(t) {
-            return 1 - Math.pow(1 - t, 4);
-        }
-
-        function scroll(currentTime) {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const eased = easeOutQuart(progress);
-            window.scrollTo(0, startY + diffY * eased);
-            if (progress < 1) requestAnimationFrame(scroll);
-        }
-
-        requestAnimationFrame(scroll);
-    }
 
 }); // End DOMContentLoaded
