@@ -25,6 +25,7 @@
 <body>
     <!-- Video Background -->
     <video id="bg-video" class="video-background" loop muted playsinline disablePictureInPicture preload="none" poster="assets/imgs/poster.jpg">
+	<source data-src="https://videos.pexels.com/video-files/18458403/18458403-hd_1920_1080_24fps.mp4" type="video/mp4">
     Your browser does not support the video tag.
 </video>
 
@@ -308,22 +309,5 @@
     </footer>
 	
     <script src="assets/js/home.js" defer></script>
-	
-	<script>
-    window.addEventListener("load", function() {
-    const video = document.getElementById("bg-video");
-    const source = document.createElement("source");
-    source.src = "https://videos.pexels.com/video-files/18458403/18458403-hd_1920_1080_24fps.mp4";
-    source.type = "video/mp4";
-    video.appendChild(source);
-
-    // Load and then autoplay
-    video.load();
-    video.play().catch(e => {
-        // Optional: handle autoplay restrictions
-        console.warn("Autoplay blocked", e);
-        });
-    });
-    </script>
 </body>
 </html>
