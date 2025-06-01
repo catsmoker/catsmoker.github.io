@@ -1,4 +1,4 @@
-// home.js
+// assets/js/home.js
 
 document.addEventListener('DOMContentLoaded', function () {
     // --- Mobile Navigation Toggle ---
@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', function () {
         mobileNavToggle.addEventListener('click', () => {
             navLinksContainer.classList.toggle('active');
         });
+        // Close mobile nav if clicking outside of it
         document.addEventListener('click', function (event) {
             const isClickInsideNav = navLinksContainer.contains(event.target);
             const isClickOnToggler = mobileNavToggle.contains(event.target);
@@ -54,6 +55,53 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
         if (words.length > 0) typeAnimation();
+    }
+
+    // --- BACKGROUND VIDEO LOGIC ---
+    const videoElement = document.getElementById('bg-video');
+
+    if (videoElement) {
+        const videoSources = videoElement.querySelectorAll('source');
+        const mobileBreakpoint = 768;
+
+        function setupVideoBackground() {
+            if (window.innerWidth >= mobileBreakpoint) {
+                // --- DESKTOP ---
+                videoSources.forEach(source => {
+                    if (source.dataset.src) {
+                        if (source.getAttribute('src') !== source.dataset.src) {
+                            source.setAttribute('src', source.dataset.src);
+                        }
+                    }
+                });
+
+                if (Array.from(videoSources).some(s => s.hasAttribute('src') && s.dataset.src)) {
+                    videoElement.load();
+                    videoElement.setAttribute('autoplay', '');
+                    videoElement.play().catch(error => {
+                        console.warn("Background video autoplay prevented:", error);
+                    });
+                }
+                videoElement.style.display = 'block';
+            } else {
+                // --- MOBILE ---
+                videoElement.removeAttribute('autoplay');
+                videoElement.pause();
+                videoSources.forEach(source => {
+                    if (source.getAttribute('src')) {
+                        source.removeAttribute('src');
+                    }
+                });
+                videoElement.load();
+                videoElement.style.display = 'block';
+            }
+        }
+        setupVideoBackground();
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(setupVideoBackground, 250);
+        });
     }
 
     // --- Show More/Less Videos ---
@@ -145,33 +193,54 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
     if (addressSelect_Crypto) {
-        addressSelect_Crypto.addEventListener('change', updateDynamicAddress);
-        updateDynamicAddress();
+        window.updateDynamicAddress();
     }
 
     window.copyToClipboard = function (text, messageId) {
-        navigator.clipboard.writeText(text).then(() => {
-            document.querySelectorAll('.copied-message-small').forEach(msg => {
-                msg.style.opacity = '0';
-            });
-            const copiedMessageEl = document.getElementById(messageId);
-            if (copiedMessageEl) {
-                copiedMessageEl.style.opacity = '1';
-                setTimeout(() => {
-                    copiedMessageEl.style.opacity = '0';
-                }, 2000);
+        if (!navigator.clipboard) {
+            console.warn('Clipboard API not available. Consider a fallback.');
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showCopiedMessage(messageId);
+            } catch (err) {
+                console.error('Fallback copy failed: ', err);
             }
+            document.body.removeChild(textArea);
+            return;
+        }
+        navigator.clipboard.writeText(text).then(() => {
+            showCopiedMessage(messageId);
         }).catch(err => console.error('Copy failed: ', err));
+    }
+
+    function showCopiedMessage(messageId) {
+        document.querySelectorAll('.copied-message-small').forEach(msg => {
+            msg.style.opacity = '0';
+        });
+        const copiedMessageEl = document.getElementById(messageId);
+        if (copiedMessageEl) {
+            copiedMessageEl.style.opacity = '1';
+            setTimeout(() => {
+                copiedMessageEl.style.opacity = '0';
+            }, 2000);
+        }
     }
 
     window.copyDynamicAddress = function () {
         if (dynamicAddressDisplay_Crypto) {
-            copyToClipboard(dynamicAddressDisplay_Crypto.innerText, 'copiedMsgCryptoAddress');
+            window.copyToClipboard(dynamicAddressDisplay_Crypto.innerText, 'copiedMsgCryptoAddress');
         }
     }
 
-    document.querySelectorAll('.top-navigation a[href^="#"]').forEach(anchor => {
+    document.querySelectorAll('.top-navigation .nav-links a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
+
             if (navLinksContainer?.classList.contains('active')) {
                 navLinksContainer.classList.remove('active');
             }
