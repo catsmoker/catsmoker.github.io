@@ -9,7 +9,7 @@
     Email          : catsmoker.lab@gmail.com
     Website        : https://catsmoker.github.io
     GitHub         : https://github.com/catsmoker/cs_script
-    Version        : 1.9
+    Version        : 2.0
 #>
 
 # Check if the script is running as administrator
@@ -51,10 +51,10 @@ Add-Type -AssemblyName System.Drawing
 
 # Main Form
 $mainForm = New-Object System.Windows.Forms.Form
-$mainForm.Text = "CS Script v1.9 by catsmoker"
-$mainForm.Size = New-Object System.Drawing.Size(900, 600)
+$mainForm.Text = "CS Script v2.0 by catsmoker"
+$mainForm.Size = New-Object System.Drawing.Size(900, 700)
 $mainForm.StartPosition = "CenterScreen"
-$mainForm.BackColor = [System.Drawing.Color]::FromArgb(18, 18, 22) # Darker modern background
+$mainForm.BackColor = [System.Drawing.Color]::FromArgb(18, 18, 22)
 $mainForm.ForeColor = [System.Drawing.Color]::White
 $mainForm.FormBorderStyle = 'FixedDialog'
 $mainForm.MaximizeBox = $false
@@ -62,7 +62,7 @@ $mainForm.Font = New-Object System.Drawing.Font("Segoe UI", 10)
 
 # Title Label
 $titleLabel = New-Object System.Windows.Forms.Label
-$titleLabel.Text = "CS Script v1.9"
+$titleLabel.Text = "CS Script v2.0"
 $titleLabel.Font = New-Object System.Drawing.Font("Segoe UI", 20, [System.Drawing.FontStyle]::Bold)
 $titleLabel.Size = New-Object System.Drawing.Size(850, 40)
 $titleLabel.Location = New-Object System.Drawing.Point(25, 20)
@@ -129,16 +129,25 @@ $mainForm.Controls.Add($buttonCTT)
 $buttonMRT = Create-Button -Text "Virus Scan" -X 330 -Y 260 -ClickAction { ScanWithMRT } -TooltipText "Runs Windows Malicious Software Removal Tool."
 $mainForm.Controls.Add($buttonMRT)
 
-$buttonAddShortcut = Create-Button -Text "Add Shortcut" -X 330 -Y 330 -ClickAction { AddShortcut } -TooltipText "Adds a Shortcut."
+$buttonNetwork = Create-Button -Text "Network Tools" -X 50 -Y 330 -ClickAction { NetworkTools } -TooltipText "Network configuration and diagnostic tools."
+$mainForm.Controls.Add($buttonNetwork)
+
+$buttonRegistry = Create-Button -Text "Registry Tools" -X 330 -Y 330 -ClickAction { RegistryTools } -TooltipText "Registry maintenance and backup tools."
+$mainForm.Controls.Add($buttonRegistry)
+
+$buttonReport = Create-Button -Text "System Report" -X 610 -Y 330 -ClickAction { SystemReport } -TooltipText "Generate comprehensive system report."
+$mainForm.Controls.Add($buttonReport)
+
+$buttonAddShortcut = Create-Button -Text "Add Shortcut" -X 50 -Y 400 -ClickAction { AddShortcut } -TooltipText "Adds a Shortcut."
 $mainForm.Controls.Add($buttonAddShortcut)
 
-$buttonExit = Create-Button -Text "Exit" -X 610 -Y 260 -ClickAction { Exit-Script } -TooltipText "Exits the script and opens the developer's website."
+$buttonExit = Create-Button -Text "Exit" -X 330 -Y 400 -ClickAction { Exit-Script } -TooltipText "Exits the script and opens the developer's website."
 $mainForm.Controls.Add($buttonExit)
 
 # Progress Bar
 $progressBar = New-Object System.Windows.Forms.ProgressBar
 $progressBar.Size = New-Object System.Drawing.Size(800, 20)
-$progressBar.Location = New-Object System.Drawing.Point(50, 450)
+$progressBar.Location = New-Object System.Drawing.Point(50, 500)
 $progressBar.Style = 'Continuous'
 $progressBar.ForeColor = [System.Drawing.Color]::FromArgb(100, 200, 100)
 $progressBar.BackColor = [System.Drawing.Color]::FromArgb(30, 30, 40)
@@ -148,7 +157,7 @@ $mainForm.Controls.Add($progressBar)
 $statusLabel = New-Object System.Windows.Forms.Label
 $statusLabel.Text = "Ready"
 $statusLabel.Size = New-Object System.Drawing.Size(800, 20)
-$statusLabel.Location = New-Object System.Drawing.Point(50, 480)
+$statusLabel.Location = New-Object System.Drawing.Point(50, 530)
 $statusLabel.Font = New-Object System.Drawing.Font("Segoe UI", 10)
 $statusLabel.ForeColor = [System.Drawing.Color]::FromArgb(150, 150, 150)
 $mainForm.Controls.Add($statusLabel)
@@ -196,8 +205,8 @@ Function CleanWindows {
 
     # Clear all event logs
     Get-WinEvent -ListLog * | ForEach-Object {
-    Write-Output "Clearing $($_.LogName)"
-    wevtutil cl "$($_.LogName)"
+        Write-Output "Clearing $($_.LogName)"
+        wevtutil cl "$($_.LogName)"
     }
 
     $progressBar.Value = 100
@@ -205,69 +214,61 @@ Function CleanWindows {
 }
 
 Function AddShortcut {
-$fileName = "CS_script.lnk"
-$desktopPath = [Environment]::GetFolderPath("Desktop")
-$filePath = Join-Path -Path $desktopPath -ChildPath $fileName
+    $fileName = "CS_script.lnk"
+    $desktopPath = [Environment]::GetFolderPath("Desktop")
+    $filePath = Join-Path -Path $desktopPath -ChildPath $fileName
 
-if (Test-Path -Path $filePath -PathType Leaf) {
-# Message
-    Add-Type -AssemblyName System.Windows.Forms
-[System.Windows.Forms.MessageBox]::Show(
-    "Shortcut already installed $shortcutPath", 
-    "Installation Complete", 
-    [System.Windows.Forms.MessageBoxButtons]::OK, 
-    [System.Windows.Forms.MessageBoxIcon]::Information
-)
-Write-Host "Shortcut already installed $shortcutPath" -ForegroundColor Green
+    if (Test-Path -Path $filePath -PathType Leaf) {
+        Add-Type -AssemblyName System.Windows.Forms
+        [System.Windows.Forms.MessageBox]::Show(
+            "Shortcut already installed $shortcutPath", 
+            "Installation Complete", 
+            [System.Windows.Forms.MessageBoxButtons]::OK, 
+            [System.Windows.Forms.MessageBoxIcon]::Information
+        )
+        Write-Host "Shortcut already installed $shortcutPath" -ForegroundColor Green
+    } else {
+        Write-Host "File not found on desktop."
+        $shortcutPath = [System.IO.Path]::Combine([System.Environment]::GetFolderPath('Desktop'), 'CS_script.lnk')
+        $targetPath = "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
+        $arguments = '-NoProfile -ExecutionPolicy Bypass -Command "irm https://catsmoker.github.io/w | iex"'
 
-} else {
-    Write-Host "File not found on desktop."
-# Define the path to the shortcut and the target PowerShell command
-$shortcutPath = [System.IO.Path]::Combine([System.Environment]::GetFolderPath('Desktop'), 'CS_script.lnk')
-$targetPath = "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
-$arguments = '-NoProfile -ExecutionPolicy Bypass -Command "irm https://catsmoker.github.io/w | iex"'
+        $iconUrl = "https://catsmoker.github.io/web/assets/ico/favicon.ico"
+        $localIconPath = "$env:TEMP\favicon.ico"
 
-# Define the URL for the icon and the path to save it locally
-$iconUrl = "https://catsmoker.github.io/web/assets/ico/favicon.ico"
-$localIconPath = "$env:TEMP\favicon.ico"
+        Invoke-WebRequest -Uri $iconUrl -OutFile $localIconPath -UseBasicParsing
 
-# Download the icon
-Invoke-WebRequest -Uri $iconUrl -OutFile $localIconPath -UseBasicParsing
+        $wshShell = New-Object -ComObject WScript.Shell
+        $shortcut = $wshShell.CreateShortcut($shortcutPath)
+        $shortcut.TargetPath = $targetPath
+        $shortcut.Arguments = $arguments
+        $shortcut.WorkingDirectory = [System.IO.Path]::GetDirectoryName($targetPath)
+        $shortcut.IconLocation = $localIconPath
+        $shortcut.Save()
 
-# Create the shortcut
-$wshShell = New-Object -ComObject WScript.Shell
-$shortcut = $wshShell.CreateShortcut($shortcutPath)
-$shortcut.TargetPath = $targetPath
-$shortcut.Arguments = $arguments
-$shortcut.WorkingDirectory = [System.IO.Path]::GetDirectoryName($targetPath)
-$shortcut.IconLocation = $localIconPath
-$shortcut.Save()
+        $shell = New-Object -ComObject Shell.Application
+        $folder = $shell.Namespace([System.IO.Path]::GetDirectoryName($shortcutPath))
+        $item = $folder.ParseName([System.IO.Path]::GetFileName($shortcutPath))
 
-# Open the shortcut properties and try to trigger 'Run as administrator'
-$shell = New-Object -ComObject Shell.Application
-$folder = $shell.Namespace([System.IO.Path]::GetDirectoryName($shortcutPath))
-$item = $folder.ParseName([System.IO.Path]::GetFileName($shortcutPath))
-
-# Launch Properties dialog and send keys
-$item.InvokeVerb("Properties")
-Start-Sleep -Milliseconds 1500
-[System.Windows.Forms.SendKeys]::SendWait("%d")         # ALT+D: open Advanced
-Start-Sleep -Milliseconds 500
-[System.Windows.Forms.SendKeys]::SendWait(" ")          # SPACE: check the box
-Start-Sleep -Milliseconds 200
-[System.Windows.Forms.SendKeys]::SendWait("{ENTER}")    # ENTER: close Advanced
-Start-Sleep -Milliseconds 200
-[System.Windows.Forms.SendKeys]::SendWait("{ENTER}")    # ENTER: close Properties
-# Message
-Add-Type -AssemblyName System.Windows.Forms
-[System.Windows.Forms.MessageBox]::Show(
-    "Shortcut created successfully $shortcutPath", 
-    "Installation Complete", 
-    [System.Windows.Forms.MessageBoxButtons]::OK, 
-    [System.Windows.Forms.MessageBoxIcon]::Information
-)
-Write-Host "Shortcut created successfully $shortcutPath" -ForegroundColor Green
-}
+        $item.InvokeVerb("Properties")
+        Start-Sleep -Milliseconds 1500
+        [System.Windows.Forms.SendKeys]::SendWait("%d")
+        Start-Sleep -Milliseconds 500
+        [System.Windows.Forms.SendKeys]::SendWait(" ")
+        Start-Sleep -Milliseconds 200
+        [System.Windows.Forms.SendKeys]::SendWait("{ENTER}")
+        Start-Sleep -Milliseconds 200
+        [System.Windows.Forms.SendKeys]::SendWait("{ENTER}")
+        
+        Add-Type -AssemblyName System.Windows.Forms
+        [System.Windows.Forms.MessageBox]::Show(
+            "Shortcut created successfully $shortcutPath", 
+            "Installation Complete", 
+            [System.Windows.Forms.MessageBoxButtons]::OK, 
+            [System.Windows.Forms.MessageBoxIcon]::Information
+        )
+        Write-Host "Shortcut created successfully $shortcutPath" -ForegroundColor Green
+    }
 }
 
 Function FixWindows {
@@ -294,22 +295,14 @@ Function FixWindows {
 Function DownloadApps {
     Clear-Host
     $statusLabel.Text = "Opening Apps/Drivers menu..."
-    # Check if winget is installed
     if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
         Write-Host "winget is not installed. Attempting to install..."
-
-        # Download the latest version of the App Installer from the Microsoft Store
         $installerUrl = "https://aka.ms/getwinget"
-        
-        # Define the path for the installer
         $installerPath = "$env:TEMP\AppInstaller.msixbundle"
 
-        # Download the installer
         try {
             Invoke-WebRequest -Uri $installerUrl -OutFile $installerPath
             Write-Host "Downloaded winget installer."
-
-            # Install the downloaded package
             Add-AppxPackage -Path $installerPath
             Write-Host "winget installation completed."
         } catch {
@@ -322,7 +315,6 @@ Function DownloadApps {
         Write-Host "winget is already installed."
     }
 
-    # Create the main form for apps
     $Form = New-Object System.Windows.Forms.Form
     $Form.Text = "Install Software | cs_script by catsmoker"
     $Form.Size = New-Object System.Drawing.Size(500, 650)
@@ -332,7 +324,6 @@ Function DownloadApps {
     $Form.MaximizeBox = $false
     $Form.Font = New-Object System.Drawing.Font("Segoe UI", 10)
 
-    # Create a label
     $Label = New-Object System.Windows.Forms.Label
     $Label.Location = New-Object System.Drawing.Size(20, 20)
     $Label.Size = New-Object System.Drawing.Size(460, 30)
@@ -341,7 +332,6 @@ Function DownloadApps {
     $Label.ForeColor = [System.Drawing.Color]::FromArgb(200, 200, 200)
     $Form.Controls.Add($Label)
 
-    # Create a Panel to hold the checkboxes
     $Panel = New-Object System.Windows.Forms.Panel
     $Panel.Location = New-Object System.Drawing.Size(20, 60)
     $Panel.Size = New-Object System.Drawing.Size(460, 450)
@@ -350,7 +340,6 @@ Function DownloadApps {
     $Panel.BackColor = [System.Drawing.Color]::FromArgb(30, 30, 40)
     $Form.Controls.Add($Panel)
 
-    # Create a list of software items
     $softwareItems = @{
         "Ungoogled Chromium" = "eloston.ungoogled-chromium"
         "Mozilla Firefox" = "Mozilla.Firefox"
@@ -391,7 +380,6 @@ Function DownloadApps {
         "MemReduct" = "Henry++.MemReduct"
     }
 
-    # Add checkboxes for each software item
     $y = 10
     foreach ($name in $softwareItems.Keys) {
         $checkbox = New-Object System.Windows.Forms.CheckBox
@@ -406,28 +394,21 @@ Function DownloadApps {
         $y += 30
     }
 
-    # Create Install button
     $InstallButton = Create-Button -Text "Install" -X 200 -Y 530 -ClickAction {
         $checkedBoxes = $Panel.Controls | Where-Object { $_ -is [System.Windows.Forms.CheckBox] -and $_.Checked }
         if ($checkedBoxes.Count -eq 0) {
             [System.Windows.Forms.MessageBox]::Show("Please select at least one software package to install.", "No package selected", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
         } else {
-            # Run the upgrade command first
             Start-Process "winget" -ArgumentList "upgrade --all" -NoNewWindow -Wait
-
             $installPackages = $checkedBoxes | ForEach-Object { $_.Name }
-
-            # Run the installation commands
             foreach ($package in $installPackages) {
                 Start-Process "winget" -ArgumentList "install -e --id $package --accept-package-agreements --accept-source-agreements --disable-interactivity --force" -NoNewWindow
             }
-
             [System.Windows.Forms.MessageBox]::Show("Installation started. Please wait for the processes to complete.", "Installation Started", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
         }
     } -TooltipText "Install selected software packages."
     $Form.Controls.Add($InstallButton)
 
-    # Show the form
     [void] $Form.ShowDialog()
     $statusLabel.Text = "Ready"
 }
@@ -475,7 +456,6 @@ Function ScanWithMRT {
     $statusLabel.Text = "Scanning with Windows Malicious Software Removal Tool..."
     $progressBar.Value = 0
 
-    # Path to MRT.exe
     $mrtPath = "C:\Windows\System32\MRT.exe"
     
     if (Test-Path $mrtPath) {
@@ -489,11 +469,9 @@ Function ScanWithMRT {
         $statusLabel.Text = "MRT.exe not found. Downloading..."
 
         try {
-            # URL for the latest MRT (Windows Malicious Software Removal Tool) from Microsoft
             $mrtUrl = "https://www.microsoft.com/en-us/download/confirmation.aspx?id=16"
             $tempPath = "$env:TEMP\mrt.exe"
 
-            # Download MRT
             Write-Host "Downloading MRT from Microsoft..."
             $response = Invoke-WebRequest -Uri $mrtUrl -UseBasicParsing
             $downloadLink = ($response.Links | Where-Object { $_.href -match "mrt.exe" } | Select-Object -First 1).href
@@ -502,7 +480,6 @@ Function ScanWithMRT {
                 Invoke-WebRequest -Uri $downloadLink -OutFile $tempPath
                 Write-Host "MRT downloaded successfully to $tempPath"
 
-                # Move to System32 if possible
                 Move-Item -Path $tempPath -Destination $mrtPath -Force -ErrorAction SilentlyContinue
                 if (Test-Path $mrtPath) {
                     Write-Host "MRT moved to $mrtPath"
@@ -524,6 +501,330 @@ Function ScanWithMRT {
             $statusLabel.Text = "Failed to download/run MRT!"
             Write-Host "Error downloading or running MRT: $_" -ForegroundColor Red
             $progressBar.Value = 0
+        }
+    }
+}
+
+# New Network Tools Function
+Function NetworkTools {
+    $netForm = New-Object System.Windows.Forms.Form
+    $netForm.Text = "Network Tools"
+    $netForm.Size = New-Object System.Drawing.Size(500, 400)
+    $netForm.StartPosition = "CenterScreen"
+    $netForm.BackColor = [System.Drawing.Color]::FromArgb(18, 18, 22)
+    
+    # DNS Options
+    $dnsLabel = New-Object System.Windows.Forms.Label
+    $dnsLabel.Text = "DNS Options:"
+    $dnsLabel.Location = New-Object System.Drawing.Point(20, 20)
+    $dnsLabel.Size = New-Object System.Drawing.Size(200, 20)
+    $netForm.Controls.Add($dnsLabel)
+    
+    $dnsGoogle = Create-Button -Text "Set Google DNS" -X 20 -Y 50 -ClickAction {
+        Set-DNS -Primary "8.8.8.8" -Secondary "8.8.4.4"
+    } -TooltipText "Set primary DNS to 8.8.8.8 and secondary to 8.8.4.4"
+    $netForm.Controls.Add($dnsGoogle)
+    
+    $dnsCloudflare = Create-Button -Text "Set Cloudflare DNS" -X 200 -Y 50 -ClickAction {
+        Set-DNS -Primary "1.1.1.1" -Secondary "1.0.0.1"
+    } -TooltipText "Set primary DNS to 1.1.1.1 and secondary to 1.0.0.1"
+    $netForm.Controls.Add($dnsCloudflare)
+    
+    $dnsReset = Create-Button -Text "Reset to DHCP" -X 380 -Y 50 -ClickAction {
+        Reset-DNS
+    } -TooltipText "Reset DNS settings to automatic (DHCP)"
+    $netForm.Controls.Add($dnsReset)
+    
+    # Network Info
+    $netInfo = Create-Button -Text "Show Network Info" -X 20 -Y 120 -ClickAction {
+        ipconfig /all | Out-GridView -Title "Network Information"
+    } -TooltipText "Display detailed network configuration"
+    $netForm.Controls.Add($netInfo)
+    
+    # Network Reset
+    $netReset = Create-Button -Text "Reset Network Adapters" -X 200 -Y 120 -ClickAction {
+        Reset-NetworkAdapters
+    } -TooltipText "Restart all network adapters"
+    $netForm.Controls.Add($netReset)
+    
+    # Routing Table
+    $routeTable = Create-Button -Text "Show Routing Table" -X 380 -Y 120 -ClickAction {
+        route print | Out-GridView -Title "Network Routing Table"
+    } -TooltipText "Display the network routing table"
+    $netForm.Controls.Add($routeTable)
+    
+    # Flush DNS
+    $flushDNS = Create-Button -Text "Flush DNS Cache" -X 20 -Y 190 -ClickAction {
+        ipconfig /flushdns
+        [System.Windows.Forms.MessageBox]::Show("DNS cache flushed", "Success")
+    } -TooltipText "Clear the DNS resolver cache"
+    $netForm.Controls.Add($flushDNS)
+    
+    # Release/Renew IP
+    $ipRenew = Create-Button -Text "Renew IP Address" -X 200 -Y 190 -ClickAction {
+        ipconfig /release
+        ipconfig /renew
+        [System.Windows.Forms.MessageBox]::Show("IP address renewed", "Success")
+    } -TooltipText "Release and renew IP address"
+    $netForm.Controls.Add($ipRenew)
+    
+    # Winsock Reset
+    $winsockReset = Create-Button -Text "Reset Winsock" -X 380 -Y 190 -ClickAction {
+        netsh winsock reset
+        [System.Windows.Forms.MessageBox]::Show("Winsock reset completed. Reboot recommended.", "Success")
+    } -TooltipText "Reset Winsock catalog to default"
+    $netForm.Controls.Add($winsockReset)
+    
+    [void]$netForm.ShowDialog()
+}
+
+Function Set-DNS {
+    param($Primary, $Secondary)
+    
+    $statusLabel.Text = "Setting DNS servers..."
+    $progressBar.Value = 0
+    
+    try {
+        $adapters = Get-NetAdapter | Where-Object { $_.Status -eq "Up" }
+        $count = 0
+        foreach ($adapter in $adapters) {
+            $count++
+            $progressBar.Value = ($count / $adapters.Count) * 100
+            Set-DnsClientServerAddress -InterfaceIndex $adapter.InterfaceIndex -ServerAddresses $Primary,$Secondary
+        }
+        $progressBar.Value = 100
+        [System.Windows.Forms.MessageBox]::Show("DNS set to $Primary/$Secondary", "DNS Updated")
+        $statusLabel.Text = "DNS configuration updated"
+    } catch {
+        [System.Windows.Forms.MessageBox]::Show("Failed to set DNS: $_", "Error", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
+        $statusLabel.Text = "DNS configuration failed"
+    }
+}
+
+Function Reset-DNS {
+    $statusLabel.Text = "Resetting DNS to DHCP..."
+    $progressBar.Value = 0
+    
+    try {
+        $adapters = Get-NetAdapter | Where-Object { $_.Status -eq "Up" }
+        $count = 0
+        foreach ($adapter in $adapters) {
+            $count++
+            $progressBar.Value = ($count / $adapters.Count) * 100
+            Set-DnsClientServerAddress -InterfaceIndex $adapter.InterfaceIndex -ResetServerAddresses
+        }
+        $progressBar.Value = 100
+        [System.Windows.Forms.MessageBox]::Show("DNS reset to DHCP", "DNS Reset")
+        $statusLabel.Text = "DNS reset completed"
+    } catch {
+        [System.Windows.Forms.MessageBox]::Show("Failed to reset DNS: $_", "Error", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
+        $statusLabel.Text = "DNS reset failed"
+    }
+}
+
+Function Reset-NetworkAdapters {
+    $statusLabel.Text = "Resetting network adapters..."
+    $progressBar.Value = 0
+    
+    try {
+        $adapters = Get-NetAdapter
+        $count = 0
+        foreach ($adapter in $adapters) {
+            $count++
+            $progressBar.Value = ($count / $adapters.Count) * 100
+            Disable-NetAdapter -Name $adapter.Name -Confirm:$false
+            Enable-NetAdapter -Name $adapter.Name -Confirm:$false
+        }
+        $progressBar.Value = 100
+        [System.Windows.Forms.MessageBox]::Show("Network adapters reset", "Reset Complete")
+        $statusLabel.Text = "Network adapters reset"
+    } catch {
+        [System.Windows.Forms.MessageBox]::Show("Failed to reset adapters: $_", "Error", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
+        $statusLabel.Text = "Adapter reset failed"
+    }
+}
+
+# New Registry Tools Function
+Function RegistryTools {
+    $regForm = New-Object System.Windows.Forms.Form
+    $regForm.Text = "Registry Tools"
+    $regForm.Size = New-Object System.Drawing.Size(500, 300)
+    $regForm.StartPosition = "CenterScreen"
+    $regForm.BackColor = [System.Drawing.Color]::FromArgb(18, 18, 22)
+    
+    $cleanReg = Create-Button -Text "Clean Registry" -X 20 -Y 20 -ClickAction {
+        Clean-Registry
+    } -TooltipText "Perform safe registry cleaning"
+    $regForm.Controls.Add($cleanReg)
+    
+    $backupReg = Create-Button -Text "Backup Registry" -X 200 -Y 20 -ClickAction {
+        Backup-Registry
+    } -TooltipText "Create a full registry backup"
+    $regForm.Controls.Add($backupReg)
+    
+    $restoreReg = Create-Button -Text "Restore Registry" -X 380 -Y 20 -ClickAction {
+        Restore-Registry
+    } -TooltipText "Restore registry from backup"
+    $regForm.Controls.Add($restoreReg)
+    
+    $regOptimize = Create-Button -Text "Optimize Registry" -X 20 -Y 90 -ClickAction {
+        Optimize-Registry
+    } -TooltipText "Optimize registry performance"
+    $regForm.Controls.Add($regOptimize)
+    
+    [void]$regForm.ShowDialog()
+}
+
+Function Clean-Registry {
+    $statusLabel.Text = "Cleaning registry..."
+    $progressBar.Value = 0
+    
+    try {
+        # Safe registry cleaning operations
+        $tempKeys = @(
+            "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\RecentDocs",
+            "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\RunMRU",
+            "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\OpenSavePidlMRU",
+            "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\ComDlg32\LastVisitedPidlMRU"
+        )
+        
+        $count = 0
+        foreach ($key in $tempKeys) {
+            $count++
+            $progressBar.Value = ($count / $tempKeys.Count) * 100
+            if (Test-Path $key) {
+                Remove-Item -Path $key -Recurse -Force -ErrorAction SilentlyContinue
+                New-Item -Path $key -Force | Out-Null
+            }
+        }
+        
+        $progressBar.Value = 100
+        [System.Windows.Forms.MessageBox]::Show("Registry cleaned", "Complete")
+        $statusLabel.Text = "Registry cleaning completed"
+    } catch {
+        [System.Windows.Forms.MessageBox]::Show("Failed to clean registry: $_", "Error", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
+        $statusLabel.Text = "Registry cleaning failed"
+    }
+}
+
+Function Backup-Registry {
+    $saveFileDialog = New-Object System.Windows.Forms.SaveFileDialog
+    $saveFileDialog.Filter = "Registry Files (*.reg)|*.reg"
+    $saveFileDialog.FileName = "RegistryBackup_$(Get-Date -Format 'yyyyMMdd').reg"
+    $saveFileDialog.InitialDirectory = [Environment]::GetFolderPath("Desktop")
+    
+    if ($saveFileDialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
+        $statusLabel.Text = "Backing up registry..."
+        $progressBar.Value = 0
+        
+        try {
+            reg export HKLM $saveFileDialog.FileName
+            $progressBar.Value = 50
+            reg export HKCU $saveFileDialog.FileName /y
+            $progressBar.Value = 100
+            
+            [System.Windows.Forms.MessageBox]::Show("Registry backup saved to $($saveFileDialog.FileName)", "Backup Complete")
+            $statusLabel.Text = "Registry backup completed"
+        } catch {
+            [System.Windows.Forms.MessageBox]::Show("Failed to backup registry: $_", "Error", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
+            $statusLabel.Text = "Registry backup failed"
+        }
+    }
+}
+
+Function Restore-Registry {
+    $openFileDialog = New-Object System.Windows.Forms.OpenFileDialog
+    $openFileDialog.Filter = "Registry Files (*.reg)|*.reg"
+    $openFileDialog.InitialDirectory = [Environment]::GetFolderPath("Desktop")
+    
+    if ($openFileDialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
+        $statusLabel.Text = "Restoring registry..."
+        $progressBar.Value = 0
+        
+        try {
+            reg import $openFileDialog.FileName
+            $progressBar.Value = 100
+            
+            [System.Windows.Forms.MessageBox]::Show("Registry restored from $($openFileDialog.FileName). Reboot recommended.", "Restore Complete")
+            $statusLabel.Text = "Registry restore completed"
+        } catch {
+            [System.Windows.Forms.MessageBox]::Show("Failed to restore registry: $_", "Error", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
+            $statusLabel.Text = "Registry restore failed"
+        }
+    }
+}
+
+Function Optimize-Registry {
+    $statusLabel.Text = "Optimizing registry..."
+    $progressBar.Value = 0
+    
+    try {
+        # Disable NTFS last access time updates
+        Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "NtfsDisableLastAccessUpdate" -Value 1
+        $progressBar.Value = 25
+        
+        # Enable large system cache
+        Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "LargeSystemCache" -Value 1
+        $progressBar.Value = 50
+        
+        # Disable paging executive
+        Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "DisablePagingExecutive" -Value 1
+        $progressBar.Value = 75
+        
+        # Set I/O page lock limit
+        Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" -Name "IoPageLockLimit" -Type DWord -Value 0x10000000
+        $progressBar.Value = 100
+        
+        [System.Windows.Forms.MessageBox]::Show("Registry optimization complete. Reboot recommended.", "Optimization Complete")
+        $statusLabel.Text = "Registry optimization completed"
+    } catch {
+        [System.Windows.Forms.MessageBox]::Show("Failed to optimize registry: $_", "Error", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
+        $statusLabel.Text = "Registry optimization failed"
+    }
+}
+
+# New System Report Function
+Function SystemReport {
+    $statusLabel.Text = "Generating system report..."
+    $progressBar.Value = 0
+    
+    $saveFileDialog = New-Object System.Windows.Forms.SaveFileDialog
+    $saveFileDialog.Filter = "Text Files (*.txt)|*.txt"
+    $saveFileDialog.FileName = "SystemReport_$(Get-Date -Format 'yyyyMMdd').txt"
+    $saveFileDialog.InitialDirectory = [Environment]::GetFolderPath("Desktop")
+    
+    if ($saveFileDialog.ShowDialog() -eq [System.Windows.Forms.DialogResult]::OK) {
+        try {
+            # System Information
+            "=== SYSTEM INFORMATION ===" | Out-File $saveFileDialog.FileName
+            systeminfo | Out-File $saveFileDialog.FileName -Append
+            $progressBar.Value = 20
+            
+            # Network Information
+            "`n=== NETWORK INFORMATION ===" | Out-File $saveFileDialog.FileName -Append
+            ipconfig /all | Out-File $saveFileDialog.FileName -Append
+            $progressBar.Value = 40
+            
+            # Installed Programs
+            "`n=== INSTALLED PROGRAMS ===" | Out-File $saveFileDialog.FileName -Append
+            Get-WmiObject -Class Win32_Product | Select-Object Name, Version | Out-File $saveFileDialog.FileName -Append
+            $progressBar.Value = 60
+            
+            # Running Services
+            "`n=== RUNNING SERVICES ===" | Out-File $saveFileDialog.FileName -Append
+            Get-Service | Where-Object { $_.Status -eq "Running" } | Select-Object DisplayName, Status | Out-File $saveFileDialog.FileName -Append
+            $progressBar.Value = 80
+            
+            # Disk Information
+            "`n=== DISK INFORMATION ===" | Out-File $saveFileDialog.FileName -Append
+            Get-PhysicalDisk | Select-Object FriendlyName, Size, HealthStatus | Out-File $saveFileDialog.FileName -Append
+            $progressBar.Value = 100
+            
+            [System.Windows.Forms.MessageBox]::Show("System report generated at $($saveFileDialog.FileName)", "Report Complete")
+            $statusLabel.Text = "System report generated"
+        } catch {
+            [System.Windows.Forms.MessageBox]::Show("Failed to generate system report: $_", "Error", [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Error)
+            $statusLabel.Text = "System report failed"
         }
     }
 }
