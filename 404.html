@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - Page Not Found</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        html {
+            font-size: 100%;
+            box-sizing: border-box;
+        }
+        *, *::before, *::after {
+            box-sizing: inherit;
+        }
+
+        body {
+            font-family: 'Poppins', 'Arial', sans-serif;
+            background-color: #121217;
+            color: #e0e0e0;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .error-content {
+            animation: fadeInScaleUp 0.8s 0.2s ease-out forwards;
+            opacity: 0;
+            width: 100%;
+            max-width: 650px;
+        }
+
+        h1 {
+            font-size: clamp(4.5em, 22vw, 9em);
+            font-weight: 900;
+            margin: 0 0 0.1em 0;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: float 3.5s ease-in-out infinite;
+            text-shadow: 0 5px 25px rgba(0,0,0,0.2);
+        }
+
+        p {
+            font-size: clamp(1em, 4vw, 1.3em);
+            font-weight: 400;
+            line-height: 1.7;
+            color: #b0b0c0;
+            margin: 15px auto;
+            max-width: 90%;
+        }
+
+        p:first-of-type {
+            margin-top: 25px;
+        }
+
+        a.home-button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 14px 35px;
+            font-size: clamp(0.9em, 3.5vw, 1.1em);
+            font-weight: 700;
+            color: #fff;
+            background-color: #ff6b6b;
+            border: none;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        a.home-button:hover, a.home-button:focus {
+            background-color: #feca57;
+            color: #121217;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(254, 202, 87, 0.4);
+            outline: none;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+
+        @keyframes fadeInScaleUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-content">
+        <h1>404</h1>
+        <p>Oops! The page you're looking for seems to have taken a detour.</p>
+        <p>Perhaps it's exploring new horizons, or maybe it just got lost in the digital cosmos.</p>
+        <p>No worries! You can always find your way back <a href="/index.html" class="home-button">to the homepage</a></p>
+    </div>
+</body>
+</html>
