@@ -3,653 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Windows Maintenance Toolkit (CS_script)</title>
+    <meta http-equiv="refresh">
+    <title>Redirecting...</title>
+    <link rel="icon" href="https://img.icons8.com/?size=100&id=QWmWrCxghblr&format=png&color=000000" type="image/x-icon">
+    <meta http-equiv="refresh" content="0; url=https://catsmoker.vercel.app">
+    
     <style>
-        :root {
-            --bg-color: #121216;
-            --surface-color: #1c1c22;
-            --primary-text-color: #e0e0e0;
-            --secondary-text-color: #a0a0b0;
-            --accent-color: #4a90e2;
-            --accent-hover-color: #5aa1f2;
-            --green-color: #2e8b57;
-            --yellow-color: #f0e68c;
-            --code-bg: #282c34;
-            --border-color: #333;
-        }
-
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-                Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-            background-color: var(--bg-color);
-            color: var(--primary-text-color);
-            line-height: 1.7;
+            background-color: black;
             margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        header {
-            text-align: center;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 30px;
-            margin-bottom: 40px;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            color: #fff;
-            margin-bottom: 0.5rem;
-        }
-
-        .badges {
+            height: 100vh;
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 1.5rem;
-        }
-
-        .tagline {
-            font-size: 1.2rem;
-            color: var(--primary-text-color);
-            margin-bottom: 0.5rem;
-        }
-        
-        .sub-tagline {
-            color: var(--secondary-text-color);
-        }
-
-        h2 {
-            font-size: 2rem;
-            color: #fff;
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 10px;
-            margin-top: 50px;
-            margin-bottom: 25px;
-        }
-
-        h3 {
-            font-size: 1.4rem;
-            color: var(--primary-text-color);
-            margin-top: 30px;
-            margin-bottom: 15px;
-        }
-
-        a {
-            color: var(--accent-color);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-
-        a:hover {
-            color: var(--accent-hover-color);
-            text-decoration: underline;
-        }
-
-        .alert {
-            background-color: rgba(240, 230, 140, 0.1);
-            border-left: 5px solid var(--yellow-color);
-            padding: 15px 20px;
-            margin: 30px 0;
-            border-radius: 5px;
-            color: var(--yellow-color);
-        }
-        
-        .alert-danger {
-             background-color: rgba(220, 20, 60, 0.1);
-             border-left: 5px solid crimson;
-             color: crimson;
-        }
-
-        .code-block {
-            position: relative;
-            background-color: var(--code-bg);
-            border-radius: 8px;
-            margin: 20px 0;
-            overflow: hidden;
-        }
-
-        pre {
-            padding: 20px;
-            margin: 0;
-            overflow-x: auto;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-        
-        code {
-            font-family: "Fira Code", "Courier New", monospace;
-            font-size: 0.95rem;
-            color: #ccc;
-        }
-        
-        .copy-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #4f5666;
+            align-items: center;
             color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            opacity: 0.7;
-            transition: opacity 0.2s, background-color 0.2s;
-        }
-
-        .code-block:hover .copy-button {
-            opacity: 1;
-        }
-
-        .copy-button:hover {
-            background-color: #6a7389;
+            flex-direction: column;
         }
         
-        .copy-button.copied {
-            background-color: var(--green-color);
-        }
-
-        table {
+        .loader {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
             width: 100%;
-            border-collapse: collapse;
-            margin: 30px 0;
-            background-color: var(--surface-color);
-            border-radius: 8px;
-            overflow: hidden;
         }
 
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
+        .jimu-primary-loading:before,
+        .jimu-primary-loading:after {
+            position: absolute;
+            top: 0;
+            content: '';
         }
 
-        thead th {
-            background-color: #2a2a33;
-            color: #fff;
-            font-weight: 600;
-        }
-        
-        tbody tr:last-child td {
-            border-bottom: none;
+        .jimu-primary-loading:before {
+            left: -19.992px;
         }
 
-        tbody tr:nth-child(even) {
-            background-color: #212128;
-        }
-        
-        ul, dl {
-            padding-left: 20px;
-        }
-        
-        li {
-            margin-bottom: 10px;
-        }
-        
-        dt {
-            font-weight: bold;
-            color: var(--primary-text-color);
-        }
-        
-        dd {
-            margin-left: 20px;
-            margin-bottom: 15px;
-            color: var(--secondary-text-color);
-        }
-        
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+        .jimu-primary-loading:after {
+            left: 19.992px;
+            -webkit-animation-delay: 0.32s !important;
+            animation-delay: 0.32s !important;
         }
 
-        .feature-category {
-            background-color: var(--surface-color);
-            padding: 25px;
-            border-radius: 8px;
+        .jimu-primary-loading:before,
+        .jimu-primary-loading:after,
+        .jimu-primary-loading {
+            background: #076fe5;
+            -webkit-animation: loading-keys-app-loading 0.8s infinite ease-in-out;
+            animation: loading-keys-app-loading 0.8s infinite ease-in-out;
+            width: 13.6px;
+            height: 32px;
+        }
+
+        .jimu-primary-loading {
+            text-indent: -9999em;
+            margin: auto;
+            position: relative;
+            -webkit-animation-delay: 0.16s !important;
+            animation-delay: 0.16s !important;
+        }
+
+        @-webkit-keyframes loading-keys-app-loading {
+            0%,
+            80%,
+            100% {
+                opacity: .75;
+                box-shadow: 0 0 #076fe5;
+                height: 32px;
+            }
+
+            40% {
+                opacity: 1;
+                box-shadow: 0 -8px #076fe5;
+                height: 40px;
+            }
+        }
+
+        @keyframes loading-keys-app-loading {
+            0%,
+            80%,
+            100% {
+                opacity: .75;
+                box-shadow: 0 0 #076fe5;
+                height: 32px;
+            }
+
+            40% {
+                opacity: 1;
+                box-shadow: 0 -8px #076fe5;
+                height: 40px;
+            }
         }
         
-        .feature-category h3 {
-            margin-top: 0;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-        }
-        
-        .feature-category ul {
-            padding-left: 15px;
-        }
-        
-        footer {
+        p {
+            margin-top: 20px;
             text-align: center;
-            margin-top: 60px;
-            padding: 20px;
-            border-top: 1px solid var(--border-color);
-            color: var(--secondary-text-color);
         }
-
+        
+        a {
+            color: #076fe5;
+            text-decoration: none;
+        }
     </style>
 </head>
 <body>
-
-    <div class="container">
-        <header>
-            <h1>🖥️ Windows Maintenance Toolkit (CS_script)</h1>
-            <div class="badges">
-                <img src="https://img.shields.io/badge/version-v2-green" alt="Version v2">
-                <img src="https://img.shields.io/badge/platform-Windows-blue" alt="Platform Windows">
-                <img src="https://img.shields.io/badge/license-MIT-blue" alt="License MIT">
-            </div>
-            <p class="tagline">A powerful all-in-one Windows maintenance and automation script.</p>
-            <p class="sub-tagline">Built for power users, sysadmins, and curious tinkerers – <strong>smarter, safer, and fully native</strong>.</p>
-        </header>
-
-        <main>
-            <div class="alert">
-                ⚠️ Some outputs may appear in your system language (e.g., English, Danish). This is expected behavior.
-            </div>
-
-            <section id="quick-start">
-                <h2>🚀 Quick Start</h2>
-                <h3>🔹 PowerShell (Online)</h3>
-                <p>Run this in <strong>PowerShell (as Administrator)</strong>:</p>
-                <div class="code-block">
-                    <button class="copy-button">Copy</button>
-                    <pre><code>irm https://catsmoker.github.io/w | iex</code></pre>
-                </div>
-
-                <h3>🔹 PowerShell (Offline)</h3>
-                <p>Download the <code>.ps1</code> file from the <a href="https://github.com/catsmoker/cs_script/releases" target="_blank" rel="noopener noreferrer">Releases page</a> and run it with PowerShell.</p>
-
-                <h3>🔹 Executable (Online)</h3>
-                <p>Download the <code>.exe</code> installer from the <a href="https://github.com/catsmoker/cs_script/releases" target="_blank" rel="noopener noreferrer">Releases page</a> and install it.</p>
-                
-                <div class="alert alert-danger">
-                    🛑 Only for <strong>Windows 10 & 11</strong>
-                </div>
-            </section>
-
-            <section id="features">
-                <h2>🛠️ Features</h2>
-                <div class="features-grid">
-                    <div class="feature-category">
-                        <h3>🧹 System Maintenance</h3>
-                        <ul>
-                            <li>Clean temp files, Recycle Bin, event logs, and DNS cache</li>
-                            <li>Scan & fix with <code>chkdsk</code>, <code>sfc</code>, and <code>DISM</code></li>
-                            <li>Run full malware scan with <strong>MRT</strong></li>
-                        </ul>
-                    </div>
-                    <div class="feature-category">
-                        <h3>📦 Software Management</h3>
-                        <ul>
-                            <li>Install/update 30+ apps using <strong>winget</strong></li>
-                            <li>Activate <strong>IDM</strong>, <strong>Windows</strong>, and <strong>Office</strong></li>
-                        </ul>
-                    </div>
-                    <div class="feature-category">
-                        <h3>🌐 Network Tools</h3>
-                        <ul>
-                            <li>Configure DNS (Google, Cloudflare, or custom)</li>
-                            <li>Reset adapters, view IP config, flush DNS, etc.</li>
-                            <li>View routing tables and perform Winsock reset</li>
-                        </ul>
-                    </div>
-                    <div class="feature-category">
-                        <h3>🧠 Registry Tools</h3>
-                        <ul>
-                            <li>Safe cleaner: history, recent docs, open/save dialogs</li>
-                            <li>Backup & restore full registry</li>
-                            <li>Optimize performance with smart tweaks</li>
-                        </ul>
-                    </div>
-                    <div class="feature-category">
-                        <h3>⚙️ System Utilities</h3>
-                        <ul>
-                            <li>Full Windows Update via <code>PSWindowsUpdate</code></li>
-                            <li>Generate detailed system report</li>
-                            <li>Launch Chris Titus Tech's optimization tool</li>
-                            <li>Create desktop shortcuts for easy access</li>
-                        </ul>
-                    </div>
-                </div>
-            </section>
-            
-            <section id="output-files">
-                <h2>📁 Output Files</h2>
-                <p>Saved to <code>Desktop\SystemReports</code> by default:</p>
-                <ul>
-                    <li><code>System_Info_YYYY-MM-DD.txt</code></li>
-                    <li><code>Network_Info_YYYY-MM-DD.txt</code></li>
-                    <li><code>Driver_List_YYYY-MM-DD.txt</code></li>
-                    <li><code>Routing_Table_YYYY-MM-DD.txt</code></li>
-                </ul>
-            </section>
-
-            <section id="requirements">
-                <h2>📋 System Requirements</h2>
-                <ul>
-                    <li>Windows 10 or 11</li>
-                    <li>PowerShell 5.1+</li>
-                    <li>Admin privileges</li>
-                    <li>Internet connection (for updates/tools)</li>
-                </ul>
-            </section>
-
-            <section id="faq">
-                <h2>❓ FAQ</h2>
-                <dl>
-                    <dt>Q: Script didn’t restart as Admin?</dt>
-                    <dd>A: Make sure UAC is enabled. Or right-click the script → <strong>Run as Administrator</strong>.</dd>
-
-                    <dt>Q: Winget install/upgrade fails?</dt>
-                    <dd>A: Ensure <code>winget</code> is up to date. Script validates most input and handles common errors.</dd>
-
-                    <dt>Q: Why was Registry Defrag removed?</dt>
-                    <dd>A: It used <strong>NTREGOPT</strong>, a deprecated external tool. All features are now offline and native to Windows.</dd>
-                </dl>
-            </section>
-            
-            <section id="apps">
-                <h2>📦 Natively Supported Applications</h2>
-                 <p>Use the CTT Tool for more apps. <code>I may remove this in the future.</code></p>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Category</th>
-                            <th>Examples</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Browsers</td>
-                            <td>Chrome, Firefox, Brave, Tor</td>
-                        </tr>
-                        <tr>
-                            <td>Media</td>
-                            <td>VLC, Spotify, foobar2000</td>
-                        </tr>
-                        <tr>
-                            <td>Utilities</td>
-                            <td>7-Zip, Everything, ShareX</td>
-                        </tr>
-                        <tr>
-                            <td>Development</td>
-                            <td>Git, VSCode, Notepad++</td>
-                        </tr>
-                        <tr>
-                            <td>Gaming</td>
-                            <td>Steam, Playnite, Heroic Launcher</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <section id="diagnostics">
-                <h2>🧪 Diagnostics & Repair</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Task</th>
-                            <th>Command(s) Used</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Disk Check</td>
-                            <td><code>chkdsk /scan /perf</code></td>
-                        </tr>
-                        <tr>
-                            <td>File Integrity</td>
-                            <td><code>sfc /scannow</code></td>
-                        </tr>
-                        <tr>
-                            <td>System Image Fix</td>
-                            <td><code>DISM /Online /Cleanup-Image /RestoreHealth</code></td>
-                        </tr>
-                        <tr>
-                            <td>Malware Scan</td>
-                            <td><code>mrt.exe</code> (full system scan)</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </section>
-
-            <section id="changelog">
-                <h2>✍️ Changelog</h2>
-                <p>See <a href="https://github.com/catsmoker/cs_script/blob/main/CHANGELOG.md" target="_blank" rel="noopener noreferrer"><code>CHANGELOG.md</code></a> for full details of recent changes.</p>
-            </section>
-
-            <section id="contributing">
-                <h2>🤝 Contributing</h2>
-                <p>Contributions, bug reports, and suggestions are welcome! Check out <a href="https://github.com/catsmoker/cs_script/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer"><code>CONTRIBUTING.md</code></a> before submitting a PR.</p>
-            </section>
-
-            <section id="license">
-                <h2>📜 License</h2>
-                <p>Licensed under the <a href="https://github.com/catsmoker/cs_script/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>. Free for personal and professional use.</p>
-            </section>
-
-            <section id="credits">
-                <h2>🧑‍💻 Credits</h2>
-                <p>Developed by <a href="https://catsmoker.github.io" target="_blank" rel="noopener noreferrer">catsmoker</a></p>
-                <p>Inspired by:</p>
-                <ul>
-                    <li>Microsoft PowerShell Team</li>
-                    <li><a href="https://christitus.com/" target="_blank" rel="noopener noreferrer">Chris Titus Tech</a></li>
-                    <li>Open-source community contributors</li>
-                </ul>
-            </section>
-            
-            <section id="source-code">
-                <h2>🔌 Full PowerShell Script Source</h2>
-                <p>The complete source code for the tool is provided below for transparency.</p>
-                <div class="code-block">
-                    <button class="copy-button">Copy</button>
-<pre><code>
-#==================================================================================================
-#
-# WARNING: DO NOT modify this file!
-#
-#==================================================================================================
-&lt;#
-.NOTES
-    Author         : catsmoker
-    Email          : catsmoker.lab@gmail.com
-    Website        : https://catsmoker.github.io
-    GitHub         : https://github.com/catsmoker/cs_script
-    Version        : 2.0
-#&gt;
-
-# Check if the script is running as administrator
-Write-Host "Checking if running as administrator..."
-$adminCheck = [System.Security.Principal.WindowsPrincipal] [System.Security.Principal.WindowsIdentity]::GetCurrent()
-$adminRole = [System.Security.Principal.WindowsBuiltInRole]::Administrator
-if (-not $adminCheck.IsInRole($adminRole)) {
-    $separator = "============================================================="
-    $adminMessage = "Attention Required!"
-    Write-Host $separator -ForegroundColor Yellow
-    Write-Host ""
-    Write-Host $adminMessage -ForegroundColor Red -BackgroundColor Black
-    Write-Host ""
-    Write-Host "Oops! It looks like this script is not running with administrator privileges." -ForegroundColor Magenta
-    Write-Host "For optimal performance and access to all features, we need to restart this script with elevated rights." -ForegroundColor Magenta
-    Write-Host ""
-    Write-Host "Attempting to relaunch with administrative privileges... Please wait." -ForegroundColor Green
-    Write-Host ""
-    Write-Host $separator -ForegroundColor Yellow
-
-    # Restart the script with administrative privileges
-    $newProcess = Start-Process -FilePath "powershell.exe" -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs -Wait
-    exit
-} else {
-    Write-Host "Script is running as administrator."
-}
-
-# Check if the script is running on a supported operating system
-$osVersion = [System.Environment]::OSVersion.Version
-if ($osVersion.Major -lt 10 -or ($osVersion.Major -eq 10 -and $osVersion.Minor -lt 0)) {
-    Write-Host "This script is only supported on Windows 10 or newer." -ForegroundColor Red
-    Write-Host "Your current OS version is $($osVersion.Major).$($osVersion.Minor)."
-    exit
-}
-
-# Load necessary assemblies for UI
-Add-Type -AssemblyName System.Windows.Forms
-Add-Type -AssemblyName System.Drawing
-
-# Main Form
-$mainForm = New-Object System.Windows.Forms.Form
-$mainForm.Text = "CS Script v2.0 by catsmoker"
-$mainForm.Size = New-Object System.Drawing.Size(900, 700)
-$mainForm.StartPosition = "CenterScreen"
-$mainForm.BackColor = [System.Drawing.Color]::FromArgb(18, 18, 22)
-$mainForm.ForeColor = [System.Drawing.Color]::White
-$mainForm.FormBorderStyle = 'FixedDialog'
-$mainForm.MaximizeBox = $false
-$mainForm.Font = New-Object System.Drawing.Font("Segoe UI", 10)
-
-# Title Label
-$titleLabel = New-Object System.Windows.Forms.Label
-$titleLabel.Text = "CS Script v2.0"
-$titleLabel.Font = New-Object System.Drawing.Font("Segoe UI", 20, [System.Drawing.FontStyle]::Bold)
-$titleLabel.Size = New-Object System.Drawing.Size(850, 40)
-$titleLabel.Location = New-Object System.Drawing.Point(25, 20)
-$titleLabel.TextAlign = [System.Windows.Forms.HorizontalAlignment]::Center
-$titleLabel.ForeColor = [System.Drawing.Color]::FromArgb(200, 200, 200)
-$mainForm.Controls.Add($titleLabel)
-
-# Subtitle Label
-$subtitleLabel = New-Object System.Windows.Forms.Label
-$subtitleLabel.Text = "by catsmoker | https://catsmoker.github.io"
-$subtitleLabel.Font = New-Object System.Drawing.Font("Segoe UI", 10, [System.Drawing.FontStyle]::Regular)
-$subtitleLabel.Size = New-Object System.Drawing.Size(850, 20)
-$subtitleLabel.Location = New-Object System.Drawing.Point(25, 60)
-$subtitleLabel.TextAlign = [System.Windows.Forms.HorizontalAlignment]::Center
-$subtitleLabel.ForeColor = [System.Drawing.Color]::FromArgb(150, 150, 150)
-$mainForm.Controls.Add($subtitleLabel)
-
-# Helper function to create styled buttons
-Function Create-Button {
-    param($Text, $X, $Y, $ClickAction, $TooltipText)
-    $button = New-Object System.Windows.Forms.Button
-    $button.Text = $Text
-    $button.Size = New-Object System.Drawing.Size(260, 50)
-    $button.Location = New-Object System.Drawing.Point($X, $Y)
-    $button.Font = New-Object System.Drawing.Font("Segoe UI", 11, [System.Drawing.FontStyle]::Regular)
-    $button.BackColor = [System.Drawing.Color]::FromArgb(40, 40, 50)
-    $button.ForeColor = [System.Drawing.Color]::White
-    $button.FlatStyle = 'Flat'
-    $button.FlatAppearance.BorderSize = 1
-    $button.FlatAppearance.BorderColor = [System.Drawing.Color]::FromArgb(60, 60, 70)
-    $button.FlatAppearance.MouseOverBackColor = [System.Drawing.Color]::FromArgb(60, 60, 80)
-    $button.FlatAppearance.MouseDownBackColor = [System.Drawing.Color]::FromArgb(80, 80, 100)
-    $button.Add_Click($ClickAction)
-    
-    # Add tooltip
-    $tooltip = New-Object System.Windows.Forms.ToolTip
-    $tooltip.SetToolTip($button, $TooltipText)
-    
-    return $button
-}
-
-# Menu Buttons (arranged in a grid)
-$buttonClean = Create-Button -Text "Clean Windows" -X 50 -Y 120 -ClickAction { CleanWindows } -TooltipText "Cleans temporary files, Recycle Bin, and DNS cache."
-$mainForm.Controls.Add($buttonClean)
-
-$buttonFix = Create-Button -Text "Scan and Fix Windows" -X 330 -Y 120 -ClickAction { FixWindows } -TooltipText "Runs chkdsk, sfc, and DISM to repair Windows."
-$mainForm.Controls.Add($buttonFix)
-
-$buttonApps = Create-Button -Text "Apps/Upgrades" -X 610 -Y 120 -ClickAction { DownloadApps } -TooltipText "Install or upgrade software using winget."
-$mainForm.Controls.Add($buttonApps)
-
-$buttonActivateIDM = Create-Button -Text "Activate IDM" -X 50 -Y 190 -ClickAction { ActivateIDM } -TooltipText "Activates Internet Download Manager."
-$mainForm.Controls.Add($buttonActivateIDM)
-
-$buttonActivateWindows = Create-Button -Text "Activate Windows/office" -X 330 -Y 190 -ClickAction { ActivateWindows } -TooltipText "Activates Windows using an external script."
-$mainForm.Controls.Add($buttonActivateWindows)
-
-$buttonAtlas = Create-Button -Text "Windows Update" -X 610 -Y 190 -ClickAction { windowsps } -TooltipText "Installs Windows updates via PSWindowsUpdate."
-$mainForm.Controls.Add($buttonAtlas)
-
-$buttonCTT = Create-Button -Text "CTT Windows Utility" -X 50 -Y 260 -ClickAction { CTT } -TooltipText "Runs Chris Titus Tech's Windows Utility."
-$mainForm.Controls.Add($buttonCTT)
-
-$buttonMRT = Create-Button -Text "Virus Scan" -X 330 -Y 260 -ClickAction { ScanWithMRT } -TooltipText "Runs Windows Malicious Software Removal Tool."
-$mainForm.Controls.Add($buttonMRT)
-
-$buttonNetwork = Create-Button -Text "Network Tools" -X 50 -Y 330 -ClickAction { NetworkTools } -TooltipText "Network configuration and diagnostic tools."
-$mainForm.Controls.Add($buttonNetwork)
-
-$buttonRegistry = Create-Button -Text "Registry Tools" -X 330 -Y 330 -ClickAction { RegistryTools } -TooltipText "Registry maintenance and backup tools."
-$mainForm.Controls.Add($buttonRegistry)
-
-$buttonReport = Create-Button -Text "System Report" -X 610 -Y 330 -ClickAction { SystemReport } -TooltipText "Generate comprehensive system report."
-$mainForm.Controls.Add($buttonReport)
-
-$buttonAddShortcut = Create-Button -Text "Add Shortcut" -X 50 -Y 400 -ClickAction { AddShortcut } -TooltipText "Adds a Shortcut."
-$mainForm.Controls.Add($buttonAddShortcut)
-
-$buttonExit = Create-Button -Text "Exit" -X 330 -Y 400 -ClickAction { Exit-Script } -TooltipText "Exits the script and opens the developer's website."
-$mainForm.Controls.Add($buttonExit)
-
-# Progress Bar
-$progressBar = New-Object System.Windows.Forms.ProgressBar
-$progressBar.Size = New-Object System.Drawing.Size(800, 20)
-$progressBar.Location = New-Object System.Drawing.Point(50, 500)
-$progressBar.Style = 'Continuous'
-$progressBar.ForeColor = [System.Drawing.Color]::FromArgb(100, 200, 100)
-$progressBar.BackColor = [System.Drawing.Color]::FromArgb(30, 30, 40)
-$mainForm.Controls.Add($progressBar)
-
-# Status Label
-$statusLabel = New-Object System.Windows.Forms.Label
-$statusLabel.Text = "Ready"
-$statusLabel.Size = New-Object System.Drawing.Size(800, 20)
-$statusLabel.Location = New-Object System.Drawing.Point(50, 530)
-$statusLabel.Font = New-Object System.Drawing.Font("Segoe UI", 10)
-$statusLabel.ForeColor = [System.Drawing.Color]::FromArgb(150, 150, 150)
-$mainForm.Controls.Add($statusLabel)
-
-# And so on... (rest of the script)
-</code></pre>
-                </div>
-            </section>
-        </main>
-        
-        <footer>
-            <p>&copy; 2024 CS_script by catsmoker. Website generated from project README.</p>
-        </footer>
+    <div class="loader">
+        <div class="justify-content-center jimu-primary-loading"></div>
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const copyButtons = document.querySelectorAll('.copy-button');
-
-            copyButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const pre = button.parentElement.querySelector('pre');
-                    const code = pre.querySelector('code');
-                    const textToCopy = code.innerText;
-
-                    navigator.clipboard.writeText(textToCopy).then(() => {
-                        button.textContent = 'Copied!';
-                        button.classList.add('copied');
-                        setTimeout(() => {
-                            button.textContent = 'Copy';
-                            button.classList.remove('copied');
-                        }, 2000);
-                    }).catch(err => {
-                        console.error('Failed to copy text: ', err);
-                    });
-                });
-            });
-        });
-    </script>
+    <p>If you are not redirected automatically, <a href="https://catsmoker.vercel.app">click here</a>.</p>
 </body>
 </html>
