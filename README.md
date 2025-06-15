@@ -7,6 +7,7 @@
 A powerful all-in-one Windows maintenance and automation script.  
 Built for power users, sysadmins, and curious tinkerers – **smarter, safer, and fully native**.
 
+go here: https://github.com/catsmoker/cs_script
 ---
 
 > ⚠️ Some outputs may appear in your system language (e.g., English, Danish). This is expected behavior.
