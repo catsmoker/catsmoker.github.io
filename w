@@ -233,7 +233,7 @@ Function AddShortcut {
         $targetPath = "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
         $arguments = '-NoProfile -ExecutionPolicy Bypass -Command "irm https://catsmoker.github.io/w | iex"'
 
-        $iconUrl = "https://catsmoker.github.io/web/assets/ico/favicon.ico"
+        $iconUrl = "https://img.icons8.com/?size=100&id=QWmWrCxghblr&format=png&color=000000"
         $localIconPath = "$env:TEMP\favicon.ico"
 
         Invoke-WebRequest -Uri $iconUrl -OutFile $localIconPath -UseBasicParsing
