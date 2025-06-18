@@ -1,4 +1,4 @@
-# 🖥️ Windows Maintenance Toolkit (CS_script)
+# 🖥️ Windows Maintenance Toolkit AetherKit
 
 ![Version](https://img.shields.io/badge/version-v2-green)
 ![Platform](https://img.shields.io/badge/platform-Windows-blue)
@@ -7,5 +7,5 @@
 A powerful all-in-one Windows maintenance and automation script.  
 Built for power users, sysadmins, and curious tinkerers – **smarter, safer, and fully native**.
 
-go here: https://github.com/catsmoker/cs_script
+go here: https://github.com/catsmoker/AetherKit
 ---
