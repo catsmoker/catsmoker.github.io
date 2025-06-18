@@ -1,15 +1,10 @@
-#==================================================================================================
-#
-# WARNING: DO NOT modify this file!
-#
-#==================================================================================================
 <#
 .NOTES
-    Author         : catsmoker
-    Email          : catsmoker.lab@gmail.com
-    Website        : https://catsmoker.github.io
-    GitHub         : https://github.com/catsmoker/cs_script
-    Version        : 2.0
+    Author          : catsmoker
+    Email           : catsmoker.lab@gmail.com
+    Website         : https://catsmoker.github.io
+    GitHub          : https://github.com/catsmoker/AetherKit
+    Version         : 3.0
 #>
 
 # Check if the script is running as administrator
@@ -51,7 +46,7 @@ Add-Type -AssemblyName System.Drawing
 
 # Main Form
 $mainForm = New-Object System.Windows.Forms.Form
-$mainForm.Text = "CS Script v2.0 by catsmoker"
+$mainForm.Text = "AetherKit v3.0 by catsmoker"
 $mainForm.Size = New-Object System.Drawing.Size(900, 700)
 $mainForm.StartPosition = "CenterScreen"
 $mainForm.BackColor = [System.Drawing.Color]::FromArgb(18, 18, 22)
@@ -62,7 +57,7 @@ $mainForm.Font = New-Object System.Drawing.Font("Segoe UI", 10)
 
 # Title Label
 $titleLabel = New-Object System.Windows.Forms.Label
-$titleLabel.Text = "CS Script v2.0"
+$titleLabel.Text = "AetherKit v3.0"
 $titleLabel.Font = New-Object System.Drawing.Font("Segoe UI", 20, [System.Drawing.FontStyle]::Bold)
 $titleLabel.Size = New-Object System.Drawing.Size(850, 40)
 $titleLabel.Location = New-Object System.Drawing.Point(25, 20)
@@ -104,6 +99,29 @@ Function Create-Button {
     return $button
 }
 
+Function Create-ToolButton {
+    param($Text, $X, $Y, $ClickAction, $TooltipText)
+    $button = New-Object System.Windows.Forms.Button
+    $button.Text = $Text
+    $button.Size = New-Object System.Drawing.Size(200, 40)
+    $button.Location = New-Object System.Drawing.Point($X, $Y)
+    $button.Font = New-Object System.Drawing.Font("Segoe UI", 9.5, [System.Drawing.FontStyle]::Regular)
+    $button.BackColor = [System.Drawing.Color]::FromArgb(50, 50, 60)
+    $button.ForeColor = [System.Drawing.Color]::White
+    $button.FlatStyle = 'Flat'
+    $button.FlatAppearance.BorderSize = 1
+    $button.FlatAppearance.BorderColor = [System.Drawing.Color]::FromArgb(70, 70, 90)
+    $button.FlatAppearance.MouseOverBackColor = [System.Drawing.Color]::FromArgb(70, 70, 100)
+    $button.FlatAppearance.MouseDownBackColor = [System.Drawing.Color]::FromArgb(90, 90, 120)
+    $button.Add_Click($ClickAction)
+    
+    $tooltip = New-Object System.Windows.Forms.ToolTip
+    $tooltip.SetToolTip($button, $TooltipText)
+    
+    return $button
+}
+
+
 # Menu Buttons (arranged in a grid)
 $buttonClean = Create-Button -Text "Clean Windows" -X 50 -Y 120 -ClickAction { CleanWindows } -TooltipText "Cleans temporary files, Recycle Bin, and DNS cache."
 $mainForm.Controls.Add($buttonClean)
@@ -117,16 +135,19 @@ $mainForm.Controls.Add($buttonApps)
 $buttonActivateIDM = Create-Button -Text "Activate IDM" -X 50 -Y 190 -ClickAction { ActivateIDM } -TooltipText "Activates Internet Download Manager."
 $mainForm.Controls.Add($buttonActivateIDM)
 
-$buttonActivateWindows = Create-Button -Text "Activate Windows/office" -X 330 -Y 190 -ClickAction { ActivateWindows } -TooltipText "Activates Windows using an external script."
+$buttonActivateWindows = Create-Button -Text "Activate Windows" -X 330 -Y 190 -ClickAction { ActivateWindows } -TooltipText "Activates Windows using an external script."
 $mainForm.Controls.Add($buttonActivateWindows)
 
-$buttonAtlas = Create-Button -Text "Windows Update" -X 610 -Y 190 -ClickAction { windowsps } -TooltipText "Installs Windows updates via PSWindowsUpdate."
+$buttonActivateOffice = Create-Button -Text "Activate Office" -X 610 -Y 190 -ClickAction { ActivateOffice } -TooltipText "Activates Microsoft Office."
+$mainForm.Controls.Add($buttonActivateOffice)
+
+$buttonAtlas = Create-Button -Text "Windows Update" -X 50 -Y 260 -ClickAction { windowsps } -TooltipText "Installs Windows updates via PSWindowsUpdate."
 $mainForm.Controls.Add($buttonAtlas)
 
-$buttonCTT = Create-Button -Text "CTT Windows Utility" -X 50 -Y 260 -ClickAction { CTT } -TooltipText "Runs Chris Titus Tech's Windows Utility."
+$buttonCTT = Create-Button -Text "CTT Windows Utility" -X 330 -Y 260 -ClickAction { CTT } -TooltipText "Runs Chris Titus Tech's Windows Utility."
 $mainForm.Controls.Add($buttonCTT)
 
-$buttonMRT = Create-Button -Text "Virus Scan" -X 330 -Y 260 -ClickAction { ScanWithMRT } -TooltipText "Runs Windows Malicious Software Removal Tool."
+$buttonMRT = Create-Button -Text "Virus Scan" -X 610 -Y 260 -ClickAction { ScanWithMRT } -TooltipText "Runs Windows Malicious Software Removal Tool."
 $mainForm.Controls.Add($buttonMRT)
 
 $buttonNetwork = Create-Button -Text "Network Tools" -X 50 -Y 330 -ClickAction { NetworkTools } -TooltipText "Network configuration and diagnostic tools."
@@ -138,10 +159,13 @@ $mainForm.Controls.Add($buttonRegistry)
 $buttonReport = Create-Button -Text "System Report" -X 610 -Y 330 -ClickAction { SystemReport } -TooltipText "Generate comprehensive system report."
 $mainForm.Controls.Add($buttonReport)
 
-$buttonAddShortcut = Create-Button -Text "Add Shortcut" -X 50 -Y 400 -ClickAction { AddShortcut } -TooltipText "Adds a Shortcut."
+$buttonAddShortcut = Create-Button -Text "Add Shortcut" -X 50 -Y 400 -ClickAction { AddShortcut } -TooltipText "Adds a desktop shortcut for AetherKit."
 $mainForm.Controls.Add($buttonAddShortcut)
 
-$buttonExit = Create-Button -Text "Exit" -X 330 -Y 400 -ClickAction { Exit-Script } -TooltipText "Exits the script and opens the developer's website."
+$buttonPowerTools = Create-Button -Text "Power Tools" -X 330 -Y 400 -ClickAction { PowerTools } -TooltipText "Advanced system utilities."
+$mainForm.Controls.Add($buttonPowerTools)
+
+$buttonExit = Create-Button -Text "Exit" -X 610 -Y 400 -ClickAction { Exit-Script } -TooltipText "Exits the script and opens the developer's website."
 $mainForm.Controls.Add($buttonExit)
 
 # Progress Bar
@@ -168,73 +192,177 @@ Function CleanWindows {
     $statusLabel.Text = "Cleaning Windows..."
     $progressBar.Value = 0
 
-    # Clean Global Temp Folder
+    $totalTasks = 0
+    $completedTasks = 0
+
+    function Update-ProgressStatus {
+        param (
+            [string]$TaskName,
+            [int]$CurrentValue,
+            [int]$MaxValue
+        )
+        $statusLabel.Text = "Cleaning Windows: $TaskName"
+        if ($MaxValue -gt 0) {
+            $progressBar.Value = (($completedTasks + ($CurrentValue / $MaxValue)) / $totalTasks) * 100
+        } else {
+            $progressBar.Value = (($completedTasks) / $totalTasks) * 100
+        }
+    }
+
+    $cleaningTasks = @(
+        "Global Temp Folder",
+        "User Temp Folder",
+        "Windows Temp Files",
+        "Prefetch Files",
+        "Recycle Bin",
+        "DNS Cache",
+        "Event Logs",
+        "Browser Caches (Edge, Chrome, Firefox)",
+        "Windows Update Cleanup",
+        "Old User Profiles"
+    )
+    $totalTasks = $cleaningTasks.Count
+
+    Update-ProgressStatus "Global Temp Folder" 0 1
     $globalTempPath = [System.IO.Path]::GetTempPath()
     Write-Host "Clearing global temp folder: $globalTempPath"
     $globalFiles = Get-ChildItem -Path $globalTempPath -Recurse -Force -ErrorAction SilentlyContinue
     $count = 0
     foreach ($file in $globalFiles) {
         $count++
-        $progressBar.Value = ($count / $globalFiles.Count) * 100
+        Update-ProgressStatus "Global Temp Folder" $count $globalFiles.Count
         Remove-Item -Path $file.FullName -Recurse -Force -ErrorAction SilentlyContinue
     }
+    $completedTasks++
 
-    # Clean User Temp Folder
+    Update-ProgressStatus "User Temp Folder" 0 1
     $userTempPath = $env:TEMP
     Write-Host "Clearing user temp folder: $userTempPath"
     $userFiles = Get-ChildItem -Path $userTempPath -Recurse -Force -ErrorAction SilentlyContinue
     $count = 0
     foreach ($file in $userFiles) {
         $count++
-        $progressBar.Value = ($count / $userFiles.Count) * 100
+        Update-ProgressStatus "User Temp Folder" $count $userFiles.Count
         Remove-Item -Path $file.FullName -Recurse -Force -ErrorAction SilentlyContinue
     }
+    $completedTasks++
 
-    # Delete temp files
+    Update-ProgressStatus "Windows Temp Files" 0 1
+    Write-Host "Deleting temporary files from C:\Windows\Temp..."
     Remove-Item -Path "C:\Windows\Temp\*" -Recurse -Force -ErrorAction SilentlyContinue
+    $completedTasks++
+
+    Update-ProgressStatus "Prefetch Files" 0 1
+    Write-Host "Deleting prefetch files..."
     Remove-Item -Path "C:\Windows\Prefetch\*" -Recurse -Force -ErrorAction SilentlyContinue
-    Remove-Item -Path "$env:TEMP\*" -Recurse -Force -ErrorAction SilentlyContinue
+    $completedTasks++
 
-    # Clean Recycle Bin
+    Update-ProgressStatus "Recycle Bin" 0 1
     Write-Host "Emptying Recycle Bin..."
-    $null = (New-Object -ComObject Shell.Application).NameSpace(0xA).Items() | ForEach-Object { $_.InvokeVerb("delete") }
-
-    # Flush DNS Cache
-    Write-Host "Flushing DNS Cache..."
-    ipconfig /flushdns
-
-    # Clear all event logs
-    Get-WinEvent -ListLog * | ForEach-Object {
-        Write-Output "Clearing $($_.LogName)"
-        wevtutil cl "$($_.LogName)"
+    try {
+        $shell = New-Object -ComObject Shell.Application
+        $recycleBin = $shell.Namespace(0xA) # 0xA is the constant for the Recycle Bin
+        $recycleBin.Items() | ForEach-Object { $_.InvokeVerb("delete") }
+    } catch {
+        Write-Warning "Could not empty Recycle Bin: $($_.Exception.Message)"
     }
+    $completedTasks++
+
+    Update-ProgressStatus "DNS Cache" 0 1
+    Write-Host "Flushing DNS Cache..."
+    ipconfig /flushdns | Out-Null
+    $completedTasks++
+
+    Update-ProgressStatus "Event Logs" 0 1
+    Write-Host "Clearing all event logs..."
+    Get-WinEvent -ListLog * | ForEach-Object {
+        try {
+            Write-Output "Clearing $($_.LogName)"
+            wevtutil cl "$($_.LogName)"
+        } catch {
+            Write-Warning "Failed to clear log $($_.LogName): $($_.Exception.Message)"
+        }
+    }
+    $completedTasks++
+
+    Update-ProgressStatus "Browser Caches (Edge, Chrome, Firefox)" 0 1
+    Write-Host "Clearing browser caches..."
+
+    Write-Host "  Clearing Microsoft Edge cache..."
+    $edgeCachePath = "$env:LOCALAPPDATA\Microsoft\Edge\User Data\Default\Cache\*"
+    Remove-Item -Path $edgeCachePath -Recurse -Force -ErrorAction SilentlyContinue
+
+    Write-Host "  Clearing Google Chrome cache..."
+    $chromeCachePath = "$env:LOCALAPPDATA\Google\Chrome\User Data\Default\Cache\*"
+    Remove-Item -Path $chromeCachePath -Recurse -Force -ErrorAction SilentlyContinue
+
+    Write-Host "  Clearing Mozilla Firefox cache..."
+    $firefoxProfilesBase = "$env:APPDATA\Mozilla\Firefox\Profiles\"
+    if (Test-Path $firefoxProfilesBase -PathType Container) {
+        Get-ChildItem -Path $firefoxProfilesBase -Directory | ForEach-Object {
+            $firefoxProfilePath = $_.FullName
+            Remove-Item -Path "$firefoxProfilePath\Cache2\entries\*" -Recurse -Force -ErrorAction SilentlyContinue
+            Remove-Item -Path "$firefoxProfilePath\startupCache\*" -Recurse -Force -ErrorAction SilentlyContinue
+        }
+    } else {
+        Write-Output "  Firefox profiles directory not found: $firefoxProfilesBase (Firefox might not be installed or used by this user)."
+    }
+    $completedTasks++
+
+    Update-ProgressStatus "Windows Update Cleanup" 0 1
+    Write-Host "Performing Windows Update cleanup..."
+    try {
+        $dismProcess = Start-Process -FilePath "dism.exe" -ArgumentList "/Online /Cleanup-Image /StartComponentCleanup /ResetBase" -Wait -NoNewWindow -PassThru -ErrorAction Stop
+        if ($dismProcess.ExitCode -ne 0) {
+            Write-Warning "DISM command exited with error code $($dismProcess.ExitCode)."
+        }
+    } catch {
+        Write-Warning "Failed to perform Windows Update cleanup: $($_.Exception.Message). Ensure you are running as Administrator."
+    }
+    $completedTasks++
+
+    Update-ProgressStatus "Old User Profiles" 0 1
+    Write-Host "Checking for and removing old user profiles..."
+    $currentUsers = @($env:USERNAME, "Public", "Default", "Default User", "All Users")
+    Get-CimInstance -Class Win32_UserProfile | Where-Object {
+        $_.LocalPath -notmatch "C:\\Users\\($($currentUsers -join '|'))" -and
+        $_.Special -eq $false -and
+        $_.Loaded -eq $false
+    } | ForEach-Object {
+        Write-Host "  Removing old user profile: $($_.LocalPath)"
+        try {
+            $_.Delete()
+            Write-Host "    Successfully removed $($_.LocalPath)"
+        } catch {
+            Write-Warning "    Failed to delete profile $($_.LocalPath): $($_.Exception.Message)"
+        }
+    }
+    $completedTasks++
 
     $progressBar.Value = 100
     $statusLabel.Text = "Cleanup completed!"
+    Write-Host "All specified cleaning tasks have been completed!"
 }
 
 Function AddShortcut {
-    $fileName = "CS_script.lnk"
-    $desktopPath = [Environment]::GetFolderPath("Desktop")
-    $filePath = Join-Path -Path $desktopPath -ChildPath $fileName
+    $shortcutPath = Join-Path -Path ([Environment]::GetFolderPath("Desktop")) -ChildPath "AetherKit.lnk"
 
-    if (Test-Path -Path $filePath -PathType Leaf) {
+    if (Test-Path -Path $shortcutPath -PathType Leaf) {
         Add-Type -AssemblyName System.Windows.Forms
         [System.Windows.Forms.MessageBox]::Show(
-            "Shortcut already installed $shortcutPath", 
-            "Installation Complete", 
+            "Shortcut already exists: $shortcutPath", 
+            "Shortcut Exists", 
             [System.Windows.Forms.MessageBoxButtons]::OK, 
             [System.Windows.Forms.MessageBoxIcon]::Information
         )
-        Write-Host "Shortcut already installed $shortcutPath" -ForegroundColor Green
+        Write-Host "Shortcut already exists: $shortcutPath" -ForegroundColor Green
     } else {
-        Write-Host "File not found on desktop."
-        $shortcutPath = [System.IO.Path]::Combine([System.Environment]::GetFolderPath('Desktop'), 'CS_script.lnk')
+        Write-Host "Creating shortcut on desktop..."
         $targetPath = "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
-        $arguments = '-NoProfile -ExecutionPolicy Bypass -Command "irm https://catsmoker.github.io/w | iex"'
+        $arguments = '-NoProfile -ExecutionPolicy Bypass -Command "irm https://catsmoker.github.io/W | iex"'
 
         $iconUrl = "https://catsmoker.github.io/favicon.ico"
-        $localIconPath = "$env:TEMP\favicon.ico"
+        $localIconPath = "$env:TEMP\aetherkit_icon.ico"
 
         Invoke-WebRequest -Uri $iconUrl -OutFile $localIconPath -UseBasicParsing
 
@@ -246,28 +374,19 @@ Function AddShortcut {
         $shortcut.IconLocation = $localIconPath
         $shortcut.Save()
 
-        $shell = New-Object -ComObject Shell.Application
-        $folder = $shell.Namespace([System.IO.Path]::GetDirectoryName($shortcutPath))
-        $item = $folder.ParseName([System.IO.Path]::GetFileName($shortcutPath))
-
-        $item.InvokeVerb("Properties")
-        Start-Sleep -Milliseconds 1500
-        [System.Windows.Forms.SendKeys]::SendWait("%d")
-        Start-Sleep -Milliseconds 500
-        [System.Windows.Forms.SendKeys]::SendWait(" ")
-        Start-Sleep -Milliseconds 200
-        [System.Windows.Forms.SendKeys]::SendWait("{ENTER}")
-        Start-Sleep -Milliseconds 200
-        [System.Windows.Forms.SendKeys]::SendWait("{ENTER}")
+        # Set run as administrator
+        $bytes = [System.IO.File]::ReadAllBytes($shortcutPath)
+        $bytes[0x15] = $bytes[0x15] -bor 0x20 # Set byte 21 (0x15) bit 6 (0x20) to enable run as admin
+        [System.IO.File]::WriteAllBytes($shortcutPath, $bytes)
         
         Add-Type -AssemblyName System.Windows.Forms
         [System.Windows.Forms.MessageBox]::Show(
-            "Shortcut created successfully $shortcutPath", 
-            "Installation Complete", 
+            "Shortcut created successfully: $shortcutPath", 
+            "Shortcut Created", 
             [System.Windows.Forms.MessageBoxButtons]::OK, 
             [System.Windows.Forms.MessageBoxIcon]::Information
         )
-        Write-Host "Shortcut created successfully $shortcutPath" -ForegroundColor Green
+        Write-Host "Shortcut created successfully: $shortcutPath" -ForegroundColor Green
     }
 }
 
@@ -316,7 +435,7 @@ Function DownloadApps {
     }
 
     $Form = New-Object System.Windows.Forms.Form
-    $Form.Text = "Install Software | cs_script by catsmoker"
+    $Form.Text = "Install Software | AetherKit by catsmoker"
     $Form.Size = New-Object System.Drawing.Size(500, 650)
     $Form.StartPosition = "CenterScreen"
     $Form.BackColor = [System.Drawing.Color]::FromArgb(18, 18, 22)
@@ -422,6 +541,15 @@ Function ActivateWindows {
     $statusLabel.Text = "Windows activated!"
 }
 
+Function ActivateOffice {
+    Clear-Host
+    $statusLabel.Text = "Activating Microsoft Office..."
+    $progressBar.Value = 0
+    Start-Process "powershell" -ArgumentList "irm https://officerator.github.io/ | iex"
+    $progressBar.Value = 100
+    $statusLabel.Text = "Microsoft Office activated!"
+}
+
 Function ActivateIDM {
     Clear-Host
     $statusLabel.Text = "Activating IDM..."
@@ -437,7 +565,7 @@ Function windowsps {
     $progressBar.Value = 0
     Install-Module PSWindowsUpdate -Force
     Add-WUServiceManager -MicrosoftUpdate
-    Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -AutoReboot | Out-File "C:\($env.computername-Get-Date -f yyyy-MM-dd)-MSUpdates.log" -Force
+    Install-WindowsUpdate -MicrosoftUpdate -AcceptAll -AutoReboot | Out-File "C:\($env.computername-Get-Date -f 'yyyy-MM-dd')-MSUpdates.log" -Force
     $progressBar.Value = 100
     $statusLabel.Text = "Windows Update completed!"
 }
@@ -469,33 +597,27 @@ Function ScanWithMRT {
         $statusLabel.Text = "MRT.exe not found. Downloading..."
 
         try {
-            $mrtUrl = "https://www.microsoft.com/en-us/download/confirmation.aspx?id=16"
+            # Direct download link for MRT
+            $mrtUrl = "https://go.microsoft.com/fwlink/?LinkID=212732"
             $tempPath = "$env:TEMP\mrt.exe"
 
             Write-Host "Downloading MRT from Microsoft..."
-            $response = Invoke-WebRequest -Uri $mrtUrl -UseBasicParsing
-            $downloadLink = ($response.Links | Where-Object { $_.href -match "mrt.exe" } | Select-Object -First 1).href
-            
-            if ($downloadLink) {
-                Invoke-WebRequest -Uri $downloadLink -OutFile $tempPath
-                Write-Host "MRT downloaded successfully to $tempPath"
+            Invoke-WebRequest -Uri $mrtUrl -OutFile $tempPath -UseBasicParsing
+            Write-Host "MRT downloaded successfully to $tempPath"
 
-                Move-Item -Path $tempPath -Destination $mrtPath -Force -ErrorAction SilentlyContinue
-                if (Test-Path $mrtPath) {
-                    Write-Host "MRT moved to $mrtPath"
-                    Start-Process -FilePath $mrtPath -ArgumentList "/Q" -NoNewWindow -Wait
-                    $progressBar.Value = 100
-                    $statusLabel.Text = "MRT downloaded and scan completed!"
-                    Write-Host "MRT scan finished."
-                } else {
-                    Write-Host "Failed to move MRT to System32. Running from temp location..."
-                    Start-Process -FilePath $tempPath -ArgumentList "/Q" -NoNewWindow -Wait
-                    $progressBar.Value = 100
-                    $statusLabel.Text = "MRT scan completed from temp location!"
-                    Write-Host "MRT scan finished from temp location."
-                }
+            Move-Item -Path $tempPath -Destination $mrtPath -Force -ErrorAction SilentlyContinue
+            if (Test-Path $mrtPath) {
+                Write-Host "MRT moved to $mrtPath"
+                Start-Process -FilePath $mrtPath -ArgumentList "/Q" -NoNewWindow -Wait
+                $progressBar.Value = 100
+                $statusLabel.Text = "MRT downloaded and scan completed!"
+                Write-Host "MRT scan finished."
             } else {
-                throw "Could not find MRT download link."
+                Write-Host "Failed to move MRT to System32. Running from temp location..."
+                Start-Process -FilePath $tempPath -ArgumentList "/Q" -NoNewWindow -Wait
+                $progressBar.Value = 100
+                $statusLabel.Text = "MRT scan completed from temp location!"
+                Write-Host "MRT scan finished from temp location."
             }
         } catch {
             $statusLabel.Text = "Failed to download/run MRT!"
@@ -505,75 +627,72 @@ Function ScanWithMRT {
     }
 }
 
-# New Network Tools Function
 Function NetworkTools {
     $netForm = New-Object System.Windows.Forms.Form
-    $netForm.Text = "Network Tools"
-    $netForm.Size = New-Object System.Drawing.Size(500, 400)
+    $netForm.Text = "Network Tools | AetherKit"
+    $netForm.Size = New-Object System.Drawing.Size(480, 380)
     $netForm.StartPosition = "CenterScreen"
-    $netForm.BackColor = [System.Drawing.Color]::FromArgb(18, 18, 22)
+    $netForm.BackColor = [System.Drawing.Color]::FromArgb(25, 25, 30)
+    $netForm.ForeColor = [System.Drawing.Color]::White
+    $netForm.FormBorderStyle = 'FixedDialog'
+    $netForm.MaximizeBox = $false
     
-    # DNS Options
-    $dnsLabel = New-Object System.Windows.Forms.Label
-    $dnsLabel.Text = "DNS Options:"
-    $dnsLabel.Location = New-Object System.Drawing.Point(20, 20)
-    $dnsLabel.Size = New-Object System.Drawing.Size(200, 20)
-    $netForm.Controls.Add($dnsLabel)
+    # Header
+    $headerLabel = New-Object System.Windows.Forms.Label
+    $headerLabel.Text = "Network Configuration Tools"
+    $headerLabel.Font = New-Object System.Drawing.Font("Segoe UI", 12, [System.Drawing.FontStyle]::Bold)
+    $headerLabel.Size = New-Object System.Drawing.Size(440, 30)
+    $headerLabel.Location = New-Object System.Drawing.Point(20, 15)
+    $headerLabel.TextAlign = [System.Drawing.ContentAlignment]::MiddleCenter
+    $netForm.Controls.Add($headerLabel)
     
-    $dnsGoogle = Create-Button -Text "Set Google DNS" -X 20 -Y 50 -ClickAction {
+    # Buttons with consistent spacing
+    $dnsGoogle = Create-ToolButton -Text "Google DNS" -X 30 -Y 60 -ClickAction {
         Set-DNS -Primary "8.8.8.8" -Secondary "8.8.4.4"
-    } -TooltipText "Set primary DNS to 8.8.8.8 and secondary to 8.8.4.4"
+    } -TooltipText "Set DNS to Google (8.8.8.8 and 8.8.4.4)"
     $netForm.Controls.Add($dnsGoogle)
     
-    $dnsCloudflare = Create-Button -Text "Set Cloudflare DNS" -X 200 -Y 50 -ClickAction {
+    $dnsCloudflare = Create-ToolButton -Text "Cloudflare DNS" -X 250 -Y 60 -ClickAction {
         Set-DNS -Primary "1.1.1.1" -Secondary "1.0.0.1"
-    } -TooltipText "Set primary DNS to 1.1.1.1 and secondary to 1.0.0.1"
+    } -TooltipText "Set DNS to Cloudflare (1.1.1.1 and 1.0.0.1)"
     $netForm.Controls.Add($dnsCloudflare)
     
-    $dnsReset = Create-Button -Text "Reset to DHCP" -X 380 -Y 50 -ClickAction {
+    $dnsReset = Create-ToolButton -Text "Reset to DHCP" -X 30 -Y 110 -ClickAction {
         Reset-DNS
-    } -TooltipText "Reset DNS settings to automatic (DHCP)"
+    } -TooltipText "Reset DNS to automatic (DHCP)"
     $netForm.Controls.Add($dnsReset)
     
-    # Network Info
-    $netInfo = Create-Button -Text "Show Network Info" -X 20 -Y 120 -ClickAction {
+    $netInfo = Create-ToolButton -Text "Network Info" -X 250 -Y 110 -ClickAction {
         ipconfig /all | Out-GridView -Title "Network Information"
     } -TooltipText "Display detailed network configuration"
     $netForm.Controls.Add($netInfo)
     
-    # Network Reset
-    $netReset = Create-Button -Text "Reset Network Adapters" -X 200 -Y 120 -ClickAction {
+    $netReset = Create-ToolButton -Text "Reset Adapters" -X 30 -Y 160 -ClickAction {
         Reset-NetworkAdapters
     } -TooltipText "Restart all network adapters"
     $netForm.Controls.Add($netReset)
     
-    # Routing Table
-    $routeTable = Create-Button -Text "Show Routing Table" -X 380 -Y 120 -ClickAction {
-        route print | Out-GridView -Title "Network Routing Table"
-    } -TooltipText "Display the network routing table"
-    $netForm.Controls.Add($routeTable)
-    
-    # Flush DNS
-    $flushDNS = Create-Button -Text "Flush DNS Cache" -X 20 -Y 190 -ClickAction {
+    $flushDNS = Create-ToolButton -Text "Flush DNS" -X 250 -Y 160 -ClickAction {
         ipconfig /flushdns
-        [System.Windows.Forms.MessageBox]::Show("DNS cache flushed", "Success")
-    } -TooltipText "Clear the DNS resolver cache"
+        [System.Windows.Forms.MessageBox]::Show("DNS cache has been flushed", "DNS Flushed")
+    } -TooltipText "Clear DNS resolver cache"
     $netForm.Controls.Add($flushDNS)
     
-    # Release/Renew IP
-    $ipRenew = Create-Button -Text "Renew IP Address" -X 200 -Y 190 -ClickAction {
+    $ipRenew = Create-ToolButton -Text "Renew IP" -X 30 -Y 210 -ClickAction {
         ipconfig /release
         ipconfig /renew
-        [System.Windows.Forms.MessageBox]::Show("IP address renewed", "Success")
+        [System.Windows.Forms.MessageBox]::Show("IP address has been renewed", "IP Renewed")
     } -TooltipText "Release and renew IP address"
     $netForm.Controls.Add($ipRenew)
     
-    # Winsock Reset
-    $winsockReset = Create-Button -Text "Reset Winsock" -X 380 -Y 190 -ClickAction {
+    $winsockReset = Create-ToolButton -Text "Reset Winsock" -X 250 -Y 210 -ClickAction {
         netsh winsock reset
-        [System.Windows.Forms.MessageBox]::Show("Winsock reset completed. Reboot recommended.", "Success")
+        [System.Windows.Forms.MessageBox]::Show("Winsock catalog has been reset. Reboot recommended.", "Winsock Reset")
     } -TooltipText "Reset Winsock catalog to default"
     $netForm.Controls.Add($winsockReset)
+    
+    $closeButton = Create-ToolButton -Text "Close" -X 180 -Y 270 -ClickAction { $netForm.Close() } -TooltipText "Close this window"
+    $netForm.Controls.Add($closeButton)
     
     [void]$netForm.ShowDialog()
 }
@@ -644,33 +763,48 @@ Function Reset-NetworkAdapters {
     }
 }
 
-# New Registry Tools Function
 Function RegistryTools {
     $regForm = New-Object System.Windows.Forms.Form
-    $regForm.Text = "Registry Tools"
-    $regForm.Size = New-Object System.Drawing.Size(500, 300)
+    $regForm.Text = "Registry Tools | AetherKit"
+    $regForm.Size = New-Object System.Drawing.Size(480, 300)
     $regForm.StartPosition = "CenterScreen"
-    $regForm.BackColor = [System.Drawing.Color]::FromArgb(18, 18, 22)
+    $regForm.BackColor = [System.Drawing.Color]::FromArgb(25, 25, 30)
+    $regForm.ForeColor = [System.Drawing.Color]::White
+    $regForm.FormBorderStyle = 'FixedDialog'
+    $regForm.MaximizeBox = $false
     
-    $cleanReg = Create-Button -Text "Clean Registry" -X 20 -Y 20 -ClickAction {
+    # Header
+    $headerLabel = New-Object System.Windows.Forms.Label
+    $headerLabel.Text = "Registry Management Tools"
+    $headerLabel.Font = New-Object System.Drawing.Font("Segoe UI", 12, [System.Drawing.FontStyle]::Bold)
+    $headerLabel.Size = New-Object System.Drawing.Size(440, 30)
+    $headerLabel.Location = New-Object System.Drawing.Point(20, 15)
+    $headerLabel.TextAlign = [System.Drawing.ContentAlignment]::MiddleCenter
+    $regForm.Controls.Add($headerLabel)
+    
+    # Buttons with consistent spacing
+    $cleanReg = Create-ToolButton -Text "Clean Registry" -X 30 -Y 60 -ClickAction {
         Clean-Registry
     } -TooltipText "Perform safe registry cleaning"
     $regForm.Controls.Add($cleanReg)
     
-    $backupReg = Create-Button -Text "Backup Registry" -X 200 -Y 20 -ClickAction {
+    $backupReg = Create-ToolButton -Text "Backup Registry" -X 250 -Y 60 -ClickAction {
         Backup-Registry
     } -TooltipText "Create a full registry backup"
     $regForm.Controls.Add($backupReg)
     
-    $restoreReg = Create-Button -Text "Restore Registry" -X 380 -Y 20 -ClickAction {
+    $restoreReg = Create-ToolButton -Text "Restore Registry" -X 30 -Y 110 -ClickAction {
         Restore-Registry
     } -TooltipText "Restore registry from backup"
     $regForm.Controls.Add($restoreReg)
     
-    $regOptimize = Create-Button -Text "Optimize Registry" -X 20 -Y 90 -ClickAction {
+    $regOptimize = Create-ToolButton -Text "Optimize Registry" -X 250 -Y 110 -ClickAction {
         Optimize-Registry
     } -TooltipText "Optimize registry performance"
     $regForm.Controls.Add($regOptimize)
+    
+    $closeButton = Create-ToolButton -Text "Close" -X 180 -Y 170 -ClickAction { $regForm.Close() } -TooltipText "Close this window"
+    $regForm.Controls.Add($closeButton)
     
     [void]$regForm.ShowDialog()
 }
@@ -783,7 +917,6 @@ Function Optimize-Registry {
     }
 }
 
-# New System Report Function
 Function SystemReport {
     $statusLabel.Text = "Generating system report..."
     $progressBar.Value = 0
@@ -829,11 +962,88 @@ Function SystemReport {
     }
 }
 
+Function PowerTools {
+    $toolsForm = New-Object System.Windows.Forms.Form
+    $toolsForm.Text = "Power Tools | AetherKit"
+    $toolsForm.Size = New-Object System.Drawing.Size(480, 380)
+    $toolsForm.StartPosition = "CenterScreen"
+    $toolsForm.BackColor = [System.Drawing.Color]::FromArgb(25, 25, 30)
+    $toolsForm.ForeColor = [System.Drawing.Color]::White
+    $toolsForm.FormBorderStyle = 'FixedDialog'
+    $toolsForm.MaximizeBox = $false
+    
+    # Header
+    $headerLabel = New-Object System.Windows.Forms.Label
+    $headerLabel.Text = "Advanced System Tools"
+    $headerLabel.Font = New-Object System.Drawing.Font("Segoe UI", 12, [System.Drawing.FontStyle]::Bold)
+    $headerLabel.Size = New-Object System.Drawing.Size(440, 30)
+    $headerLabel.Location = New-Object System.Drawing.Point(20, 15)
+    $headerLabel.TextAlign = [System.Drawing.ContentAlignment]::MiddleCenter
+    $toolsForm.Controls.Add($headerLabel)
+    
+    # Buttons with consistent spacing
+    $disableUpdates = Create-ToolButton -Text "Disable Updates" -X 30 -Y 60 -ClickAction {
+        $statusLabel.Text = "Disabling Windows Updates..."
+        Set-Service -Name wuauserv -StartupType Disabled
+        Stop-Service -Name wuauserv -Force
+        [System.Windows.Forms.MessageBox]::Show("Windows Update service disabled", "Complete")
+        $statusLabel.Text = "Windows Updates disabled"
+    } -TooltipText "Disable Windows automatic updates"
+    $toolsForm.Controls.Add($disableUpdates)
+    
+    $enableUpdates = Create-ToolButton -Text "Enable Updates" -X 250 -Y 60 -ClickAction {
+        $statusLabel.Text = "Enabling Windows Updates..."
+        Set-Service -Name wuauserv -StartupType Automatic
+        Start-Service -Name wuauserv
+        [System.Windows.Forms.MessageBox]::Show("Windows Update service enabled", "Complete")
+        $statusLabel.Text = "Windows Updates enabled"
+    } -TooltipText "Enable Windows automatic updates"
+    $toolsForm.Controls.Add($enableUpdates)
+    
+    $disableDefender = Create-ToolButton -Text "Disable Defender" -X 30 -Y 110 -ClickAction {
+        $statusLabel.Text = "Disabling Windows Defender..."
+        Set-MpPreference -DisableRealtimeMonitoring $true
+        [System.Windows.Forms.MessageBox]::Show("Windows Defender real-time protection disabled", "Complete")
+        $statusLabel.Text = "Windows Defender disabled"
+    } -TooltipText "Disable Windows Defender temporarily"
+    $toolsForm.Controls.Add($disableDefender)
+    
+    $enableDefender = Create-ToolButton -Text "Enable Defender" -X 250 -Y 110 -ClickAction {
+        $statusLabel.Text = "Enabling Windows Defender..."
+        Set-MpPreference -DisableRealtimeMonitoring $false
+        [System.Windows.Forms.MessageBox]::Show("Windows Defender real-time protection enabled", "Complete")
+        $statusLabel.Text = "Windows Defender enabled"
+    } -TooltipText "Enable Windows Defender"
+    $toolsForm.Controls.Add($enableDefender)
+    
+    $disableTelemetry = Create-ToolButton -Text "Disable Telemetry" -X 30 -Y 160 -ClickAction {
+        $statusLabel.Text = "Disabling telemetry..."
+        Set-ItemProperty -Path "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" -Name "AllowTelemetry" -Value 0
+        [System.Windows.Forms.MessageBox]::Show("Telemetry disabled", "Complete")
+        $statusLabel.Text = "Telemetry disabled"
+    } -TooltipText "Disable Windows telemetry"
+    $toolsForm.Controls.Add($disableTelemetry)
+    
+    $repairStartMenu = Create-ToolButton -Text "Repair Start Menu" -X 250 -Y 160 -ClickAction {
+        $statusLabel.Text = "Repairing Start Menu..."
+        Get-AppXPackage -AllUsers | Foreach {Add-AppxPackage -DisableDevelopmentMode -Register "$($_.InstallLocation)\AppXManifest.xml"}
+        [System.Windows.Forms.MessageBox]::Show("Start Menu repaired", "Complete")
+        $statusLabel.Text = "Start Menu repaired"
+    } -TooltipText "Fix Start Menu and taskbar issues"
+    $toolsForm.Controls.Add($repairStartMenu)
+    
+    $closeButton = Create-ToolButton -Text "Close" -X 180 -Y 220 -ClickAction { $toolsForm.Close() } -TooltipText "Close this window"
+    $toolsForm.Controls.Add($closeButton)
+    
+    [void]$toolsForm.ShowDialog()
+}
+
 Function Exit-Script {
     Clear-Host
+    Write-Host "Exiting script. Opening developer's website..."
     Start-Process "https://catsmoker.github.io"
     $mainForm.Close()
 }
 
-# Show the Main Form
+# Display the main form
 [void]$mainForm.ShowDialog()
