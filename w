@@ -261,7 +261,7 @@ Function CleanWindows {
     Write-Host "Emptying Recycle Bin..."
     try {
         $shell = New-Object -ComObject Shell.Application
-        $recycleBin = $shell.Namespace(0xA) # 0xA is the constant for the Recycle Bin
+        $recycleBin = $shell.Namespace(0xA)
         $recycleBin.Items() | ForEach-Object { $_.InvokeVerb("delete") }
     } catch {
         Write-Warning "Could not empty Recycle Bin: $($_.Exception.Message)"
@@ -359,7 +359,7 @@ Function AddShortcut {
     } else {
         Write-Host "Creating shortcut on desktop..."
         $targetPath = "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
-        $arguments = '-NoProfile -ExecutionPolicy Bypass -Command "irm https://catsmoker.github.io/W | iex"'
+        $arguments = '-NoProfile -ExecutionPolicy Bypass -Command "irm https://catsmoker.github.io/w | iex"'
 
         $iconUrl = "https://catsmoker.github.io/favicon.ico"
         $localIconPath = "$env:TEMP\aetherkit_icon.ico"
@@ -376,7 +376,7 @@ Function AddShortcut {
 
         # Set run as administrator
         $bytes = [System.IO.File]::ReadAllBytes($shortcutPath)
-        $bytes[0x15] = $bytes[0x15] -bor 0x20 # Set byte 21 (0x15) bit 6 (0x20) to enable run as admin
+        $bytes[0x15] = $bytes[0x15] -bor 0x20
         [System.IO.File]::WriteAllBytes($shortcutPath, $bytes)
         
         Add-Type -AssemblyName System.Windows.Forms
