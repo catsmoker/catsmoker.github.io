@@ -138,9 +138,6 @@ $mainForm.Controls.Add($buttonActivateIDM)
 $buttonActivateWindows = Create-Button -Text "Activate Windows" -X 330 -Y 190 -ClickAction { ActivateWindows } -TooltipText "Activates Windows using an external script."
 $mainForm.Controls.Add($buttonActivateWindows)
 
-$buttonActivateOffice = Create-Button -Text "Activate Office" -X 610 -Y 190 -ClickAction { ActivateOffice } -TooltipText "Activates Microsoft Office."
-$mainForm.Controls.Add($buttonActivateOffice)
-
 $buttonAtlas = Create-Button -Text "Windows Update" -X 50 -Y 260 -ClickAction { windowsps } -TooltipText "Installs Windows updates via PSWindowsUpdate."
 $mainForm.Controls.Add($buttonAtlas)
 
@@ -361,7 +358,7 @@ Function AddShortcut {
         $targetPath = "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
         $arguments = '-NoProfile -ExecutionPolicy Bypass -Command "irm https://catsmoker.github.io/w | iex"'
 
-        $iconUrl = "https://catsmoker.github.io/favicon.ico"
+        $iconUrl = "https://catsmoker.github.io/aetherkit_icon.ico"
         $localIconPath = "$env:TEMP\aetherkit_icon.ico"
 
         Invoke-WebRequest -Uri $iconUrl -OutFile $localIconPath -UseBasicParsing
@@ -539,15 +536,6 @@ Function ActivateWindows {
     Start-Process "powershell" -ArgumentList "irm https://get.activated.win | iex"
     $progressBar.Value = 100
     $statusLabel.Text = "Windows activated!"
-}
-
-Function ActivateOffice {
-    Clear-Host
-    $statusLabel.Text = "Activating Microsoft Office..."
-    $progressBar.Value = 0
-    Start-Process "powershell" -ArgumentList "irm https://officerator.github.io/ | iex"
-    $progressBar.Value = 100
-    $statusLabel.Text = "Microsoft Office activated!"
 }
 
 Function ActivateIDM {
