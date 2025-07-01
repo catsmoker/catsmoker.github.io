@@ -97,7 +97,7 @@ Function New-ToolButton {
 #region Main Form and Controls
 # Main Form
 $mainForm = New-Object System.Windows.Forms.Form
-$mainForm.Text = "AetherKit v3.0 by catsmoker"
+$mainForm.Text = "AetherKit v4.0 by catsmoker"
 $mainForm.Size = New-Object System.Drawing.Size(900, 700)
 $mainForm.StartPosition = "CenterScreen"
 $mainForm.BackColor = [System.Drawing.Color]::FromArgb(18, 18, 22)
@@ -108,7 +108,7 @@ $mainForm.Font = New-Object System.Drawing.Font("Segoe UI", 10)
 
 # Title Label
 $titleLabel = New-Object System.Windows.Forms.Label
-$titleLabel.Text = "AetherKit v3.0"
+$titleLabel.Text = "AetherKit"
 $titleLabel.Font = New-Object System.Drawing.Font("Segoe UI", 20, [System.Drawing.FontStyle]::Bold)
 $titleLabel.Size = New-Object System.Drawing.Size(850, 40)
 $titleLabel.Location = New-Object System.Drawing.Point(25, 20)
