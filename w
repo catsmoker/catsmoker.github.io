@@ -144,9 +144,6 @@ $statusLabel.Font = New-Object System.Drawing.Font("Segoe UI", 10)
 $statusLabel.ForeColor = [System.Drawing.Color]::FromArgb(150, 150, 150)
 $mainForm.Controls.Add($statusLabel)
 
-# Define the path to the modules folder
-$modulePath = Join-Path -Path $PSScriptRoot -ChildPath "modules"
-
 # Menu Buttons (arranged in a grid)
 # The ClickAction now dot-sources the corresponding module script
 $buttonClean = New-Button -Text "Clean Windows" -X 50 -Y 120 -ClickAction { iex (irm "https://catsmoker.github.io/modules/CleanWindows.ps1") } -TooltipText "Cleans temporary files, Recycle Bin, and DNS cache."
