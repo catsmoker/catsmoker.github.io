@@ -149,46 +149,46 @@ $modulePath = Join-Path -Path $PSScriptRoot -ChildPath "modules"
 
 # Menu Buttons (arranged in a grid)
 # The ClickAction now dot-sources the corresponding module script
-$buttonClean = New-Button -Text "Clean Windows" -X 50 -Y 120 -ClickAction { . "https://catsmoker.github.io/modules/CleanWindows.ps1" } -TooltipText "Cleans temporary files, Recycle Bin, and DNS cache."
+$buttonClean = New-Button -Text "Clean Windows" -X 50 -Y 120 -ClickAction { iex (irm "https://catsmoker.github.io/modules/CleanWindows.ps1") } -TooltipText "Cleans temporary files, Recycle Bin, and DNS cache."
 $mainForm.Controls.Add($buttonClean)
 
-$buttonFix = New-Button -Text "Scan and Fix Windows" -X 330 -Y 120 -ClickAction { . "https://catsmoker.github.io/modules/FixWindows.ps1" } -TooltipText "Runs chkdsk, sfc, and DISM to repair Windows."
+$buttonFix = New-Button -Text "Scan and Fix Windows" -X 330 -Y 120 -ClickAction { iex (irm "https://catsmoker.github.io/modules/FixWindows.ps1") } -TooltipText "Runs chkdsk, sfc, and DISM to repair Windows."
 $mainForm.Controls.Add($buttonFix)
 
-$buttonApps = New-Button -Text "Apps/Upgrades" -X 610 -Y 120 -ClickAction { . "https://catsmoker.github.io/modules/DownloadApps.ps1" } -TooltipText "Install or upgrade software using winget."
+$buttonApps = New-Button -Text "Apps/Upgrades" -X 610 -Y 120 -ClickAction { iex (irm "https://catsmoker.github.io/modules/DownloadApps.ps1") } -TooltipText "Install or upgrade software using winget."
 $mainForm.Controls.Add($buttonApps)
 
-$buttonActivateIDM = New-Button -Text "Activate IDM" -X 50 -Y 190 -ClickAction { . "https://catsmoker.github.io/modules/ActivateIDM.ps1" } -TooltipText "Activates Internet Download Manager."
+$buttonActivateIDM = New-Button -Text "Activate IDM" -X 50 -Y 190 -ClickAction { iex (irm "https://catsmoker.github.io/modules/ActivateIDM.ps1") } -TooltipText "Activates Internet Download Manager."
 $mainForm.Controls.Add($buttonActivateIDM)
 
-$buttonActivateWindows = New-Button -Text "Activate Windows" -X 330 -Y 190 -ClickAction { . "https://catsmoker.github.io/modules/ActivateWindows.ps1" } -TooltipText "Activates Windows using an external script."
+$buttonActivateWindows = New-Button -Text "Activate Windows" -X 330 -Y 190 -ClickAction { iex (irm "https://catsmoker.github.io/modules/ActivateWindows.ps1") } -TooltipText "Activates Windows using an external script."
 $mainForm.Controls.Add($buttonActivateWindows)
 
-$buttonspotifypro = New-Button -Text "Spotify Pro" -X 610 -Y 190 -ClickAction { . "https://catsmoker.github.io/modules/SpotifyPro.ps1" } -TooltipText "Add Spotify Premium using an external script."
+$buttonspotifypro = New-Button -Text "Spotify Pro" -X 610 -Y 190 -ClickAction { iex (irm "https://catsmoker.github.io/modules/SpotifyPro.ps1") } -TooltipText "Add Spotify Premium using an external script."
 $mainForm.Controls.Add($buttonspotifypro)
 
-$buttonAtlas = New-Button -Text "Windows Update" -X 50 -Y 260 -ClickAction { . "https://catsmoker.github.io/modules/windowsps.ps1" } -TooltipText "Installs Windows updates via PSWindowsUpdate."
+$buttonAtlas = New-Button -Text "Windows Update" -X 50 -Y 260 -ClickAction { iex (irm "https://catsmoker.github.io/modules/windowsps.ps1") } -TooltipText "Installs Windows updates via PSWindowsUpdate."
 $mainForm.Controls.Add($buttonAtlas)
 
-$buttonCTT = New-Button -Text "CTT Windows Utility" -X 330 -Y 260 -ClickAction { . "https://catsmoker.github.io/modules/CTT.ps1" } -TooltipText "Runs Chris Titus Tech's Windows Utility."
+$buttonCTT = New-Button -Text "CTT Windows Utility" -X 330 -Y 260 -ClickAction { iex (irm "https://catsmoker.github.io/modules/CTT.ps1") } -TooltipText "Runs Chris Titus Tech's Windows Utility."
 $mainForm.Controls.Add($buttonCTT)
 
-$buttonMRT = New-Button -Text "Virus Scan" -X 610 -Y 260 -ClickAction { . "https://catsmoker.github.io/modules/ScanWithMRT.ps1" } -TooltipText "Runs Windows Malicious Software Removal Tool."
+$buttonMRT = New-Button -Text "Virus Scan" -X 610 -Y 260 -ClickAction { iex (irm "https://catsmoker.github.io/modules/ScanWithMRT.ps1") } -TooltipText "Runs Windows Malicious Software Removal Tool."
 $mainForm.Controls.Add($buttonMRT)
 
-$buttonNetwork = New-Button -Text "Network Tools" -X 50 -Y 330 -ClickAction { . "https://catsmoker.github.io/modules/NetworkTools.ps1" } -TooltipText "Network configuration and diagnostic tools."
+$buttonNetwork = New-Button -Text "Network Tools" -X 50 -Y 330 -ClickAction { iex (irm "https://catsmoker.github.io/modules/NetworkTools.ps1") } -TooltipText "Network configuration and diagnostic tools."
 $mainForm.Controls.Add($buttonNetwork)
 
-$buttonRegistry = New-Button -Text "Registry Tools" -X 330 -Y 330 -ClickAction { . "https://catsmoker.github.io/modules/RegistryTools.ps1" } -TooltipText "Registry maintenance and backup tools."
+$buttonRegistry = New-Button -Text "Registry Tools" -X 330 -Y 330 -ClickAction { iex (irm "https://catsmoker.github.io/modules/RegistryTools.ps1") } -TooltipText "Registry maintenance and backup tools."
 $mainForm.Controls.Add($buttonRegistry)
 
-$buttonReport = New-Button -Text "System Report" -X 610 -Y 330 -ClickAction { . "https://catsmoker.github.io/modules/SystemReport.ps1" } -TooltipText "Generate comprehensive system report."
+$buttonReport = New-Button -Text "System Report" -X 610 -Y 330 -ClickAction { iex (irm "https://catsmoker.github.io/modules/SystemReport.ps1") } -TooltipText "Generate comprehensive system report."
 $mainForm.Controls.Add($buttonReport)
 
-$buttonAddShortcut = New-Button -Text "Add Shortcut" -X 50 -Y 400 -ClickAction { . "https://catsmoker.github.io/modules/AddShortcut.ps1" } -TooltipText "Adds a desktop shortcut for AetherKit."
+$buttonAddShortcut = New-Button -Text "Add Shortcut" -X 50 -Y 400 -ClickAction { iex (irm "https://catsmoker.github.io/modules/AddShortcut.ps1") } -TooltipText "Adds a desktop shortcut for AetherKit."
 $mainForm.Controls.Add($buttonAddShortcut)
 
-$buttonPowerTools = New-Button -Text "Power Tools" -X 330 -Y 400 -ClickAction { . "https://catsmoker.github.io/modules/PowerTools.ps1" } -TooltipText "Advanced system utilities."
+$buttonPowerTools = New-Button -Text "Power Tools" -X 330 -Y 400 -ClickAction { iex (irm "https://catsmoker.github.io/modules/PowerTools.ps1") } -TooltipText "Advanced system utilities."
 $mainForm.Controls.Add($buttonPowerTools)
 
 $buttonExit = New-Button -Text "Exit" -X 610 -Y 400 -ClickAction { Exit-Script } -TooltipText "Exits the script and opens the developer's website."
