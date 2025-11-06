@@ -1,115 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh">
-    <title>Redirecting...</title>
-    <link rel="icon" href="https://img.icons8.com/?size=100&id=QWmWrCxghblr&format=png&color=000000" type="image/x-icon">
-    <meta http-equiv="refresh" content="0; url=https://catsmoker.vercel.app">
-    
-    <style>
-        body {
-            background-color: black;
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            flex-direction: column;
-        }
-        
-        .loader {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            width: 100%;
-        }
-
-        .jimu-primary-loading:before,
-        .jimu-primary-loading:after {
-            position: absolute;
-            top: 0;
-            content: '';
-        }
-
-        .jimu-primary-loading:before {
-            left: -19.992px;
-        }
-
-        .jimu-primary-loading:after {
-            left: 19.992px;
-            -webkit-animation-delay: 0.32s !important;
-            animation-delay: 0.32s !important;
-        }
-
-        .jimu-primary-loading:before,
-        .jimu-primary-loading:after,
-        .jimu-primary-loading {
-            background: #076fe5;
-            -webkit-animation: loading-keys-app-loading 0.8s infinite ease-in-out;
-            animation: loading-keys-app-loading 0.8s infinite ease-in-out;
-            width: 13.6px;
-            height: 32px;
-        }
-
-        .jimu-primary-loading {
-            text-indent: -9999em;
-            margin: auto;
-            position: relative;
-            -webkit-animation-delay: 0.16s !important;
-            animation-delay: 0.16s !important;
-        }
-
-        @-webkit-keyframes loading-keys-app-loading {
-            0%,
-            80%,
-            100% {
-                opacity: .75;
-                box-shadow: 0 0 #076fe5;
-                height: 32px;
-            }
-
-            40% {
-                opacity: 1;
-                box-shadow: 0 -8px #076fe5;
-                height: 40px;
-            }
-        }
-
-        @keyframes loading-keys-app-loading {
-            0%,
-            80%,
-            100% {
-                opacity: .75;
-                box-shadow: 0 0 #076fe5;
-                height: 32px;
-            }
-
-            40% {
-                opacity: 1;
-                box-shadow: 0 -8px #076fe5;
-                height: 40px;
-            }
-        }
-        
-        p {
-            margin-top: 20px;
-            text-align: center;
-        }
-        
-        a {
-            color: #076fe5;
-            text-decoration: none;
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Redirecting…</title>
+  <link rel="icon" href="https://img.icons8.com/?size=100&id=QWmWrCxghblr&format=png&color=000000">
+  <meta http-equiv="refresh" content="0; url=https://catsmoker.vercel.app">
+  <style>
+    html,body{height:100%;margin:0}
+    body{display:flex;align-items:center;justify-content:center;flex-direction:column;background:#000;color:#fff;font-family:system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial}
+    .loader{display:flex;gap:8px;align-items:flex-end;height:48px}
+    .bar{width:12px;height:32px;background:#076fe5;animation:grow 0.8s infinite ease-in-out}
+    .bar:nth-child(2){animation-delay:0.16s}
+    .bar:nth-child(3){animation-delay:0.32s}
+    @keyframes grow{0%,80%,100%{height:32px;opacity:.75}40%{height:40px;opacity:1}}
+    p{margin-top:20px}
+    a{color:#076fe5;text-decoration:none}
+  </style>
 </head>
 <body>
-    <div class="loader">
-        <div class="justify-content-center jimu-primary-loading"></div>
-    </div>
-    <p>If you are not redirected automatically, <a href="https://catsmoker.vercel.app">click here</a>.</p>
+  <div class="loader" aria-hidden="true">
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+  </div>
+  <p>If you are not redirected, <a href="https://catsmoker.vercel.app">click here</a>.</p>
 </body>
 </html>

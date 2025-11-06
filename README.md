@@ -1,6 +1,5 @@
 # 🖥️ Windows Maintenance Toolkit AetherKit
 
-![Version](https://img.shields.io/badge/version-v4-green)
 ![Platform](https://img.shields.io/badge/platform-Windows-blue)
 ![License: MIT](https://img.shields.io/badge/license-MIT-blue)
 
