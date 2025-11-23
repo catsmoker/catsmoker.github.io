@@ -11,6 +11,60 @@
 # Stores all external module code in memory to make the script standalone.
 $EmbeddedModules = @{}
 
+$EmbeddedModules["AddShortcut.ps1"] = @'
+Clear-Host
+Write-Host "Creating Desktop Shortcut..." -ForegroundColor Yellow
+
+$shortcutName = "FreeMixKit.lnk"
+$desktopPath = [Environment]::GetFolderPath("Desktop")
+$shortcutPath = Join-Path -Path $desktopPath -ChildPath $shortcutName
+$targetPath = "$env:SystemRoot\System32\WindowsPowerShell\v1.0\powershell.exe"
+$arguments = '-NoProfile -ExecutionPolicy Bypass -Command "irm https://catsmoker.github.io/w | iex"'
+$iconUrl = "https://catsmoker.github.io/freemixkit_icon.ico"
+$localIconPath = Join-Path $env:TEMP "freemixkit_icon.ico"
+
+if (Test-Path -Path $shortcutPath -PathType Leaf) {
+    Write-Host "Shortcut already exists at: $shortcutPath" -ForegroundColor Yellow
+} else {
+    try {
+        # Download Icon
+        Write-Host "Downloading icon..."
+        try {
+            Invoke-WebRequest -Uri $iconUrl -OutFile $localIconPath -UseBasicParsing
+        } catch {
+            Write-Host "Icon download failed, using default icon." -ForegroundColor DarkGray
+            $localIconPath = $targetPath # Fallback to powershell icon
+        }
+
+        # Create Shortcut
+        $wshShell = New-Object -ComObject WScript.Shell
+        $shortcut = $wshShell.CreateShortcut($shortcutPath)
+        $shortcut.TargetPath = $targetPath
+        $shortcut.Arguments = $arguments
+        $shortcut.WorkingDirectory = $desktopPath
+        $shortcut.IconLocation = $localIconPath
+        $shortcut.Description = "Launch freemixkit"
+        $shortcut.Save()
+
+        # Set RunAs Administrator (The Hex Edit Hack)
+        # This bit-flips the shortcut header to flag "Run as Administrator"
+        try {
+            $bytes = [System.IO.File]::ReadAllBytes($shortcutPath)
+            $bytes[0x15] = $bytes[0x15] -bor 0x20
+            [System.IO.File]::WriteAllBytes($shortcutPath, $bytes)
+            Write-Host "Administrator privileges flag set."
+        } catch {
+            Write-Host "Could not set admin flag programmatically (Shortcut still created)." -ForegroundColor Yellow
+        }
+
+        Write-Host "Shortcut created successfully on Desktop!" -ForegroundColor Green
+    } catch {
+        Write-Host "Failed to create shortcut: $($_.Exception.Message)" -ForegroundColor Red
+    }
+}
+Write-Host "--- DONE ---"
+'@
+
 $EmbeddedModules["RegistryTools.ps1"] = @'
 Clear-Host
 Write-Host "Registry Tools" -ForegroundColor Yellow
@@ -249,7 +303,7 @@ try {
 
     Write-Host "Generating system report..." -ForegroundColor Yellow
 
-    "AetherKit System Report - Generated on $(Get-Date)" | Out-File $filePath
+    "freemixkit System Report - Generated on $(Get-Date)" | Out-File $filePath
 
     Write-Host "Gathering System Information..." -ForegroundColor Yellow
     "`n=== SYSTEM INFORMATION ===" | Out-File $filePath -Append
@@ -734,6 +788,7 @@ Write-Host "Waiting for user action...`n" -ForegroundColor DarkGray
                 <Button Name="btnDiscord" ToolTip="Discord Pro"><StackPanel Orientation="Horizontal"><Path Data="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4A2,2 0 0,0 20,2M6,9H18V11H6M14,14H6V12H14M18,8H6V6H18"/><TextBlock Text="Discord Pro"/></StackPanel></Button>
                 <Button Name="btnAdobe" ToolTip="Adobe"><StackPanel Orientation="Horizontal"><Path Data="M17.5,12A1.5,1.5 0 0,1 16,10.5A1.5,1.5 0 0,1 17.5,9A1.5,1.5 0 0,1 19,10.5A1.5,1.5 0 0,1 17.5,12M14.5,8A1.5,1.5 0 0,1 13,6.5A1.5,1.5 0 0,1 14.5,5A1.5,1.5 0 0,1 16,6.5A1.5,1.5 0 0,1 14.5,8M9.5,8A1.5,1.5 0 0,1 8,6.5A1.5,1.5 0 0,1 9.5,5A1.5,1.5 0 0,1 11,6.5A1.5,1.5 0 0,1 9.5,8M6.5,12A1.5,1.5 0 0,1 5,10.5A1.5,1.5 0 0,1 6.5,9A1.5,1.5 0 0,1 8,10.5A1.5,1.5 0 0,1 6.5,12M12,3A9,9 0 0,0 3,12A9,9 0 0,0 12,21C12.32,21 12.5,20.81 12.5,20.5V19A2.5,2.5 0 0,1 15,16.5H16A3,3 0 0,0 19,13.5V12C19,7.03 15.86,3 12,3Z"/><TextBlock Text="Adobe Free"/></StackPanel></Button>
                 <Button Name="btnRes" ToolTip="Fix Resolution"><StackPanel Orientation="Horizontal"><Path Data="M20,3H4C2.89,3 2,3.89 2,5V17A2,2 0 0,0 4,19H8V21H16V19H20A2,2 0 0,0 22,17V5C22,3.89 21.1,3 20,3M20,17H4V5H20V17Z"/><TextBlock Text="Fix Resolution"/></StackPanel></Button>
+                <Button Name="btnShortcut" ToolTip="Create Shortcut"><StackPanel Orientation="Horizontal"><Path Data="M16,6H13V7.9H16C18.26,7.9 20.1,9.73 20.1,12A4.1,4.1 0 0,1 16,16.1H13V18H16A6,6 0 0,0 22,12C22,8.68 19.31,6 16,6M3.9,12C3.9,9.73 5.74,7.9 8,7.9H11V6H8A6,6 0 0,0 2,12A6,6 0 0,0 8,18H11V16.1H8C5.74,16.1 3.9,14.26 3.9,12M8,13H16V11H8V13Z"/><TextBlock Text="Add Shortcut"/></StackPanel></Button>
             </WrapPanel>
         </ScrollViewer>
     </Grid>
@@ -757,6 +812,7 @@ $btnReport=$window.FindName("btnReport"); $btnApps=$window.FindName("btnApps"); 
 $btnWinAct=$window.FindName("btnWinAct"); $btnSpotify=$window.FindName("btnSpotify"); $btnCTT=$window.FindName("btnCTT");
 $btnNet=$window.FindName("btnNet"); $btnPower=$window.FindName("btnPower"); $btnReg=$window.FindName("btnReg");
 $btnDiscord=$window.FindName("btnDiscord"); $btnAdobe=$window.FindName("btnAdobe"); $btnRes=$window.FindName("btnRes");
+$btnShortcut=$window.FindName("btnShortcut");
 
 # --- LOGIC ---
 
@@ -869,6 +925,7 @@ $btnReg.Add_Click({ Run-Tool "RegistryTools.ps1" "Registry Tools" })
 $btnDiscord.Add_Click({ Run-Tool "DiscordPro.ps1" "Discord Pro" })
 $btnAdobe.Add_Click({ Run-Tool "AdobeFree.ps1" "Adobe Free" })
 $btnRes.Add_Click({ Run-Tool "FixResolution.ps1" "Fix Resolution" })
+$btnShortcut.Add_Click({ Run-Tool "AddShortcut.ps1" "Create Shortcut" })
 
 # -----------------------------------------------------------------------------------
 # 5. EXECUTE
