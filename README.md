@@ -6,5 +6,5 @@
 A powerful all-in-one Windows maintenance and automation script.  
 Built for power users, sysadmins, and curious tinkerers – **smarter, safer, and fully native**.
 
-go here: https://github.com/catsmoker/AetherKit
+go here: https://github.com/catsmoker/FreeMixKit
 ---
