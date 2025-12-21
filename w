@@ -1,16 +1,17 @@
 <#
 .SYNOPSIS
-    FreeMixKit v5.4 (Spicetify Fix)
+    FreeMixKit v5.5 (Dev Choice Edition)
     Standalone system utility suite.
 
 .DESCRIPTION
-    - Fixed Spotify Pro to run as Non-Admin (via Scheduled Task injection).
-    - Updated Adobe Free to use gen.paramore.su.
-    - Full TUI control (Arrow Keys).
-    
+    - New: DEV CHOICE (Full Dev Stack + Bibata Cursor).
+    - Fixed Spotify Pro (Non-Admin).
+    - Updated Adobe Free (GenP Source).
+    - Full TUI control.
+
 .NOTES
     Author: catsmoker (Refactored by Assistant)
-    Privileges: Administrator Required (Auto-Elevates)
+    Privileges: Administrator Required
 #>
 
 # ==============================================================================
@@ -24,7 +25,7 @@ if (-not $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Adm
 }
 
 # Console visual setup
-$Host.UI.RawUI.WindowTitle = "FreeMixKit v5.4 - System Suite"
+$Host.UI.RawUI.WindowTitle = "FreeMixKit v5.5 - Dev Edition"
 [Console]::BackgroundColor = "Black"
 [Console]::ForegroundColor = "Green"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -47,6 +48,88 @@ Clear-Host
 
 $Modules = @{}
 
+# --- DEVELOPER STACK (NEW) ---
+$Modules["DevChoice"] = {
+    Write-Log "Starting Developer Environment Setup..." "Warn"
+    Write-Log "This will install multiple packages. Do not close." "Info"
+
+    # 1. Check Winget
+    if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+        Write-Log "Installing Winget Provider..." "Warn"
+        Invoke-WebRequest -Uri "https://aka.ms/getwinget" -OutFile "$env:TEMP\winget.msixbundle"
+        Add-AppxPackage -Path "$env:TEMP\winget.msixbundle"
+    }
+
+    # 2. Define Packages
+    $packages = @(
+        # Runtimes
+        "Microsoft.DotNet.SDK.10",
+        "Microsoft.DotNet.Runtime.10",
+        "OpenJS.NodeJS.LTS",
+        "Python.Python.3",
+        "EclipseAdoptium.Temurin.21.JDK",
+        # Shells & Core
+        "Microsoft.PowerShell",
+        "Git.Git",
+        "Gyan.FFmpeg",
+        # VC++ Redistributables
+        "Microsoft.VCRedist.2005.x64",
+        "Microsoft.VCRedist.2008.x64",
+        "Microsoft.VCRedist.2010.x64",
+        "Microsoft.VCRedist.2012.x64",
+        "Microsoft.VCRedist.2013.x64",
+        "Microsoft.VCRedist.2015+.x64",
+        # Tools
+        "7zip.7zip",
+        "Notepad++.Notepad++",
+        "AdrienAllard.FileConverter",
+        "Google.GeminiCLI"
+    )
+
+    # 3. Install Loop
+    foreach ($id in $packages) {
+        Write-Host " -> Installing $id..." -ForegroundColor Gray
+        try {
+            # Running winget directly to allow stream output to console
+            winget install $id -s winget --accept-package-agreements --accept-source-agreements --disable-interactivity
+        } catch {
+            Write-Host "    Failed to install $id" -ForegroundColor Red
+        }
+    }
+
+    # 4. Install Bibata Cursor
+    Write-Log "Installing Bibata Cursor..." "Info"
+    $cursorUrl = "https://github.com/ful1e5/Bibata_Cursor/releases/download/v2.0.7/Bibata-Modern-Classic-Windows.zip"
+    $zipPath = "$env:TEMP\BibataCursor.zip"
+    $extractPath = "$env:TEMP\BibataCursor"
+
+    try {
+        # Download
+        Invoke-WebRequest $cursorUrl -OutFile $zipPath
+        
+        # Extract
+        if (Test-Path $extractPath) { Remove-Item $extractPath -Recurse -Force }
+        Expand-Archive $zipPath -DestinationPath $extractPath -Force
+
+        # Find .inf file (Recursive search in case of subfolders)
+        $infFile = Get-ChildItem -Path $extractPath -Recurse -Filter "*.inf" | Select-Object -First 1
+
+        if ($infFile) {
+            Write-Host "    Found INF: $($infFile.Name)" -ForegroundColor Gray
+            # Install using RUNDLL32 SETUPAPI
+            $cmdArgs = "SETUPAPI.DLL,InstallHinfSection DefaultInstall 128 $($infFile.FullName)"
+            Start-Process "RUNDLL32.EXE" -ArgumentList $cmdArgs -Wait
+            Write-Log "Cursor installed! Enable it in Mouse Settings." "Success"
+        } else {
+            Write-Log "Cursor install.inf not found in archive." "Error"
+        }
+    } catch {
+        Write-Log "Cursor installation failed: $($_.Exception.Message)" "Error"
+    }
+
+    Write-Log "Dev Choice Setup Completed!" "Success"
+}
+
 # --- MAINTENANCE ---
 $Modules["CleanSystem"] = {
     Write-Log "Cleaning System Junk..."
@@ -60,23 +143,20 @@ $Modules["CleanSystem"] = {
 
 $Modules["SystemRepair"] = {
     Write-Log "Starting SFC & DISM..." "Warn"
-    Write-Log "NOTE: This will take 5-10 minutes. Do not close." "Warn"
     Write-Host " [1/2] Scanning System Files (SFC)..." -ForegroundColor Gray
     sfc.exe /scannow
     Write-Host " [2/2] Restoring Health (DISM)..." -ForegroundColor Gray
     DISM.exe /Online /Cleanup-Image /RestoreHealth
-    Write-Log "Repair Sequence Finished." "Success"
+    Write-Log "Repair Finished." "Success"
 }
 
 $Modules["MalwareScan"] = {
-    Write-Log "Checking for MRT (Malware Removal Tool)..."
+    Write-Log "Checking for MRT..."
     $mrt = "$env:SystemRoot\System32\MRT.exe"
     if (-not (Test-Path $mrt)) {
         Write-Log "Downloading MRT..." "Warn"
-        try {
-            Invoke-WebRequest "https://go.microsoft.com/fwlink/?LinkID=212732" -OutFile "$env:TEMP\MRT.exe"
-            $mrt = "$env:TEMP\MRT.exe"
-        } catch { Write-Log "Download failed." "Error"; return }
+        try { Invoke-WebRequest "https://go.microsoft.com/fwlink/?LinkID=212732" -OutFile "$env:TEMP\MRT.exe"; $mrt = "$env:TEMP\MRT.exe" }
+        catch { Write-Log "Download failed." "Error"; return }
     }
     Start-Process $mrt -Wait
 }
@@ -94,73 +174,42 @@ $Modules["SystemReport"] = {
 # --- APPS ---
 $Modules["AdobeFree"] = {
     Write-Log "Opening GenP Download Portal..."
-    Write-Log "ACTION REQUIRED: Cloudflare blocks scripts." "Warn"
-    Write-Host "   1. Site will open in browser." -ForegroundColor Gray
-    Write-Host "   2. Click 'Download' manually." -ForegroundColor Gray
+    Write-Log "Cloudflare blocks scripts. Please click 'Download' manually in browser." "Warn"
     Start-Process "https://gen.paramore.su"
 }
 
 $Modules["SoftwareUpdate"] = {
-    if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
-        Write-Log "Installing Winget..." "Warn"
-        Invoke-WebRequest -Uri "https://aka.ms/getwinget" -OutFile "$env:TEMP\winget.msixbundle"
-        Add-AppxPackage -Path "$env:TEMP\winget.msixbundle"
-    }
     Write-Log "Starting Global Software Update..."
+    if (-not (Get-Command winget -ErrorAction SilentlyContinue)) { Write-Log "Winget missing." "Error"; return }
     winget upgrade --all --include-unknown --accept-source-agreements --accept-package-agreements
 }
 
 $Modules["SpotifyPro"] = {
     Write-Log "Preparing Spicetify Installation..."
-    
-    # 1. Create the installation script in TEMP
-    $tempDir = $env:TEMP
-    $installScript = Join-Path $tempDir "Install-Spicetify.ps1"
-    
-    # We add a pause at the end so you can see if it worked or failed
+    $tempDir = $env:TEMP; $installScript = Join-Path $tempDir "Install-Spicetify.ps1"
     $scriptContent = @'
-    Write-Host "=== Spicetify Installer (Non-Admin Mode) ===" -ForegroundColor Cyan
-    Write-Host "Downloading and running installer..." -ForegroundColor Gray
-    try {
-        irm https://raw.githubusercontent.com/spicetify/marketplace/main/resources/install.ps1 | iex
-    } catch {
-        Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
-    }
-    Write-Host "`nInstallation attempt finished." -ForegroundColor Yellow
-    Write-Host "Press ENTER to close this window..."
+    Write-Host "=== Spicetify Installer ===" -ForegroundColor Cyan
+    try { irm https://raw.githubusercontent.com/spicetify/marketplace/main/resources/install.ps1 | iex } catch { Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red }
+    Write-Host "Press ENTER to close..."
     Read-Host
 '@
     Set-Content -Path $installScript -Value $scriptContent -Force
-
-    # 2. Use Scheduled Tasks to de-escalate privileges (Run as User, not Admin)
-    $taskName = "FreeMixKit_Spicetify_UserInstall"
-    $currentUser = $env:USERNAME
-    
-    Write-Log "Spicetify requires Non-Admin rights." "Info"
-    Write-Log "Launching separate terminal as user: $currentUser..."
-
+    $taskName = "FreeMixKit_Spicetify_User"; $currentUser = $env:USERNAME
+    Write-Log "Launching as user: $currentUser..."
     $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$installScript`""
     $trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddSeconds(2)
-    # RunLevel Limited = Standard User Permissions (Solves the Admin issue)
     $principal = New-ScheduledTaskPrincipal -UserId $currentUser -LogonType Interactive -RunLevel Limited 
-
     try {
         Unregister-ScheduledTask -TaskName $taskName -Confirm:$false -ErrorAction SilentlyContinue
         Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Principal $principal -Force | Out-Null
         Start-ScheduledTask -TaskName $taskName
-        
-        Write-Log "Installer launched in a new window!" "Success"
-        Write-Log "Check the new window to complete setup." "Info"
-        
-        # Give it a moment to fire before we clean up the task
+        Write-Log "Installer launched in new window." "Success"
         Start-Sleep -Seconds 3
-    } catch {
-        Write-Log "Failed to launch user-mode task: $($_.Exception.Message)" "Error"
-    }
+    } catch { Write-Log "Failed to launch task." "Error" }
 }
 
 $Modules["DiscordPro"] = {
-    Write-Log "Downloading LegCord Installer..."
+    Write-Log "Downloading LegCord..."
     try {
         $url = ((Invoke-RestMethod "https://api.github.com/repos/Legcord/Legcord/releases/latest").assets | Where name -match ".exe" | Select -First 1).browser_download_url
         $dest = "$env:TEMP\Legcord_Installer.exe"
@@ -178,22 +227,18 @@ $Modules["CTTUtility"] = { Write-Log "Launching WinUtil..."; irm https://christi
 $Modules["ToggleUpdates"] = {
     try {
         $srv = Get-Service wuauserv
-        if ($srv.StartType -eq 'Disabled') {
-            Set-Service wuauserv -StartupType Manual; Write-Log "Updates ENABLED." "Success"
-        } else {
-            Stop-Service wuauserv -Force; Set-Service wuauserv -StartupType Disabled; Write-Log "Updates DISABLED." "Warn"
-        }
-    } catch { Write-Log "Failed. TrustedInstaller required?" "Error" }
+        if ($srv.StartType -eq 'Disabled') { Set-Service wuauserv -StartupType Manual; Write-Log "Updates ENABLED." "Success" }
+        else { Stop-Service wuauserv -Force; Set-Service wuauserv -StartupType Disabled; Write-Log "Updates DISABLED." "Warn" }
+    } catch { Write-Log "Failed." "Error" }
 }
 
 $Modules["ToggleDefender"] = {
     Write-Log "Toggling Defender..."
     $pref = Get-MpPreference
-    if ($pref.DisableRealtimeMonitoring) {
-        Set-MpPreference -DisableRealtimeMonitoring $false; Write-Log "Defender ENABLED." "Success"
-    } else {
-        Set-MpPreference -DisableRealtimeMonitoring $true; 
-        if (-not (Get-MpPreference).DisableRealtimeMonitoring) { Write-Log "Failed. Disable 'Tamper Protection' manually first." "Error"; Start-Process "windowsdefender:" }
+    if ($pref.DisableRealtimeMonitoring) { Set-MpPreference -DisableRealtimeMonitoring $false; Write-Log "Defender ENABLED." "Success" }
+    else { 
+        Set-MpPreference -DisableRealtimeMonitoring $true
+        if (-not (Get-MpPreference).DisableRealtimeMonitoring) { Write-Log "Failed. Disable 'Tamper Protection' manually." "Error"; Start-Process "windowsdefender:" }
         else { Write-Log "Defender DISABLED." "Warn" }
     }
 }
@@ -262,6 +307,9 @@ function Write-Log($Message, $Type="Info") {
 # ==============================================================================
 
 $Menu = @(
+    @{L="[ DEVELOPER ]";       Type="Header"}
+    @{L="DEV CHOICE (Full)";   A="DevChoice";      D="Install .NET, Node, Python, Java, Git, Tools & Bibata Cursor"}
+
     @{L="[ MAINTENANCE ]";     Type="Header"}
     @{L="Clean System Junk";   A="CleanSystem";    D="Clear Temp, Prefetch & Flush DNS"}
     @{L="System Repair";       A="SystemRepair";   D="Run SFC & DISM (Fix Corrupt OS)"}
@@ -309,7 +357,7 @@ $SelectionIndex = 0
 while ($true) {
     Clear-Host
     Write-Host "==========================================================" -ForegroundColor Blue
-    Write-Host "   FREEMIXKIT v5.4 " -NoNewline -ForegroundColor Cyan
+    Write-Host "   FREEMIXKIT v5.5 " -NoNewline -ForegroundColor Cyan
     Write-Host "|  " -NoNewline -ForegroundColor Gray
     Write-Host "ARROWS" -NoNewline -ForegroundColor Yellow
     Write-Host " to Navigate, " -NoNewline -ForegroundColor Gray
