@@ -1,4 +1,4 @@
-# 🖥️ FreeMixKit v5.5 (Dev Choice Edition)
+#  FreeMixKit v5.5 (Dev Choice Edition)
 
 ![Platform](https://img.shields.io/badge/platform-Windows-blue)
 ![License: MIT](https://img.shields.io/badge/license-MIT-blue)
@@ -8,7 +8,7 @@ An advanced, all-in-one Windows maintenance and automation script with a full-fe
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 **Prerequisites:** Administrator privileges are required to run this script. It will automatically attempt to elevate itself if not run as admin.
 
@@ -21,7 +21,7 @@ An advanced, all-in-one Windows maintenance and automation script with a full-fe
 
 The script will open in a new console window with the TUI menu.
 
-## ✨ Core Features
+##  Core Features
 
 *   **Text-based User Interface (TUI):** A clean, keyboard-driven menu for easy navigation and execution of all modules.
 *   **Developer Toolkit:** A one-click setup for a complete development environment.
@@ -30,7 +30,7 @@ The script will open in a new console window with the TUI menu.
 *   **Privacy & Tweaks:** Quickly apply popular tweaks to disable telemetry, manage updates, and more.
 *   **Activation Utilities:** Includes shortcuts to well-known activation scripts.
 
-## 🛠️ Modules Overview
+##  Modules Overview
 
 The script is divided into several modules, each targeting a specific area of system management.
 
@@ -64,10 +64,10 @@ The script is divided into several modules, each targeting a specific area of sy
 
 This script includes tools that can modify your system extensively. It also contains modules that automate the download and execution of third-party software and activation scripts. Please use these features responsibly and at your own risk. The author is not responsible for any data loss or system instability.
 
-## 🤝 Contributing
+##  Contributing
 
 Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/catsmoker/FreeMixKit/issues).
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
