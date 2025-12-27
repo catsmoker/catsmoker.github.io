@@ -14,6 +14,7 @@
     Privileges: Administrator Required
 #>
 
+
 # ==============================================================================
 # 1. SETUP & ADMIN CHECK
 # ==============================================================================
@@ -283,13 +284,63 @@ $Modules["AddShortcut"] = {
     $ws = New-Object -ComObject WScript.Shell
     $s = $ws.CreateShortcut($path)
     $s.TargetPath = "powershell.exe"
-    $s.Arguments = "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`""
-    $s.IconLocation = "$env:SystemRoot\System32\shell32.dll,238"
+    $s.Arguments = "-NoProfile -ExecutionPolicy Bypass -File `"C:\FreeMixKit\w.ps1`""
+    $s.IconLocation = "C:\FreeMixKit\freemixkit_icon.ico"
     $s.Save()
     try {
         $bytes = [System.IO.File]::ReadAllBytes($path); $bytes[0x15] = $bytes[0x15] -bor 0x20; [System.IO.File]::WriteAllBytes($path, $bytes)
         Write-Log "Admin Shortcut created." "Success"
     } catch { Write-Log "Shortcut created (Standard)." "Warn" }
+}
+
+# --- AI TOOLS ---
+$Modules["RemoveWindowsAI"] = {
+    Write-Log "Executing RemoveWindowsAI script from URL..." "Warn"
+    try {
+        $scriptContent = irm "https://raw.githubusercontent.com/zoicware/RemoveWindowsAI/main/RemoveWindowsAi.ps1"
+        $scriptBlock = [scriptblock]::Create($scriptContent)
+        & $scriptBlock -nonInteractive -AllOptions
+        Write-Log "RemoveWindowsAI script finished." "Success"
+    } catch {
+        Write-Log "Failed to execute RemoveWindowsAI script: $($_.Exception.Message)" "Error"
+    }
+}
+
+# --- UPDATE ---
+$Modules["CheckForUpdate"] = {
+    Write-Log "Checking for updates..." "Info"
+    $ScriptUrl = "https://raw.githubusercontent.com/catsmoker/catsmoker.github.io/main/w"
+    # Use $PSCommandPath which is the path of the currently running script.
+    # This assumes the script is named w.ps1 in C:\FreeMixKit as per the new logic.
+    $SelfPath = $PSCommandPath 
+
+    try {
+        $latestContent = irm $ScriptUrl
+        $currentContent = Get-Content -Path $SelfPath -Raw
+
+        if ($latestContent.Trim() -eq $currentContent.Trim()) {
+            Write-Log "You are already running the latest version." "Success"
+        } else {
+            Write-Log "An update is available!" "Warn"
+            $choice = Read-Host "Do you want to update now? (y/n)"
+            if ($choice -eq 'y') {
+                Write-Log "Updating..." "Info"
+                try {
+                    $latestContent | Out-File -FilePath $SelfPath -Encoding utf8 -Force
+                    Write-Log "Update complete! The script will now restart." "Success"
+                    Start-Sleep -Seconds 2
+                    Start-Process powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$SelfPath`""
+                    exit
+                } catch {
+                    Write-Log "Update failed: Could not write to `"$SelfPath`". Please check permissions." "Error"
+                }
+            } else {
+                Write-Log "Update cancelled." "Info"
+            }
+        }
+    } catch {
+        Write-Log "Failed to check for updates: $($_.Exception.Message)" "Error"
+    }
 }
 
 # ==============================================================================
@@ -341,9 +392,13 @@ $Menu = @(
     @{L="CTT WinUtil";         A="CTTUtility";     D="Launch Chris Titus Tech Utility"}
     @{L="Registry Backup";     A="RegistryBackup"; D="Backup HKLM to Desktop"}
     @{L="Fix Resolution";      A="FixResolution";  D="Custom Resolution Utility (CRU)"}
-    @{L="Add Shortcut";        A="AddShortcut";    D="Create Admin Shortcut on Desktop"}
+
+    @{L="[ AI TOOLS ]";        Type="Header"}
+    @{L="Remove Windows AI";   A="RemoveWindowsAI";D="Removes integrated Windows AI features"}
     
     @{L="[ EXIT ]";            Type="Header"}
+    @{L="Add Shortcut";        A="AddShortcut";    D="Create Admin Shortcut on Desktop"}
+    @{L="Check for Updates";   A="CheckForUpdate"; D="Check for and install the latest version"}
     @{L="Exit";                A="EXIT";           D="Close Application"}
 )
 
@@ -354,8 +409,9 @@ $SelectionIndex = 0
 # 6. MAIN LOOP
 # ==============================================================================
 
+Clear-Host # Clear the screen once before the loop starts
 while ($true) {
-    Clear-Host
+    [Console]::SetCursorPosition(0, 0) # Move cursor to top-left, much faster than Clear-Host
     Write-Host "==========================================================" -ForegroundColor Blue
     Write-Host "   FREEMIXKIT v5.5 " -NoNewline -ForegroundColor Cyan
     Write-Host "|  " -NoNewline -ForegroundColor Gray
