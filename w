@@ -1,23 +1,27 @@
 <#
 .SYNOPSIS
-    FreeMixKit v5.5 (Dev Choice Edition)
+    FreeMixKit v5.7 (Grid Edition)
     Standalone system utility suite.
-
-.DESCRIPTION
-    - New: DEV CHOICE (Full Dev Stack + Bibata Cursor).
-    - Fixed Spotify Pro (Non-Admin).
-    - Updated Adobe Free (GenP Source).
-    - Full TUI control.
 
 .NOTES
     Author: catsmoker (Refactored by Assistant)
     Privileges: Administrator Required
 #>
 
-
 # ==============================================================================
 # 1. SETUP & ADMIN CHECK
 # ==============================================================================
+
+$Host.UI.RawUI.WindowTitle = "FreeMixKit v5.7"
+try {
+    # Force big window (120x40 is good for grid)
+    $bufferSize = New-Object Management.Automation.Host.Size(120, 2000)
+    $windowSize = New-Object Management.Automation.Host.Size(120, 40)
+    if ($Host.UI.RawUI.BufferSize.Width -lt $windowSize.Width) { $Host.UI.RawUI.BufferSize = $bufferSize }
+    $Host.UI.RawUI.WindowSize = $windowSize
+    $Host.UI.RawUI.BufferSize = $bufferSize
+}
+catch { Write-Host "Resize not supported." -ForegroundColor DarkGray }
 
 $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
 if (-not $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
@@ -25,8 +29,6 @@ if (-not $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Adm
     Exit
 }
 
-# Console visual setup
-$Host.UI.RawUI.WindowTitle = "FreeMixKit v5.5 - Dev Edition"
 [Console]::BackgroundColor = "Black"
 [Console]::ForegroundColor = "Green"
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
@@ -35,427 +37,362 @@ Clear-Host
 # ==============================================================================
 # 2. STATIC SYSTEM INFO
 # ==============================================================================
-Write-Host "Loading System Information..." -ForegroundColor DarkGray
 $SysInfo = @{
-    OS   = (Get-CimInstance Win32_OperatingSystem).Caption
-    CPU  = (Get-CimInstance Win32_Processor).Name
-    RAM  = "{0:N1} GB" -f ((Get-CimInstance Win32_PhysicalMemory | Measure-Object -Property Capacity -Sum).Sum / 1GB)
-}
-Clear-Host
-
-# ==============================================================================
-# 3. MODULE LIBRARY
-# ==============================================================================
-
-$Modules = @{}
-
-# --- DEVELOPER STACK (NEW) ---
-$Modules["DevChoice"] = {
-    Write-Log "Starting Developer Environment Setup..." "Warn"
-    Write-Log "This will install multiple packages. Do not close." "Info"
-
-    # 1. Check Winget
-    if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
-        Write-Log "Installing Winget Provider..." "Warn"
-        Invoke-WebRequest -Uri "https://aka.ms/getwinget" -OutFile "$env:TEMP\winget.msixbundle"
-        Add-AppxPackage -Path "$env:TEMP\winget.msixbundle"
-    }
-
-    # 2. Define Packages
-    $packages = @(
-        # Runtimes
-        "Microsoft.DotNet.SDK.10",
-        "Microsoft.DotNet.Runtime.10",
-        "OpenJS.NodeJS.LTS",
-        "Python.Python.3",
-        "EclipseAdoptium.Temurin.21.JDK",
-        # Shells & Core
-        "Microsoft.PowerShell",
-        "Git.Git",
-        "Gyan.FFmpeg",
-        # VC++ Redistributables
-        "Microsoft.VCRedist.2005.x64",
-        "Microsoft.VCRedist.2008.x64",
-        "Microsoft.VCRedist.2010.x64",
-        "Microsoft.VCRedist.2012.x64",
-        "Microsoft.VCRedist.2013.x64",
-        "Microsoft.VCRedist.2015+.x64",
-        # Tools
-        "7zip.7zip",
-        "Notepad++.Notepad++",
-        "AdrienAllard.FileConverter",
-        "Google.GeminiCLI"
-    )
-
-    # 3. Install Loop
-    foreach ($id in $packages) {
-        Write-Host " -> Installing $id..." -ForegroundColor Gray
-        try {
-            # Running winget directly to allow stream output to console
-            winget install $id -s winget --accept-package-agreements --accept-source-agreements --disable-interactivity
-        } catch {
-            Write-Host "    Failed to install $id" -ForegroundColor Red
-        }
-    }
-
-    # 4. Install Bibata Cursor
-    Write-Log "Installing Bibata Cursor..." "Info"
-    $cursorUrl = "https://github.com/ful1e5/Bibata_Cursor/releases/download/v2.0.7/Bibata-Modern-Classic-Windows.zip"
-    $zipPath = "$env:TEMP\BibataCursor.zip"
-    $extractPath = "$env:TEMP\BibataCursor"
-
-    try {
-        # Download
-        Invoke-WebRequest $cursorUrl -OutFile $zipPath
-        
-        # Extract
-        if (Test-Path $extractPath) { Remove-Item $extractPath -Recurse -Force }
-        Expand-Archive $zipPath -DestinationPath $extractPath -Force
-
-        # Find .inf file (Recursive search in case of subfolders)
-        $infFile = Get-ChildItem -Path $extractPath -Recurse -Filter "*.inf" | Select-Object -First 1
-
-        if ($infFile) {
-            Write-Host "    Found INF: $($infFile.Name)" -ForegroundColor Gray
-            # Install using RUNDLL32 SETUPAPI
-            $cmdArgs = "SETUPAPI.DLL,InstallHinfSection DefaultInstall 128 $($infFile.FullName)"
-            Start-Process "RUNDLL32.EXE" -ArgumentList $cmdArgs -Wait
-            Write-Log "Cursor installed! Enable it in Mouse Settings." "Success"
-        } else {
-            Write-Log "Cursor install.inf not found in archive." "Error"
-        }
-    } catch {
-        Write-Log "Cursor installation failed: $($_.Exception.Message)" "Error"
-    }
-
-    Write-Log "Dev Choice Setup Completed!" "Success"
-}
-
-# --- MAINTENANCE ---
-$Modules["CleanSystem"] = {
-    Write-Log "Cleaning System Junk..."
-    $count = 0
-    $count += (Remove-Item -Path "$env:TEMP\*" -Recurse -Force -ErrorAction SilentlyContinue | Measure-Object).Count
-    $count += (Remove-Item -Path "C:\Windows\Temp\*" -Recurse -Force -ErrorAction SilentlyContinue | Measure-Object).Count
-    $count += (Remove-Item -Path "C:\Windows\Prefetch\*" -Recurse -Force -ErrorAction SilentlyContinue | Measure-Object).Count
-    Clear-DnsClientCache -ErrorAction SilentlyContinue
-    Write-Log "Cleanup Complete. Removed approx $count files." "Success"
-}
-
-$Modules["SystemRepair"] = {
-    Write-Log "Starting SFC & DISM..." "Warn"
-    Write-Host " [1/2] Scanning System Files (SFC)..." -ForegroundColor Gray
-    sfc.exe /scannow
-    Write-Host " [2/2] Restoring Health (DISM)..." -ForegroundColor Gray
-    DISM.exe /Online /Cleanup-Image /RestoreHealth
-    Write-Log "Repair Finished." "Success"
-}
-
-$Modules["MalwareScan"] = {
-    Write-Log "Checking for MRT..."
-    $mrt = "$env:SystemRoot\System32\MRT.exe"
-    if (-not (Test-Path $mrt)) {
-        Write-Log "Downloading MRT..." "Warn"
-        try { Invoke-WebRequest "https://go.microsoft.com/fwlink/?LinkID=212732" -OutFile "$env:TEMP\MRT.exe"; $mrt = "$env:TEMP\MRT.exe" }
-        catch { Write-Log "Download failed." "Error"; return }
-    }
-    Start-Process $mrt -Wait
-}
-
-$Modules["SystemReport"] = {
-    $path = "$([Environment]::GetFolderPath('Desktop'))\SystemReport_$(Get-Date -Format 'yyyyMMdd-HHmm').txt"
-    Write-Log "Gathering Data..."
-    $out =  "=== FREEMIXKIT REPORT ===`r`nDate: $(Get-Date)`r`n`r`n[SYSTEM]`r`nOS: $($SysInfo.OS)`r`nCPU: $($SysInfo.CPU)`r`nRAM: $($SysInfo.RAM)`r`n"
-    $out += "`r`n[DISK]`r`n" + (Get-PhysicalDisk | Select-Object FriendlyName, MediaType, HealthStatus, Size | Format-Table -AutoSize | Out-String)
-    $out | Out-File $path
-    Write-Log "Report saved to Desktop." "Success"
-    Invoke-Item $path
-}
-
-# --- APPS ---
-$Modules["AdobeFree"] = {
-    Write-Log "Opening GenP Download Portal..."
-    Write-Log "Cloudflare blocks scripts. Please click 'Download' manually in browser." "Warn"
-    Start-Process "https://gen.paramore.su"
-}
-
-$Modules["SoftwareUpdate"] = {
-    Write-Log "Starting Global Software Update..."
-    if (-not (Get-Command winget -ErrorAction SilentlyContinue)) { Write-Log "Winget missing." "Error"; return }
-    winget upgrade --all --include-unknown --accept-source-agreements --accept-package-agreements
-}
-
-$Modules["SpotifyPro"] = {
-    Write-Log "Preparing Spicetify Installation..."
-    $tempDir = $env:TEMP; $installScript = Join-Path $tempDir "Install-Spicetify.ps1"
-    $scriptContent = @'
-    Write-Host "=== Spicetify Installer ===" -ForegroundColor Cyan
-    try { irm https://raw.githubusercontent.com/spicetify/marketplace/main/resources/install.ps1 | iex } catch { Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red }
-    Write-Host "Press ENTER to close..."
-    Read-Host
-'@
-    Set-Content -Path $installScript -Value $scriptContent -Force
-    $taskName = "FreeMixKit_Spicetify_User"; $currentUser = $env:USERNAME
-    Write-Log "Launching as user: $currentUser..."
-    $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$installScript`""
-    $trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddSeconds(2)
-    $principal = New-ScheduledTaskPrincipal -UserId $currentUser -LogonType Interactive -RunLevel Limited 
-    try {
-        Unregister-ScheduledTask -TaskName $taskName -Confirm:$false -ErrorAction SilentlyContinue
-        Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Principal $principal -Force | Out-Null
-        Start-ScheduledTask -TaskName $taskName
-        Write-Log "Installer launched in new window." "Success"
-        Start-Sleep -Seconds 3
-    } catch { Write-Log "Failed to launch task." "Error" }
-}
-
-$Modules["DiscordPro"] = {
-    Write-Log "Downloading LegCord..."
-    try {
-        $url = ((Invoke-RestMethod "https://api.github.com/repos/Legcord/Legcord/releases/latest").assets | Where name -match ".exe" | Select -First 1).browser_download_url
-        $dest = "$env:TEMP\Legcord_Installer.exe"
-        Invoke-WebRequest $url -OutFile $dest
-        Start-Process $dest -Wait
-    } catch { Write-Log "Download failed." "Error" }
-}
-
-# --- ACTIVATION ---
-$Modules["ActivateWindows"] = { Write-Log "Launching MAS..."; irm https://get.activated.win | iex }
-$Modules["ActivateIDM"] = { Write-Log "Launching IAS..."; irm https://coporton.com/ias | iex }
-$Modules["CTTUtility"] = { Write-Log "Launching WinUtil..."; irm https://christitus.com/win | iex }
-
-# --- TWEAKS ---
-$Modules["ToggleUpdates"] = {
-    try {
-        $srv = Get-Service wuauserv
-        if ($srv.StartType -eq 'Disabled') { Set-Service wuauserv -StartupType Manual; Write-Log "Updates ENABLED." "Success" }
-        else { Stop-Service wuauserv -Force; Set-Service wuauserv -StartupType Disabled; Write-Log "Updates DISABLED." "Warn" }
-    } catch { Write-Log "Failed." "Error" }
-}
-
-$Modules["ToggleDefender"] = {
-    Write-Log "Toggling Defender..."
-    $pref = Get-MpPreference
-    if ($pref.DisableRealtimeMonitoring) { Set-MpPreference -DisableRealtimeMonitoring $false; Write-Log "Defender ENABLED." "Success" }
-    else { 
-        Set-MpPreference -DisableRealtimeMonitoring $true
-        if (-not (Get-MpPreference).DisableRealtimeMonitoring) { Write-Log "Failed. Disable 'Tamper Protection' manually." "Error"; Start-Process "windowsdefender:" }
-        else { Write-Log "Defender DISABLED." "Warn" }
-    }
-}
-
-$Modules["DisableTelemetry"] = {
-    Write-Log "Disabling Telemetry..."
-    $paths = @("HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection", "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection")
-    foreach ($p in $paths) { if (-not (Test-Path $p)) { New-Item $p -Force | Out-Null }; Set-ItemProperty $p "AllowTelemetry" 0 -Force }
-    Write-Log "Telemetry Disabled." "Success"
-}
-
-$Modules["RegistryOptimize"] = {
-    Write-Log "Applying Registry Tweaks..."
-    Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" "NtfsDisableLastAccessUpdate" 1 -Force
-    Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" "SystemResponsiveness" 0 -Force
-    Write-Log "Optimized." "Success"
-}
-
-# --- NETWORK ---
-$Modules["SetGoogleDNS"] = { Get-NetAdapter | Where Status -eq Up | Set-DnsClientServerAddress -ServerAddresses ("8.8.8.8","8.8.4.4"); Write-Log "DNS Set: Google" "Success" }
-$Modules["SetCloudflareDNS"] = { Get-NetAdapter | Where Status -eq Up | Set-DnsClientServerAddress -ServerAddresses ("1.1.1.1","1.0.0.1"); Write-Log "DNS Set: Cloudflare" "Success" }
-$Modules["ResetNetwork"] = { Get-NetAdapter | Where Status -eq Up | Set-DnsClientServerAddress -ResetServerAddresses; ipconfig /flushdns; netsh winsock reset; Write-Log "Network Reset." "Success" }
-
-# --- UTILS ---
-$Modules["RegistryBackup"] = {
-    $path = "$([Environment]::GetFolderPath('Desktop'))\RegBackup_$(Get-Date -Format 'yyyyMMdd').reg"
-    Start-Process reg.exe -ArgumentList "export HKLM `"$path`" /y" -Wait -NoNewWindow
-    Write-Log "Backup saved to Desktop." "Success"
-}
-
-$Modules["FixResolution"] = {
-    Write-Log "Downloading CRU..."
-    $url = "https://www.monitortests.com/download/cru/cru-1.5.3.zip"
-    Invoke-WebRequest $url -OutFile "$env:TEMP\cru.zip"
-    Expand-Archive "$env:TEMP\cru.zip" -DestinationPath "$env:TEMP\CRU" -Force
-    Start-Process "$env:TEMP\CRU\CRU.exe" -Wait
-    Start-Process "$env:TEMP\CRU\restart64.exe" -Wait
-}
-
-$Modules["AddShortcut"] = {
-    $path = "$([Environment]::GetFolderPath('Desktop'))\FreeMixKit.lnk"
-    $ws = New-Object -ComObject WScript.Shell
-    $s = $ws.CreateShortcut($path)
-    $s.TargetPath = "powershell.exe"
-    $s.Arguments = "-NoProfile -ExecutionPolicy Bypass -File `"C:\FreeMixKit\w.ps1`""
-    $s.IconLocation = "C:\FreeMixKit\freemixkit_icon.ico"
-    $s.Save()
-    try {
-        $bytes = [System.IO.File]::ReadAllBytes($path); $bytes[0x15] = $bytes[0x15] -bor 0x20; [System.IO.File]::WriteAllBytes($path, $bytes)
-        Write-Log "Admin Shortcut created." "Success"
-    } catch { Write-Log "Shortcut created (Standard)." "Warn" }
-}
-
-# --- AI TOOLS ---
-$Modules["RemoveWindowsAI"] = {
-    Write-Log "Executing RemoveWindowsAI script from URL..." "Warn"
-    try {
-        $scriptContent = irm "https://raw.githubusercontent.com/zoicware/RemoveWindowsAI/main/RemoveWindowsAi.ps1"
-        $scriptBlock = [scriptblock]::Create($scriptContent)
-        & $scriptBlock -nonInteractive -AllOptions
-        Write-Log "RemoveWindowsAI script finished." "Success"
-    } catch {
-        Write-Log "Failed to execute RemoveWindowsAI script: $($_.Exception.Message)" "Error"
-    }
-}
-
-# --- UPDATE ---
-$Modules["CheckForUpdate"] = {
-    Write-Log "Checking for updates..." "Info"
-    $ScriptUrl = "https://raw.githubusercontent.com/catsmoker/catsmoker.github.io/main/w"
-    # Use $PSCommandPath which is the path of the currently running script.
-    # This assumes the script is named w.ps1 in C:\FreeMixKit as per the new logic.
-    $SelfPath = $PSCommandPath 
-
-    try {
-        $latestContent = irm $ScriptUrl
-        $currentContent = Get-Content -Path $SelfPath -Raw
-
-        if ($latestContent.Trim() -eq $currentContent.Trim()) {
-            Write-Log "You are already running the latest version." "Success"
-        } else {
-            Write-Log "An update is available!" "Warn"
-            $choice = Read-Host "Do you want to update now? (y/n)"
-            if ($choice -eq 'y') {
-                Write-Log "Updating..." "Info"
-                try {
-                    $latestContent | Out-File -FilePath $SelfPath -Encoding utf8 -Force
-                    Write-Log "Update complete! The script will now restart." "Success"
-                    Start-Sleep -Seconds 2
-                    Start-Process powershell.exe -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$SelfPath`""
-                    exit
-                } catch {
-                    Write-Log "Update failed: Could not write to `"$SelfPath`". Please check permissions." "Error"
-                }
-            } else {
-                Write-Log "Update cancelled." "Info"
-            }
-        }
-    } catch {
-        Write-Log "Failed to check for updates: $($_.Exception.Message)" "Error"
-    }
+    OS  = (Get-CimInstance Win32_OperatingSystem).Caption
+    CPU = (Get-CimInstance Win32_Processor).Name
+    RAM = "{0:N1} GB" -f ((Get-CimInstance Win32_PhysicalMemory | Measure-Object -Property Capacity -Sum).Sum / 1GB)
 }
 
 # ==============================================================================
-# 4. HELPER FUNCTIONS
+# 3. HELPER FUNCTIONS
 # ==============================================================================
 
-function Write-Log($Message, $Type="Info") {
-    $c = switch ($Type) { "Info" {"White"} "Success" {"Cyan"} "Warn" {"Yellow"} "Error" {"Red"} }
+function Write-Log($Message, $Type = "Info") {
+    $c = switch ($Type) { "Info" { "White" } "Success" { "Cyan" } "Warn" { "Yellow" } "Error" { "Red" } }
     Write-Host " [$((Get-Date).ToString('HH:mm:ss'))] " -NoNewline -ForegroundColor DarkGray
     Write-Host $Message -ForegroundColor $c
 }
 
 # ==============================================================================
-# 5. MENU CONFIGURATION
+# 4. MODULE LIBRARY
 # ==============================================================================
 
-$Menu = @(
-    @{L="[ DEVELOPER ]";       Type="Header"}
-    @{L="DEV CHOICE (Full)";   A="DevChoice";      D="Install .NET, Node, Python, Java, Git, Tools & Bibata Cursor"}
+$Modules = @{}
 
-    @{L="[ MAINTENANCE ]";     Type="Header"}
-    @{L="Clean System Junk";   A="CleanSystem";    D="Clear Temp, Prefetch & Flush DNS"}
-    @{L="System Repair";       A="SystemRepair";   D="Run SFC & DISM (Fix Corrupt OS)"}
-    @{L="Malware Scan";        A="MalwareScan";    D="Run Microsoft MRT Scanner"}
-    @{L="System Report";       A="SystemReport";   D="Generate Specs text file on Desktop"}
+# --- DEVELOPER ---
+$Modules["DevChoice"] = {
+    Write-Log "Starting Developer Environment Setup..." "Warn"
+    Write-Log "Installing: VS Redists, .NET, Node, Python, Java, Tools, Bibata Cursor."
     
-    @{L="[ SOFTWARE & APPS ]"; Type="Header"}
-    @{L="Adobe Free (GenP)";   A="AdobeFree";      D="Open gen.paramore.su (New Source)"}
-    @{L="Software Update";     A="SoftwareUpdate"; D="Upgrade all apps (Winget)"}
-    @{L="Spotify Pro";         A="SpotifyPro";     D="Install Spicetify (Safe Non-Admin Mode)"}
-    @{L="Discord Pro";         A="DiscordPro";     D="Install LegCord (Better Discord)"}
-
-    @{L="[ ACTIVATION ]";      Type="Header"}
-    @{L="Activate Windows";    A="ActivateWindows";D="Microsoft Activation Scripts (MAS)"}
-    @{L="Activate IDM";        A="ActivateIDM";    D="IDM Activation Script"}
-    
-    @{L="[ TWEAKS & PRIVACY ]";Type="Header"}
-    @{L="Toggle Updates";      A="ToggleUpdates";  D="Enable/Disable Windows Updates"}
-    @{L="Toggle Defender";     A="ToggleDefender"; D="Toggle Real-time Protection"}
-    @{L="Disable Telemetry";   A="DisableTelemetry";D="Block Windows Data Collection"}
-    @{L="Registry Optimize";   A="RegistryOptimize";D="Apply Speed Tweaks to Registry"}
-
-    @{L="[ NETWORK ]";         Type="Header"}
-    @{L="Set Google DNS";      A="SetGoogleDNS";   D="Set DNS to 8.8.8.8"}
-    @{L="Set Cloudflare DNS";  A="SetCloudflareDNS";D="Set DNS to 1.1.1.1"}
-    @{L="Reset Network";       A="ResetNetwork";   D="Reset IP, Winsock & DNS"}
-
-    @{L="[ UTILITIES ]";       Type="Header"}
-    @{L="CTT WinUtil";         A="CTTUtility";     D="Launch Chris Titus Tech Utility"}
-    @{L="Registry Backup";     A="RegistryBackup"; D="Backup HKLM to Desktop"}
-    @{L="Fix Resolution";      A="FixResolution";  D="Custom Resolution Utility (CRU)"}
-
-    @{L="[ AI TOOLS ]";        Type="Header"}
-    @{L="Remove Windows AI";   A="RemoveWindowsAI";D="Removes integrated Windows AI features"}
-    
-    @{L="[ EXIT ]";            Type="Header"}
-    @{L="Add Shortcut";        A="AddShortcut";    D="Create Admin Shortcut on Desktop"}
-    @{L="Check for Updates";   A="CheckForUpdate"; D="Check for and install the latest version"}
-    @{L="Exit";                A="EXIT";           D="Close Application"}
-)
-
-$NavItems = $Menu | Where-Object { $_.Type -ne "Header" }
-$SelectionIndex = 0
-
-# ==============================================================================
-# 6. MAIN LOOP
-# ==============================================================================
-
-Clear-Host # Clear the screen once before the loop starts
-while ($true) {
-    [Console]::SetCursorPosition(0, 0) # Move cursor to top-left, much faster than Clear-Host
-    Write-Host "==========================================================" -ForegroundColor Blue
-    Write-Host "   FREEMIXKIT v5.5 " -NoNewline -ForegroundColor Cyan
-    Write-Host "|  " -NoNewline -ForegroundColor Gray
-    Write-Host "ARROWS" -NoNewline -ForegroundColor Yellow
-    Write-Host " to Navigate, " -NoNewline -ForegroundColor Gray
-    Write-Host "ENTER" -NoNewline -ForegroundColor Yellow
-    Write-Host " to Select" -ForegroundColor Gray
-    Write-Host "==========================================================" -ForegroundColor Blue
-    
-    Write-Host " OS: $($SysInfo.OS) | CPU: $($SysInfo.CPU) | RAM: $($SysInfo.RAM)" -ForegroundColor DarkGray
-    Write-Host "==========================================================" -ForegroundColor Blue
-
-    $currentNavIndex = 0
-    foreach ($item in $Menu) {
-        if ($item.Type -eq "Header") {
-            Write-Host "`n $($item.L)" -ForegroundColor DarkGray
-            continue
-        }
-        if ($currentNavIndex -eq $SelectionIndex) {
-            Write-Host " > $($item.L.PadRight(20))" -NoNewline -BackgroundColor DarkGray -ForegroundColor White
-            Write-Host " : $($item.D)" -ForegroundColor Cyan
-        } else {
-            Write-Host "   $($item.L.PadRight(20))" -NoNewline -ForegroundColor Green
-            Write-Host " : $($item.D)" -ForegroundColor DarkGray
-        }
-        $currentNavIndex++
+    # 1. Winget
+    if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+        Write-Log "Installing Winget..."
+        Invoke-WebRequest -Uri "https://aka.ms/getwinget" -OutFile "$env:TEMP\winget.msixbundle"
+        Add-AppxPackage -Path "$env:TEMP\winget.msixbundle"
     }
 
-    $key = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-    switch ($key.VirtualKeyCode) {
-        38 { if ($SelectionIndex -gt 0) { $SelectionIndex-- } else { $SelectionIndex = $NavItems.Count - 1 } }
-        40 { if ($SelectionIndex -lt $NavItems.Count - 1) { $SelectionIndex++ } else { $SelectionIndex = 0 } }
-        13 { 
-            $action = $NavItems[$SelectionIndex].A
+    # 2. Packages
+    $packages = @(
+        "Microsoft.DotNet.SDK.10", "Microsoft.DotNet.Runtime.10", "OpenJS.NodeJS.LTS", "Python.Python.3", "EclipseAdoptium.Temurin.21.JDK",
+        "Microsoft.PowerShell", "Git.Git", "Gyan.FFmpeg", "7zip.7zip", "Notepad++.Notepad++", "AdrienAllard.FileConverter", "Google.GeminiCLI",
+        "Microsoft.VCRedist.2005.x86", "Microsoft.VCRedist.2005.x64", "Microsoft.VCRedist.2008.x86", "Microsoft.VCRedist.2008.x64",
+        "Microsoft.VCRedist.2010.x86", "Microsoft.VCRedist.2010.x64", "Microsoft.VCRedist.2012.x86", "Microsoft.VCRedist.2012.x64",
+        "Microsoft.VCRedist.2013.x86", "Microsoft.VCRedist.2013.x64", "Microsoft.VCRedist.2015+.x86", "Microsoft.VCRedist.2015+.x64"
+    )
+
+    foreach ($id in $packages) {
+        Write-Host " -> $id..." -ForegroundColor Gray
+        try { winget install $id -s winget --accept-package-agreements --accept-source-agreements --disable-interactivity }
+        catch { Write-Host "Failed: $id" -ForegroundColor Red }
+    }
+
+    # 3. Notepad Fix
+    Write-Log "Replacing Notepad with Notepad++..."
+    Get-AppxPackage *Microsoft.WindowsNotepad* | Remove-AppxPackage -AllUsers -ErrorAction SilentlyContinue
+    $reg = @"
+Windows Registry Editor Version 5.00
+[HKEY_CLASSES_ROOT\.txt]
+@="txtfile"
+"PerceivedType"="text"
+"Content Type"="text/plain"
+[HKEY_CLASSES_ROOT\.txt\ShellNew]
+"NullFile"=""
+[HKEY_CLASSES_ROOT\txtfile]
+@="Text Document"
+[HKEY_CLASSES_ROOT\txtfile\ShellNew]
+"NullFile"=""
+"@
+    $reg | Out-File "$env:TEMP\nppfix.reg" -Encoding ASCII -Force
+    Start-Process reg.exe -Argument "import `"$env:TEMP\nppfix.reg`"" -Wait -NoNewWindow
+    
+    # 4. Bibata
+    Write-Log "Installing Bibata Cursor..."
+    try {
+        $zip = "$env:TEMP\Bibata.zip"; $dest = "$env:TEMP\Bibata"
+        Invoke-WebRequest "https://github.com/ful1e5/Bibata_Cursor/releases/download/v2.0.7/Bibata-Modern-Classic-Windows.zip" -OutFile $zip
+        Expand-Archive $zip -Dest $dest -Force
+        $inf = Get-ChildItem "$dest" -Recurse -Filter "*.inf" | Select-Object -First 1
+        if ($inf) { Start-Process "RUNDLL32.EXE" -Arg "SETUPAPI.DLL,InstallHinfSection DefaultInstall 128 $($inf.FullName)" -Wait }
+    }
+    catch { Write-Log "Cursor Failed" "Error" }
+
+    Write-Log "Done!" "Success"
+}
+
+# --- MAINTENANCE ---
+$Modules["CleanSystem"] = {
+    Write-Log "Cleaning..."
+    Remove-Item "$env:TEMP\*" -Recurse -Force -EA SilentlyContinue
+    Remove-Item "C:\Windows\Temp\*" -Recurse -Force -EA SilentlyContinue
+    Remove-Item "C:\Windows\Prefetch\*" -Recurse -Force -EA SilentlyContinue
+    Clear-DnsClientCache
+    Write-Log "Cleaned." "Success"
+}
+$Modules["SystemRepair"] = { sfc /scannow; DISM /Online /Cleanup-Image /RestoreHealth; Write-Log "Done." "Success" }
+$Modules["MalwareScan"] = { 
+    $mrt = "$env:SystemRoot\System32\MRT.exe"
+    if (!(Test-Path $mrt)) { Invoke-WebRequest "https://go.microsoft.com/fwlink/?LinkID=212732" -OutFile "$env:TEMP\MRT.exe"; $mrt = "$env:TEMP\MRT.exe" }
+    Start-Process $mrt -Wait 
+}
+$Modules["MalwareScanAdv"] = {
+    Write-Host "WARNING: DOWNLOADING 400MB+ (Tron Script)" -Bx Red -Fx White
+    try {
+        $l = (Invoke-WebRequest "https://bmrf.org/repos/tron/" -UseBasicParsing).Links.href | Where-Object { $_ -match "Tron v.+?\.exe" } | Select-Object -First 1
+        If ($l) { Invoke-WebRequest "https://bmrf.org/repos/tron/$l" -OutFile "$env:TEMP\$l"; Start-Process "$env:TEMP\$l" -Wait }
+    }
+    catch { Write-Log "Error fetching Tron." "Error" }
+}
+$Modules["SystemReport"] = { 
+    $f = "$env:USERPROFILE\Desktop\SysReport.txt"
+    "OS: $($SysInfo.OS)`nCPU: $($SysInfo.CPU)`nRAM: $($SysInfo.RAM)" | Out-File $f
+    Invoke-Item $f 
+}
+
+# --- APPS ---
+$Modules["AdobeFree"] = {
+    Write-Log "Opening Creative Cloud..."
+    Start-Process "https://www.adobe.com/download/creative-cloud"
+    Write-Log "Opening GenP..."
+    Start-Process "https://gen.paramore.su"
+}
+$Modules["SoftwareUpdate"] = {
+    if (!(Get-Command winget -EA SilentlyContinue)) { 
+        Write-Log "Installing Choco to get Winget..."
+        Set-ExecutionPolicy Bypass -Scope Process -Force
+        Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+        choco install winget -y
+    }
+    winget upgrade --all --include-unknown --accept-source-agreements --accept-package-agreements
+}
+$Modules["SpotifyPro"] = {
+    $s = "$env:TEMP\spicetify.ps1"; "Invoke-RestMethod https://raw.githubusercontent.com/spicetify/marketplace/main/resources/install.ps1 | iex" | Out-File $s
+    Start-Process powershell -Arg "-NoProfile -ExecutionPolicy Bypass -File $s"
+}
+$Modules["DiscordPro"] = {
+    try { 
+        $u = ((Invoke-RestMethod "https://api.github.com/repos/Legcord/Legcord/releases/latest").assets | Where-Object name -match ".exe" | Select-Object -First 1).browser_download_url
+        Invoke-WebRequest $u -OutFile "$env:TEMP\legcord.exe"; Start-Process "$env:TEMP\legcord.exe" -Wait
+    }
+    catch { Write-Log "Failed." }
+}
+
+# --- ACTIVATION ---
+$Modules["ActivateWindows"] = { Invoke-RestMethod https://get.activated.win | Invoke-Expression }
+$Modules["ActivateIDM"] = { Invoke-RestMethod https://coporton.com/ias | Invoke-Expression }
+
+# --- TWEAKS & NETWORK ---
+$Modules["ToggleUpdates"] = { try { if ((Get-Service wuauserv).StartType -eq 'Disabled') { Set-Service wuauserv -StartupType Manual }else { Stop-Service wuauserv -Force; Set-Service wuauserv -StartupType Disabled } } catch {} }
+$Modules["ToggleDefender"] = { $p = Get-MpPreference; Set-MpPreference -DisableRealtimeMonitoring (!$p.DisableRealtimeMonitoring) }
+$Modules["DisableTelemetry"] = { "HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection", "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection" | ForEach-Object { New-Item $_ -Force -EA SilentlyContinue; Set-ItemProperty $_ "AllowTelemetry" 0 -Force } }
+$Modules["RegistryOptimize"] = { Set-ItemProperty "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" "NtfsDisableLastAccessUpdate" 1; Set-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile" "SystemResponsiveness" 0 }
+$Modules["SetGoogleDNS"] = { Get-NetAdapter | Where-Object Status -eq Up | Set-DnsClientServerAddress -ServerAddresses "8.8.8.8", "8.8.4.4" }
+$Modules["SetCloudflareDNS"] = { Get-NetAdapter | Where-Object Status -eq Up | Set-DnsClientServerAddress -ServerAddresses "1.1.1.1", "1.0.0.1" }
+$Modules["ResetNetwork"] = { Get-NetAdapter | Where-Object Status -eq Up | Set-DnsClientServerAddress -ResetServerAddresses; ipconfig /flushdns; netsh winsock reset }
+
+# --- UTILS ---
+$Modules["CTTUtility"] = { Invoke-RestMethod https://christitus.com/win | Invoke-Expression }
+$Modules["RegistryBackup"] = { Start-Process reg.exe -Arg "export HKLM `"$env:USERPROFILE\Desktop\Backup.reg`" /y" -Wait }
+$Modules["FixResolution"] = { Invoke-WebRequest "https://www.monitortests.com/download/cru/cru-1.5.3.zip" -OutFile "$env:TEMP\cru.zip"; Expand-Archive "$env:TEMP\cru.zip" "$env:TEMP\CRU" -Force; Start-Process "$env:TEMP\CRU\CRU.exe" -Wait; Start-Process "$env:TEMP\CRU\restart64.exe" -Wait }
+$Modules["RemoveWindowsAI"] = { try { & ([scriptblock]::Create((Invoke-RestMethod "https://raw.githubusercontent.com/zoicware/RemoveWindowsAI/main/RemoveWindowsAi.ps1"))) -nonInteractive } catch {} }
+
+$Modules["AddShortcut"] = {
+    $iconUrl = "https://catsmoker.github.io/freemixkit_icon.ico"
+    $iconPath = "$env:USERPROFILE\Pictures\freemixkit_icon.ico"
+    try { Invoke-WebRequest $iconUrl -OutFile $iconPath -ErrorAction SilentlyContinue } catch {}
+
+    $s = (New-Object -ComObject WScript.Shell).CreateShortcut("$env:USERPROFILE\Desktop\FreeMixKit.lnk")
+    $s.TargetPath = "powershell.exe"
+    $s.Arguments = "-NoProfile -ExecutionPolicy Bypass -Command `"irm https://catsmoker.github.io/w | iex`""
+    if (Test-Path $iconPath) { $s.IconLocation = $iconPath }
+    $s.Save()
+    
+    # 3. Set RunAsAdministrator (Byte Patching)
+    try {
+        $bytes = [System.IO.File]::ReadAllBytes("$env:USERPROFILE\Desktop\FreeMixKit.lnk")
+        $bytes[0x15] = $bytes[0x15] -bor 0x20 # Bit 5 = RunAsAdmin
+        [System.IO.File]::WriteAllBytes("$env:USERPROFILE\Desktop\FreeMixKit.lnk", $bytes)
+    }
+    catch {}
+}
+
+# ==============================================================================
+# 5. GRID MENU CONFIGURATION
+# ==============================================================================
+
+# Define Columns. Type: H=Header, I=Item
+$Col1 = @(
+    @{T = "H"; L = "[ DEVELOPER ]" }
+    @{T = "I"; L = "DEV CHOICE (Full)"; A = "DevChoice"; D = "Installs: VS Redists, .NET, Node.js, Python, Java, PowerShell, Git, FFmpeg, 7zip, Notepad++, File Converter, GeminiCLI, Bibata Cursor." }
+    @{T = "H"; L = "" }
+    @{T = "H"; L = "[ MAINTENANCE ]" }
+    @{T = "I"; L = "Clean System Junk"; A = "CleanSystem"; D = "Removes temp files, prefetch, and clears DNS cache." }
+    @{T = "I"; L = "System Repair"; A = "SystemRepair"; D = "Runs SFC Scannow and DISM RestoreHealth." }
+    @{T = "I"; L = "Malware Scan"; A = "MalwareScan"; D = "Runs the built-in Microsoft Malicious Software Removal Tool." }
+    @{T = "I"; L = "Malware Scan Adv"; A = "MalwareScanAdv"; D = "Downloads and runs Tron Script (Heavy/Advanced deep clean)." }
+    @{T = "I"; L = "System Report"; A = "SystemReport"; D = "Generates a text file with system specs on your desktop." }
+    @{T = "H"; L = "" }
+    @{T = "H"; L = "[ ACTIVATION ]" }
+    @{T = "I"; L = "Activate Windows"; A = "ActivateWindows"; D = "Runs MAS (Microsoft Activation Scripts) to activate Windows." }
+    @{T = "I"; L = "Activate IDM"; A = "ActivateIDM"; D = "Activates Internet Download Manager (IDM)." }
+    @{T = "H"; L = "" }
+    @{T = "H"; L = "[ TWEAKS ]" }
+    @{T = "I"; L = "Toggle Updates"; A = "ToggleUpdates"; D = "Enables or Disables Windows Update service." }
+    @{T = "I"; L = "Toggle Defender"; A = "ToggleDefender"; D = "Toggles Real-time monitoring for Windows Defender." }
+    @{T = "I"; L = "Disable Telemetry"; A = "DisableTelemetry"; D = "Disables Windows data collection policies." }
+    @{T = "I"; L = "Registry Optimize"; A = "RegistryOptimize"; D = "Tweaks NTFS access updates and System Responsiveness." }
+)
+
+$Col2 = @(
+    @{T = "H"; L = "[ SOFTWARE ]" }
+    @{T = "I"; L = "Adobe Free (GenP)"; A = "AdobeFree"; D = "Downloads Creative Cloud and GenP activator." }
+    @{T = "I"; L = "Software Update"; A = "SoftwareUpdate"; D = "Upgrades all installed software via Winget." }
+    @{T = "I"; L = "Spotify Pro"; A = "SpotifyPro"; D = "Installs Spicetify for Spotify customization/ad-blocking." }
+    @{T = "I"; L = "Discord Pro"; A = "DiscordPro"; D = "Installs Legcord (BetterDiscord alternative)." }
+    @{T = "H"; L = "" }
+    @{T = "H"; L = "[ NETWORK ]" }
+    @{T = "I"; L = "Set Google DNS"; A = "SetGoogleDNS"; D = "Sets DNS to 8.8.8.8 / 8.8.4.4." }
+    @{T = "I"; L = "Set Cloudflare DNS"; A = "SetCloudflareDNS"; D = "Sets DNS to 1.1.1.1 / 1.0.0.1." }
+    @{T = "I"; L = "Reset Network"; A = "ResetNetwork"; D = "Resets DNS and Winsock settings." }
+    @{T = "H"; L = "" }
+    @{T = "H"; L = "[ UTILITIES ]" }
+    @{T = "I"; L = "CTT WinUtil"; A = "CTTUtility"; D = "Launches Chris Titus Tech's Windows Utility." }
+    @{T = "I"; L = "Registry Backup"; A = "RegistryBackup"; D = "Backs up the HKLM registry hive to Desktop." }
+    @{T = "I"; L = "Fix Resolution"; A = "FixResolution"; D = "Uses CRU to restart graphics driver and fix resolution." }
+    @{T = "H"; L = "" }
+    @{T = "H"; L = "[ AI & EXIT ]" }
+    @{T = "I"; L = "Remove Windows AI"; A = "RemoveWindowsAI"; D = "Removes Copilot and Recall features." }
+    @{T = "I"; L = "Add Shortcut"; A = "AddShortcut"; D = "Creates a shortcut for this script on the Desktop." }
+    @{T = "I"; L = "Exis Application"; A = "EXIT"; D = "Closes the application." }
+)
+
+# Build Navigation Grid
+# NavGrid is an array where item = {Col=0/1, Row=IndexInCol, Label, Action}
+$NavItems = @()
+
+# Process Col 1
+for ($i = 0; $i -lt $Col1.Count; $i++) {
+    if ($Col1[$i].T -eq "I") { $NavItems += @{C = 0; R = $i; L = $Col1[$i].L; A = $Col1[$i].A; D = $Col1[$i].D } }
+}
+# Process Col 2
+for ($i = 0; $i -lt $Col2.Count; $i++) {
+    if ($Col2[$i].T -eq "I") { $NavItems += @{C = 1; R = $i; L = $Col2[$i].L; A = $Col2[$i].A; D = $Col2[$i].D } }
+}
+
+$SelIdx = 0 # Index in $NavItems
+
+# ==============================================================================
+# 6. RENDER LOOP
+# ==============================================================================
+
+Clear-Host
+while ($true) {
+    [Console]::SetCursorPosition(0, 0)
+    Write-Host "========================================================================================================================" -F Blue
+    Write-Host "   FREEMIXKIT v5.7" -NoNewline -F Cyan
+    Write-Host " | Use " -NoNewline -F Gray; Write-Host "ARROWS" -NoNewline -F Yellow; Write-Host " to Navigate (Left/Right to switch columns)" -F Gray
+    Write-Host "========================================================================================================================" -F Blue
+    Write-Host " OS: $($SysInfo.OS) | CPU: $($SysInfo.CPU) | RAM: $($SysInfo.RAM)" -F DarkGray
+    Write-Host "------------------------------------------------------------------------------------------------------------------------" -F Blue
+    
+    $startY = 5
+    
+    # RENDER COL 1
+    $y = $startY
+    $x = 2
+    for ($i = 0; $i -lt $Col1.Count; $i++) {
+        [Console]::SetCursorPosition($x, $y)
+        $item = $Col1[$i]
+        
+        if ($item.T -eq "H") { 
+            Write-Host $item.L -F DarkGray
+        }
+        else {
+            # Check if selected
+            $isSel = ($NavItems[$SelIdx].C -eq 0 -and $NavItems[$SelIdx].R -eq $i)
+            if ($isSel) { Write-Host " > $($item.L) " -B DarkGray -F White }
+            else { Write-Host "   $($item.L) " -F Green }
+        }
+        $y++
+    }
+
+    # RENDER COL 2
+    $y = $startY
+    $x = 60
+    for ($i = 0; $i -lt $Col2.Count; $i++) {
+        [Console]::SetCursorPosition($x, $y)
+        $item = $Col2[$i]
+        
+        if ($item.T -eq "H") { 
+            Write-Host $item.L -F DarkGray
+        }
+        else {
+            # Check if selected
+            $isSel = ($NavItems[$SelIdx].C -eq 1 -and $NavItems[$SelIdx].R -eq $i)
+            if ($isSel) { Write-Host " > $($item.L) " -B DarkGray -F White }
+            else { Write-Host "   $($item.L) " -F Green }
+        }
+        $y++
+    }
+    
+    # Helper Stats area below
+    $maxY = $startY + [Math]::Max($Col1.Count, $Col2.Count) + 1
+    [Console]::SetCursorPosition(0, $maxY)
+    Write-Host "========================================================================================================================" -F Blue
+
+    $curr = $NavItems[$SelIdx]
+
+    [Console]::SetCursorPosition(0, $maxY + 1)
+    # Clear 2 lines (240 chars) to handle wrapping text
+    Write-Host (" " * 240) -NoNewline
+    
+    [Console]::SetCursorPosition(2, $maxY + 1)
+    Write-Host "INFO: $($curr.D)" -F Yellow
+
+    # INPUT HANDLING
+    $k = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+
+    switch ($k.VirtualKeyCode) {
+        38 {
+            # UP
+            # Find prev item in same column
+            $prev = $NavItems | Where-Object { $_.C -eq $curr.C -and $_.R -lt $curr.R } | Select-Object -Last 1
+            if ($prev) { $SelIdx = $NavItems.IndexOf($prev) }
+        }
+        40 {
+            # DOWN
+            # Find next item in same column
+            $next = $NavItems | Where-Object { $_.C -eq $curr.C -and $_.R -gt $curr.R } | Select-Object -First 1
+            if ($next) { $SelIdx = $NavItems.IndexOf($next) }
+        }
+        39 {
+            # RIGHT
+            if ($curr.C -eq 0) {
+                # Jump to Col 1, similar Row Y
+                $target = $NavItems | Where-Object { $_.C -eq 1 } | Sort-Object { [Math]::Abs($_.R - $curr.R) } | Select-Object -First 1
+                if ($target) { $SelIdx = $NavItems.IndexOf($target) }
+            }
+        }
+        37 {
+            # LEFT
+            if ($curr.C -eq 1) {
+                # Jump to Col 0, similar Row Y
+                $target = $NavItems | Where-Object { $_.C -eq 0 } | Sort-Object { [Math]::Abs($_.R - $curr.R) } | Select-Object -First 1
+                if ($target) { $SelIdx = $NavItems.IndexOf($target) }
+            }
+        }
+        13 {
+            # ENTER
+            $action = $curr.A
             if ($action -eq "EXIT") { Clear-Host; exit }
-            Clear-Host
-            Write-Host "----------------------------------------------------------" -ForegroundColor DarkGray
-            Write-Host " RUNNING: $($NavItems[$SelectionIndex].L)" -ForegroundColor Cyan
-            Write-Host "----------------------------------------------------------" -ForegroundColor DarkGray
-            if ($Modules.ContainsKey($action)) { try { & $Modules[$action] } catch { Write-Log "Error: $($_.Exception.Message)" "Error" } } 
-            else { Write-Log "Module Missing" "Error" }
-            Write-Host "`n----------------------------------------------------------" -ForegroundColor DarkGray
-            Write-Host "Press any key to return..." -ForegroundColor Gray
+            
+            [Console]::SetCursorPosition(2, $maxY + 2)
+            Write-Host "Executing: $($curr.L)..." -F Cyan
+            if ($Modules.ContainsKey($action)) { try { & $Modules[$action] } catch { Write-Log "Error: $($_.Exception.Message)" "Error" } }
+            
+            [Console]::SetCursorPosition(2, $maxY + 4)
+            Write-Host "Press any key..." -F Gray
             $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown") | Out-Null
+            Clear-Host
         }
     }
 }
