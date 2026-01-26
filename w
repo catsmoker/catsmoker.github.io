@@ -165,28 +165,94 @@ $Modules["SoftwareUpdate"] = {
     winget upgrade --all --include-unknown --accept-source-agreements --accept-package-agreements
 }
 $Modules["SpotifyPro"] = {
-    Write-Log "Preparing Spicetify Installation..."
-    $tempDir = $env:TEMP; $installScript = Join-Path $tempDir "Install-Spicetify.ps1"
+    # ===============================
+    # Spotify → Spicetify Installer
+    # ===============================
+
+    Write-Log "Checking Spotify installation..." "Info"
+
+    $spotifyExe = "$env:APPDATA\Spotify\Spotify.exe"
+
+    if (-not (Test-Path $spotifyExe)) {
+
+        if (Get-Command winget -ErrorAction SilentlyContinue) {
+            Write-Log "Installing Spotify using winget..." "Info"
+            winget install --id Spotify.Spotify --accept-package-agreements --accept-source-agreements
+        }
+        else {
+            Write-Log "Winget not found. Using direct installer..." "Info"
+
+            $spotifyInstaller = "$env:TEMP\SpotifySetup.exe"
+            Invoke-WebRequest "https://download.scdn.co/SpotifySetup.exe" -OutFile $spotifyInstaller
+
+            Start-Process $spotifyInstaller -ArgumentList "/silent" -Wait
+        }
+
+        # Wait until Spotify exists
+        for ($i = 0; $i -lt 15; $i++) {
+            if (Test-Path $spotifyExe) { break }
+            Start-Sleep 2
+        }
+
+        if (-not (Test-Path $spotifyExe)) {
+            Write-Log "Spotify installation failed or timed out." "Error"
+            return
+        }
+    }
+    else {
+        Write-Log "Spotify already installed." "Info"
+    }
+
+    # ===============================
+    # Prepare Spicetify Installer
+    # ===============================
+
+    Write-Log "Preparing Spicetify Installation..." "Info"
+
+    $tempDir = $env:TEMP
+    $installScript = Join-Path $tempDir "Install-Spicetify.ps1"
+
     $scriptContent = @'
-    Write-Host "=== Spicetify Installer ===" -ForegroundColor Cyan
-    try { irm https://raw.githubusercontent.com/spicetify/marketplace/main/resources/install.ps1 | iex } catch { Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red }
-    Write-Host "Press ENTER to close..."
-    Read-Host
+Write-Host "=== Spicetify Installer ===" -ForegroundColor Cyan
+try {
+    irm https://raw.githubusercontent.com/spicetify/marketplace/main/resources/install.ps1 | iex
+}
+catch {
+    Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
+}
+Write-Host "Press ENTER to close..."
+Read-Host
 '@
+
     Set-Content -Path $installScript -Value $scriptContent -Force
-    $taskName = "FreeMixKit_Spicetify_User"; $currentUser = $env:USERNAME
-    Write-Log "Launching as user: $currentUser..."
-    $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$installScript`""
+
+    # ===============================
+    # Run as Standard User
+    # ===============================
+
+    $taskName = "FreeMixKit_Spicetify_User"
+    $currentUser = $env:USERNAME
+
+    Write-Log "Launching Spicetify installer as user: $currentUser..." "Info"
+
+    $action = New-ScheduledTaskAction `
+        -Execute "powershell.exe" `
+        -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$installScript`""
+
     $trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddSeconds(2)
-    $principal = New-ScheduledTaskPrincipal -UserId $currentUser -LogonType Interactive -RunLevel Limited 
+    $principal = New-ScheduledTaskPrincipal -UserId $currentUser -LogonType Interactive -RunLevel Limited
+
     try {
         Unregister-ScheduledTask -TaskName $taskName -Confirm:$false -ErrorAction SilentlyContinue
         Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Principal $principal -Force | Out-Null
         Start-ScheduledTask -TaskName $taskName
-        Write-Log "Installer launched in new window." "Success"
-        Start-Sleep -Seconds 3
+
+        Write-Log "Spicetify installer launched successfully." "Success"
     }
-    catch { Write-Log "Failed to launch task." "Error" }
+    catch {
+        Write-Log "Failed to launch Spicetify installer." "Error"
+    }
+
 }
 
 $Modules["DiscordPro"] = {
