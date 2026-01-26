@@ -165,15 +165,30 @@ $Modules["SoftwareUpdate"] = {
     winget upgrade --all --include-unknown --accept-source-agreements --accept-package-agreements
 }
 $Modules["SpotifyPro"] = {
-    Write-Log "Preparing Spicetify installation script..." "Info"
-    $tempFile = "$env:TEMP\spicetify_install.ps1"
-    $scriptBody = "iwr -useb https://raw.githubusercontent.com/spicetify/marketplace/main/resources/install.ps1 | iex; pause"
-    $scriptBody | Out-File $tempFile -Encoding UTF8 -Force
-    
-    Write-Log "Launching installer as Standard User..." "Info"
-    # Using runas /trustlevel:0x20000 to drop admin privileges
-    Start-Process cmd.exe -ArgumentList "/c runas /trustlevel:0x20000 `"powershell.exe -NoProfile -ExecutionPolicy Bypass -File `"$tempFile`"`"" -Wait
+    Write-Log "Preparing Spicetify Installation..."
+    $tempDir = $env:TEMP; $installScript = Join-Path $tempDir "Install-Spicetify.ps1"
+    $scriptContent = @'
+    Write-Host "=== Spicetify Installer ===" -ForegroundColor Cyan
+    try { irm https://raw.githubusercontent.com/spicetify/marketplace/main/resources/install.ps1 | iex } catch { Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red }
+    Write-Host "Press ENTER to close..."
+    Read-Host
+'@
+    Set-Content -Path $installScript -Value $scriptContent -Force
+    $taskName = "FreeMixKit_Spicetify_User"; $currentUser = $env:USERNAME
+    Write-Log "Launching as user: $currentUser..."
+    $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-NoProfile -ExecutionPolicy Bypass -File `"$installScript`""
+    $trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddSeconds(2)
+    $principal = New-ScheduledTaskPrincipal -UserId $currentUser -LogonType Interactive -RunLevel Limited 
+    try {
+        Unregister-ScheduledTask -TaskName $taskName -Confirm:$false -ErrorAction SilentlyContinue
+        Register-ScheduledTask -TaskName $taskName -Action $action -Trigger $trigger -Principal $principal -Force | Out-Null
+        Start-ScheduledTask -TaskName $taskName
+        Write-Log "Installer launched in new window." "Success"
+        Start-Sleep -Seconds 3
+    }
+    catch { Write-Log "Failed to launch task." "Error" }
 }
+
 $Modules["DiscordPro"] = {
     try { 
         $u = ((Invoke-RestMethod "https://api.github.com/repos/Legcord/Legcord/releases/latest").assets | Where-Object name -match ".exe" | Select-Object -First 1).browser_download_url
