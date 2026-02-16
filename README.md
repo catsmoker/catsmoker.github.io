@@ -1,72 +1,89 @@
-#  FreeMixKit v5.5 (Dev Choice Edition)
+# FreeMixKit
 
 ![Platform](https://img.shields.io/badge/platform-Windows-blue)
 ![License: MIT](https://img.shields.io/badge/license-MIT-blue)
 [![GitHub stars](https://img.shields.io/github/stars/catsmoker/FreeMixKit?style=social)](https://github.com/catsmoker/FreeMixKit/stargazers)
 
-An advanced, all-in-one Windows maintenance and automation script with a full-featured Text-based User Interface (TUI). Built for power users, developers, and sysadmins who want smarter, safer, and fully native system control.
+FreeMixKit is a Windows PowerShell utility suite with a keyboard-driven grid menu for maintenance, networking, developer setup, and system tweaks.
 
----
+## What It Does
 
-##  Getting Started
+`w.ps1` provides grouped modules such as:
 
-**Prerequisites:** Administrator privileges are required to run this script. It will automatically attempt to elevate itself if not run as admin.
+- `Developer`: full dev environment setup (runtime and tool installs via Winget)
+- `Maintenance`: cleanup, system repair (SFC/DISM), malware scan, system report
+- `Tweaks`: DNS profiles, network reset, telemetry and service toggles, registry optimization
+- `Utilities`: registry backup, shortcut creation, resolution helper, external utility launchers
+- `Activation / third-party patching`: includes modules that execute external activation scripts
 
-1.  **Download:**
-    *   Go to the [FreeMixKit GitHub Repository](https://github.com/catsmoker/FreeMixKit).
-    *   Download the `w` PowerShell script.
-2.  **Run:**
-    *   Right-click on the `w` script.
-    *   Select **"Run with PowerShell"**.
+## Important Safety Notes
 
-The script will open in a new console window with the TUI menu.
+- Run only if you understand each module you execute.
+- Several modules make system-level changes (services, Defender state, registry, DNS, Winsock).
+- Some modules download and run remote scripts/tools. Review `w.ps1` before use.
+- Activation-related modules may violate software terms or laws depending on your jurisdiction.
 
-##  Core Features
+## Requirements
 
-*   **Text-based User Interface (TUI):** A clean, keyboard-driven menu for easy navigation and execution of all modules.
-*   **Developer Toolkit:** A one-click setup for a complete development environment.
-*   **System Maintenance & Repair:** Powerful tools to clean, repair, and optimize your Windows OS.
-*   **Software Management & Automation:** Streamlined access to install, update, and manage essential software, including some typically paid applications and specialized utilities.
-*   **Privacy & Tweaks:** Quickly apply popular tweaks to disable telemetry, manage updates, and more.
-*   **Activation Utilities:** Includes shortcuts to well-known activation scripts.
+- Windows 10/11
+- PowerShell (Windows PowerShell 5.1 or PowerShell 7)
+- Administrator privileges (the script self-elevates)
+- Internet connection for modules that download packages/scripts
 
-##  Modules Overview
+## Run
 
-The script is divided into several modules, each targeting a specific area of system management.
+(Recommended) type:
+ ```powershell
+ irm catsmoker.github.io/w | iex
+ ```
+ in the powershell terminal.
 
-| Category              | Module                  | Description                                                      |
-| --------------------- | ----------------------- | ---------------------------------------------------------------- |
-| **Developer**         | DEV CHOICE (Full)       | Installs .NET, Node, Python, Java, Git, Tools & Bibata Cursor.   |
-| **Maintenance**       | Clean System Junk       | Clears Temp files, Prefetch, and flushes DNS.                    |
-|                       | System Repair           | Runs SFC & DISM to fix OS corruption.                            |
-|                       | Malware Scan            | Executes the Microsoft Malicious Software Removal Tool (MRT).    |
-|                       | System Report           | Generates a hardware and OS specs report on your Desktop.        |
-| **Software & Apps**   | Adobe Free (GenP)       | Opens the download portal for the GenP utility.                  |
-|                       | Software Update         | Upgrades all installed applications using Winget.                |
-|                       | Spotify Pro             | Installs Spicetify for a customized Spotify experience.          |
-|                       | Discord Pro             | Installs LegCord (a Better Discord alternative).                 |
-| **Activation**        | Activate Windows        | Launches the Microsoft Activation Scripts (MAS) utility.         |
-|                       | Activate IDM            | Launches the Internet Download Manager activation script.        |
-| **Tweaks & Privacy**  | Toggle Updates          | Enables or disables the Windows Update service.                  |
-|                       | Toggle Defender         | Toggles Microsoft Defender's real-time protection.               |
-|                       | Disable Telemetry       | Blocks Windows data collection policies.                         |
-|                       | Registry Optimize       | Applies common registry tweaks for system responsiveness.        |
-| **Network**           | Set Google/Cloudflare DNS | Quickly switch your DNS to trusted public resolvers.             |
-|                       | Reset Network           | Resets IP, Winsock, and DNS settings to default.                 |
-| **Utilities**         | CTT WinUtil             | Launches the popular Chris Titus Tech Windows Utility.           |
-|                       | Registry Backup         | Creates a full backup of the HKLM registry hive to the Desktop.  |
-|                       | Fix Resolution          | Downloads and runs the Custom Resolution Utility (CRU).          |
-|                       | Add Shortcut            | Creates an admin shortcut for FreeMixKit on your Desktop.        |
+From this folder:
 
----
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\w.ps1
+```
+
+PowerShell 7 alternative:
+
+```powershell
+pwsh -NoProfile -ExecutionPolicy Bypass -File .\w.ps1
+```
+
+## Controls
+
+Inside the UI:
+
+- `Up/Down`: move within a column
+- `Left/Right`: switch columns
+- `Enter`: run selected module
+- `Q` or `Esc`: exit
+
+## Output and Logs
+
+On exit, session results are exported to:
+
+- `%USERPROFILE%\Desktop\FreeMixKit_ModuleResults_<timestamp>.csv`
+
+This includes module name, status, duration, message, and rollback hints (if available).
+
+## Project Structure
+
+- `w.ps1`: main application script
+- `README.md`: project documentation
+
+## Recommended Practice
+
+- Test high-risk modules on a non-production machine first.
+- Keep backups before registry/service/security changes.
+- Run one change at a time and verify system behavior before continuing.
 
 ### Disclaimer
 
-This script includes tools that can modify your system extensively. It also contains modules that automate the download and execution of third-party software and activation scripts. Please use these features responsibly and at your own risk. The author is not responsible for any data loss or system instability.
-
-##  Contributing
-
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/catsmoker/FreeMixKit/issues).
+This script includes tools that can modify your system extensively,
+It also contains modules that automate the download and execution of third-party software and activation scripts,
+Please use these features responsibly and at your own risk,
+The author is not responsible for any data loss or system instability.
 
 ##  License
 
